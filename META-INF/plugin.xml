@@ -1,24 +1,32 @@
 <idea-plugin version="2">
-  <name>Plugin name here</name>
-  <description>short description of the plugin</description>
-  <version>1.0</version>
-  <vendor>YourCompany</vendor>
-  <idea-version since-build="8000"/>
+    <name>CodeNarc</name>
+    <description>Adds CodeNarc inspections into IntelliJ IDEA for static Groovy code analysis.</description>
+    <version>0.1</version>
+    <vendor>Cédric Champeau</vendor>
+    <idea-version since-build="8000"/>
 
-  <application-components>
-      <component>
-          <implementation-class>org.codenarc.idea.CodeNarcComponent</implementation-class>
-      </component> </application-components>
+    <change-notes><![CDATA[
+            <b>Version 0.1</b>
+            <ul>
+            <li>Initial release</li>
+            <li>Integrates CodeNarc 0.12</li>
+            </ul>
+            ]]></change-notes>
+    <application-components>
+        <component>
+            <implementation-class>org.codenarc.idea.CodeNarcComponent</implementation-class>
+        </component>
+    </application-components>
 
-  <project-components>
+    <project-components>
 
-  </project-components>
+    </project-components>
 
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-  </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
 </idea-plugin>
