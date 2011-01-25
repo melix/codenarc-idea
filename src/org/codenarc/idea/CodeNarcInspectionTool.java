@@ -30,11 +30,14 @@ import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.*;
 import org.codenarc.rule.Rule;
 import org.codenarc.rule.Violation;
@@ -56,7 +59,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final String GROUP_DISPLAY_NAME = "CodeNarc";
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.<CachedValue<SourceString>>create("CODENARC_SOURCE_AS_STRING");
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.<CachedValue<Boolean>>create("CODENARC_HAS_SYNTAX_ERRORS");
-    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[],Rule>>create("CODENARC_VIOLATIONS");
+    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[], Rule>>create("CODENARC_VIOLATIONS");
 
     private ResourceBundle bundle;
 
@@ -132,23 +135,23 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         if (file.getFileType().getName().equalsIgnoreCase("groovy")) {
             final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject());
             CachedValue<Boolean> hasErrorsCachedValue = file.getUserData(HAS_SYNTAX_ERRORS_CACHE_KEY);
-            if (hasErrorsCachedValue==null) {
+            if (hasErrorsCachedValue == null) {
                 hasErrorsCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<Boolean>() {
                     public Result<Boolean> compute() {
                         PsiErrorElement errorElement = PsiTreeUtil.findChildOfType(file, PsiErrorElement.class);
-                        return Result.create(errorElement!=null, file);
+                        return Result.create(errorElement != null, file);
                     }
                 }, false);
             }
 
             if (!hasErrorsCachedValue.getValue()) { // avoid inspection if any syntax error is found
                 ParameterizedCachedValue<ProblemDescriptor[], Rule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY);
-                if (cachedViolations==null) {
+                if (cachedViolations == null) {
                     cachedViolations = cachedValuesManager.createParameterizedCachedValue(new ParameterizedCachedValueProvider<ProblemDescriptor[], Rule>() {
                         public CachedValueProvider.Result<ProblemDescriptor[]> compute(final Rule rule) {
                             final List<ProblemDescriptor> descriptors = new LinkedList<ProblemDescriptor>();
                             CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY);
-                            if (sourceStringCachedValue==null) {
+                            if (sourceStringCachedValue == null) {
                                 sourceStringCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<SourceString>() {
                                     public Result<SourceString> compute() {
                                         return Result.create(new SourceString(file.getText()), file);
@@ -158,19 +161,22 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                             }
                             final SourceCode code = sourceStringCachedValue.getValue();
                             final List<Violation> list = rule.applyTo(code);
-                            final Editor editor = PsiUtil.findEditor(file);
-                            if (editor==null) return CachedValueProvider.Result.create(null, file);
-                            for (final Violation violation : list) {
-                                final int startOffset = editor.getDocument().getLineStartOffset(violation.getLineNumber() - 1);
-                                final String message = violation.getMessage();
-                                final PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
-                                ProblemDescriptor descriptor = manager.createProblemDescriptor(
-                                        element,
-                                        message == null ? description == null ? rule.getName() : description : message,
-                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                        null,
-                                        isOnTheFly);
-                                descriptors.add(descriptor);
+                            final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+                            final VirtualFile virtualFile = file.getVirtualFile();
+                            if (virtualFile != null) {
+                                for (final Violation violation : list) {
+                                    Document document = documentManager.getDocument(virtualFile);
+                                    final int startOffset = document.getLineStartOffset(violation.getLineNumber() - 1);
+                                    final String message = violation.getMessage();
+                                    PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
+                                    ProblemDescriptor descriptor = manager.createProblemDescriptor(
+                                            element,
+                                            message == null ? description == null ? rule.getName() : description : message,
+                                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                            null,
+                                            isOnTheFly);
+                                    descriptors.add(descriptor);
+                                }
                             }
                             return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                         }
