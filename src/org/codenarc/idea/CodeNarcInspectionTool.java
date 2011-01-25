@@ -56,6 +56,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final String GROUP_DISPLAY_NAME = "CodeNarc";
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.<CachedValue<SourceString>>create("CODENARC_SOURCE_AS_STRING");
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.<CachedValue<Boolean>>create("CODENARC_HAS_SYNTAX_ERRORS");
+    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[],Rule>>create("CODENARC_VIOLATIONS");
 
     private ResourceBundle bundle;
 
@@ -129,9 +130,9 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     @Override
     public ProblemDescriptor[] checkFile(@NotNull final PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
         if (file.getFileType().getName().equalsIgnoreCase("groovy")) {
+            final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject());
             CachedValue<Boolean> hasErrorsCachedValue = file.getUserData(HAS_SYNTAX_ERRORS_CACHE_KEY);
             if (hasErrorsCachedValue==null) {
-                final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject());
                 hasErrorsCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<Boolean>() {
                     public Result<Boolean> compute() {
                         PsiErrorElement errorElement = PsiTreeUtil.findChildOfType(file, PsiErrorElement.class);
@@ -141,47 +142,46 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             }
 
             if (!hasErrorsCachedValue.getValue()) { // avoid inspection if any syntax error is found
-                final Editor editor = PsiUtil.findEditor(file);
-                final List<ProblemDescriptor> descriptors = new LinkedList<ProblemDescriptor>();
-                CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY);
-                if (sourceStringCachedValue==null) {
-                    final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject());
-                    sourceStringCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<SourceString>() {
-                        public Result<SourceString> compute() {
-                            return Result.create(new SourceString(file.getText()), file);
+                ParameterizedCachedValue<ProblemDescriptor[], Rule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY);
+                if (cachedViolations==null) {
+                    cachedViolations = cachedValuesManager.createParameterizedCachedValue(new ParameterizedCachedValueProvider<ProblemDescriptor[], Rule>() {
+                        public CachedValueProvider.Result<ProblemDescriptor[]> compute(final Rule rule) {
+                            final List<ProblemDescriptor> descriptors = new LinkedList<ProblemDescriptor>();
+                            CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY);
+                            if (sourceStringCachedValue==null) {
+                                sourceStringCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<SourceString>() {
+                                    public Result<SourceString> compute() {
+                                        return Result.create(new SourceString(file.getText()), file);
+                                    }
+                                }, false);
+                                file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue);
+                            }
+                            final SourceCode code = sourceStringCachedValue.getValue();
+                            final List<Violation> list = rule.applyTo(code);
+                            final Editor editor = PsiUtil.findEditor(file);
+                            if (editor==null) return CachedValueProvider.Result.create(null, file);
+                            for (final Violation violation : list) {
+                                final int startOffset = editor.getDocument().getLineStartOffset(violation.getLineNumber() - 1);
+                                final String message = violation.getMessage();
+                                final PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
+                                ProblemDescriptor descriptor = manager.createProblemDescriptor(
+                                        element,
+                                        message == null ? description == null ? rule.getName() : description : message,
+                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                        null,
+                                        isOnTheFly);
+                                descriptors.add(descriptor);
+                            }
+                            return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                         }
                     }, false);
-                    file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue);
                 }
-                SourceCode code = sourceStringCachedValue.getValue();
-                final List<Violation> list = rule.applyTo(code);
-                for (final Violation violation : list) {
-                    final int startOffset = editor.getDocument().getLineStartOffset(violation.getLineNumber() - 1);
-                    final String message = violation.getMessage();
-                    final PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
-                    ProblemDescriptor descriptor = manager.createProblemDescriptor(
-                            element,
-                            message == null ? description == null ? rule.getName() : description : message,
-                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                            null,
-                            isOnTheFly);
-                    descriptors.add(descriptor);
-                }
-                return descriptors.toArray(new ProblemDescriptor[descriptors.size()]);
+                return cachedViolations.getValue(rule);
             } else {
                 return null;
             }
         } else {
             return null;
-        }
-    }
-
-    private ProblemHighlightType type() {
-        switch (rule.getPriority()) {
-            case 1:
-                return ProblemHighlightType.ERROR;
-            default:
-                return ProblemHighlightType.ERROR;
         }
     }
 }
