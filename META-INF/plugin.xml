@@ -9,7 +9,11 @@
     <idea-version since-build="8000"/>
 
     <change-notes><![CDATA[
-            <b>Version 0.2</b>
+            <b>Version 0.1.13</b>
+            <ul>
+            <li>Upgrade to CodeNarc 0.13</li>
+            </ul>
+            <b>Version 0.1.1</b>
             <ul>
             <li>Performance improvements</li>
             <li>Fixed inspections not shown if an editor wasn't open on file</li>
