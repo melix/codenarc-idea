@@ -9,6 +9,11 @@
     <idea-version since-build="8000"/>
 
     <change-notes><![CDATA[
+            <b>Version 0.1.14</b>
+            <ul>
+            <li>Fixed NPE on empty files or newly created files</li>
+            <li>Fixed NPE when a CodeNarc rule doesn't set a line number</li>
+            </ul>
             <b>Version 0.1.13</b>
             <ul>
             <li>Upgrade to CodeNarc 0.13</li>

@@ -1,7 +1,7 @@
 /*
  *
  *
- *   Copyright 2011 C�dric Champeau
+ *   Copyright 2011 Cédric Champeau
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -154,31 +154,42 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                             if (sourceStringCachedValue == null) {
                                 sourceStringCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<SourceString>() {
                                     public Result<SourceString> compute() {
+                                        if (file.getText() == null || "".equals(file.getText())) return null;
                                         return Result.create(new SourceString(file.getText()), file);
                                     }
                                 }, false);
                                 file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue);
                             }
                             final SourceCode code = sourceStringCachedValue.getValue();
-                            final List<Violation> list = rule.applyTo(code);
-                            final FileDocumentManager documentManager = FileDocumentManager.getInstance();
-                            final VirtualFile virtualFile = file.getVirtualFile();
-                            if (virtualFile != null) {
-                                for (final Violation violation : list) {
-                                    Document document = documentManager.getDocument(virtualFile);
-                                    final int startOffset = document.getLineStartOffset(violation.getLineNumber() - 1);
-                                    final String message = violation.getMessage();
-                                    PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
-                                    ProblemDescriptor descriptor = manager.createProblemDescriptor(
-                                            element,
-                                            message == null ? description == null ? rule.getName() : description : message,
-                                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                            null,
-                                            isOnTheFly);
-                                    descriptors.add(descriptor);
+                            if (code != null) {
+                                final List<Violation> list = rule.applyTo(code);
+                                if (list != null) {
+                                    final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+                                    final VirtualFile virtualFile = file.getVirtualFile();
+                                    if (virtualFile != null) {
+                                        for (final Violation violation : list) {
+                                            Document document = documentManager.getDocument(virtualFile);
+                                            Integer lineNumber = violation.getLineNumber();
+                                             // workaround for some rules which do not set the line number correctly
+                                            if (lineNumber==null) lineNumber=1;
+                                            final int startOffset = document.getLineStartOffset(lineNumber - 1);
+                                            final String message = violation.getMessage();
+                                            PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
+                                            ProblemDescriptor descriptor = manager.createProblemDescriptor(
+                                                    element,
+                                                    message == null ? description == null ? rule.getName() : description : message,
+                                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                                    null,
+                                                    isOnTheFly);
+                                            descriptors.add(descriptor);
+                                        }
+                                    }
+                                    return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                                 }
+                                return null;
+                            } else {
+                                return null;
                             }
-                            return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                         }
                     }, false);
                 }
