@@ -69,6 +69,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             "generic",
             "grails",
             "imports",
+            "jdbc",
             "junit",
             "logging",
             "naming",
@@ -108,7 +109,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
                     if (m.find()) {
                         try {
                             final Class<?> ruleClass = Class.forName(m.group(1));
-                            Class clazz = inspectionsClassLoader.defineClass(new ImplementGetRuleClassGenerator(ruleClass).toByteArray());
+                            Class clazz = inspectionsClassLoader.defineClass(new ImplementGetRuleClassGenerator(ruleClass, ruleset).toByteArray());
                             // initialize rule
                             proxyclasses.add(clazz);
                         } catch (ClassNotFoundException e) {
@@ -148,10 +149,12 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
      * A class generator which creates an implementation class for {@link CodeNarcInspectionTool}
      */
     private static class ImplementGetRuleClassGenerator implements Opcodes {
-        private Class ruleClass;
+        private final Class ruleClass;
+        private final String ruleSet;
 
-        public ImplementGetRuleClassGenerator(Class ruleClass) {
+        public ImplementGetRuleClassGenerator(Class ruleClass, String ruleSet) {
             this.ruleClass = ruleClass;
+            this.ruleSet = ruleSet;
         }
 
         public byte[] toByteArray() {
@@ -173,6 +176,14 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
                 mv = cw.visitMethod(ACC_PROTECTED, "getRuleClass", "()Ljava/lang/Class;", null, null);
                 mv.visitCode();
                 mv.visitLdcInsn(Type.getType(ruleClass));
+                mv.visitInsn(Opcodes.ARETURN);
+                mv.visitMaxs(1, 1);
+                mv.visitEnd();
+            }
+            {
+                mv = cw.visitMethod(ACC_PROTECTED, "getRuleset", "()Ljava/lang/String;", null, null);
+                mv.visitCode();
+                mv.visitLdcInsn(ruleSet);
                 mv.visitInsn(Opcodes.ARETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();

@@ -57,6 +57,7 @@ import java.util.ResourceBundle;
  */
 public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final String GROUP_DISPLAY_NAME = "CodeNarc";
+    private static final String RULESET_INTRO = " - Ruleset ";
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.<CachedValue<SourceString>>create("CODENARC_SOURCE_AS_STRING");
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.<CachedValue<Boolean>>create("CODENARC_HAS_SYNTAX_ERRORS");
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[], Rule>>create("CODENARC_VIOLATIONS");
@@ -89,6 +90,8 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
 
     protected abstract Class getRuleClass();
 
+    protected abstract String getRuleset();
+
     private void initRule() {
         try {
             bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE);
@@ -109,7 +112,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     @NotNull
     @Override
     public String getGroupDisplayName() {
-        return GROUP_DISPLAY_NAME;
+        return GROUP_DISPLAY_NAME + RULESET_INTRO + getRuleset();
     }
 
     @Nls
