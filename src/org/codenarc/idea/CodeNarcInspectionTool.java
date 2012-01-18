@@ -30,6 +30,7 @@ import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.Key;
@@ -39,6 +40,7 @@ import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiWhiteSpace;
 import com.intellij.psi.util.*;
+import org.codenarc.rule.AbstractRule;
 import org.codenarc.rule.Rule;
 import org.codenarc.rule.Violation;
 import org.codenarc.source.SourceCode;
@@ -46,10 +48,9 @@ import org.codenarc.source.SourceString;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.*;
 
 /**
  * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
@@ -61,6 +62,19 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.<CachedValue<SourceString>>create("CODENARC_SOURCE_AS_STRING");
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.<CachedValue<Boolean>>create("CODENARC_HAS_SYNTAX_ERRORS");
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[], Rule>>create("CODENARC_VIOLATIONS");
+    private static final Rule UNLOADED_RULE = new Rule() {
+        public List<Violation> applyTo(final SourceCode sourceCode) throws Throwable {
+            return Collections.emptyList();
+        }
+
+        public int getPriority() {
+            return 0;
+        }
+
+        public String getName() {
+            return "Rule could not be loaded";
+        }
+    };
 
     private ResourceBundle bundle;
 
@@ -88,24 +102,38 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         return string;
     }
 
-    protected abstract Class getRuleClass();
+    protected abstract String getRuleClass();
 
     protected abstract String getRuleset();
 
     private void initRule() {
         try {
             bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE);
-            rule = (Rule) getRuleClass().newInstance();
+            ClassLoader classLoader = CodeNarcInspectionTool.class.getClassLoader();
+            Class<?> clazz = Class.forName(getRuleClass(), true, classLoader);
+            rule = (Rule) clazz.newInstance();
             String ruleName = rule.getName();
             shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
             displayName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
             description = getRuleDescriptionOrDefaultMessage(rule);
-
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            defineErrorRule(e);
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            defineErrorRule(e);
+        } catch (ClassNotFoundException e) {
+            defineErrorRule(e);
+        } catch (Throwable e) {
+            defineErrorRule(e);
         }
+    }
+
+    private void defineErrorRule(Throwable e) {
+        rule = UNLOADED_RULE;
+        shortName = "RuleCannotBeLoaded_"+getRuleClass().replaceAll("[^a-zA-Z0-9]","_");
+        displayName = "Not loaded: "+getRuleClass();
+        StringWriter wrt = new StringWriter();
+        e.printStackTrace(new PrintWriter(wrt));
+        description = "Unable to load rule : "+wrt.toString();
     }
 
     @Nls
@@ -165,29 +193,33 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                             }
                             final SourceCode code = sourceStringCachedValue.getValue();
                             if (code != null) {
-                                final List<Violation> list = rule.applyTo(code);
-                                if (list != null) {
-                                    final FileDocumentManager documentManager = FileDocumentManager.getInstance();
-                                    final VirtualFile virtualFile = file.getVirtualFile();
-                                    if (virtualFile != null) {
-                                        for (final Violation violation : list) {
-                                            Document document = documentManager.getDocument(virtualFile);
-                                            Integer lineNumber = violation.getLineNumber();
-                                             // workaround for some rules which do not set the line number correctly
-                                            if (lineNumber==null) lineNumber=1;
-                                            final int startOffset = document.getLineStartOffset(lineNumber - 1);
-                                            final String message = violation.getMessage();
-                                            PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
-                                            ProblemDescriptor descriptor = manager.createProblemDescriptor(
-                                                    element,
-                                                    message == null ? description == null ? rule.getName() : description : message,
-                                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                                    null,
-                                                    isOnTheFly);
-                                            descriptors.add(descriptor);
+                                try {
+                                    final List<Violation> list = rule.applyTo(code);
+                                    if (list != null) {
+                                        final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+                                        final VirtualFile virtualFile = file.getVirtualFile();
+                                        if (virtualFile != null) {
+                                            for (final Violation violation : list) {
+                                                Document document = documentManager.getDocument(virtualFile);
+                                                Integer lineNumber = violation.getLineNumber();
+                                                 // workaround for some rules which do not set the line number correctly
+                                                if (lineNumber==null) lineNumber=1;
+                                                final int startOffset = document.getLineStartOffset(lineNumber - 1);
+                                                final String message = violation.getMessage();
+                                                PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
+                                                ProblemDescriptor descriptor = manager.createProblemDescriptor(
+                                                        element,
+                                                        message == null ? description == null ? rule.getName() : description : message,
+                                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                                        null,
+                                                        isOnTheFly);
+                                                descriptors.add(descriptor);
+                                            }
                                         }
+                                        return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                                     }
-                                    return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
+                                } catch (Throwable throwable) {
+                                    return null;
                                 }
                                 return null;
                             } else {

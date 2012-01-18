@@ -22,6 +22,7 @@ package org.codenarc.idea;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.openapi.components.ApplicationComponent;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
@@ -63,16 +64,21 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             "basic",
             "braces",
             "concurrency",
+            "convention",
             "design",
             "dry",
             "exceptions",
+            "formatting",
             "generic",
             "grails",
+            "groovyism",
             "imports",
             "jdbc",
             "junit",
             "logging",
             "naming",
+            "security",
+            "serialization",
             "size",
             "unnecessary",
             "unused"
@@ -107,20 +113,15 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
                 while ((line = reader.readLine()) != null) {
                     Matcher m = RULE_CLASS_PATTERN.matcher(line);
                     if (m.find()) {
-                        try {
-                            final Class<?> ruleClass = Class.forName(m.group(1));
-                            Class clazz = inspectionsClassLoader.defineClass(new ImplementGetRuleClassGenerator(ruleClass, ruleset).toByteArray());
-                            // initialize rule
-                            proxyclasses.add(clazz);
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
+                        Class clazz = inspectionsClassLoader.defineClass(new ImplementGetRuleClassGenerator(m.group(1), ruleset).toByteArray());
+                        // initialize rule
+                        proxyclasses.add(clazz);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (reader != null) try {
+                try {
                     reader.close();
                 } catch (IOException e) {
                     // silent
@@ -149,10 +150,10 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
      * A class generator which creates an implementation class for {@link CodeNarcInspectionTool}
      */
     private static class ImplementGetRuleClassGenerator implements Opcodes {
-        private final Class ruleClass;
+        private final String ruleClass;
         private final String ruleSet;
 
-        public ImplementGetRuleClassGenerator(Class ruleClass, String ruleSet) {
+        public ImplementGetRuleClassGenerator(String ruleClass, String ruleSet) {
             this.ruleClass = ruleClass;
             this.ruleSet = ruleSet;
         }
@@ -161,7 +162,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             ClassWriter cw = new ClassWriter(0);
             MethodVisitor mv;
 
-            cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/codenarc/idea/CodeNarcInpectionTool$" + ruleClass.getSimpleName(), null, "org/codenarc/idea/CodeNarcInspectionTool", null);
+            cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/codenarc/idea/CodeNarcInpectionTool$" + ruleClass.replaceAll("\\.","_"), null, "org/codenarc/idea/CodeNarcInspectionTool", null);
 
             {
                 mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -173,9 +174,9 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
                 mv.visitEnd();
             }
             {
-                mv = cw.visitMethod(ACC_PROTECTED, "getRuleClass", "()Ljava/lang/Class;", null, null);
+                mv = cw.visitMethod(ACC_PROTECTED, "getRuleClass", "()Ljava/lang/String;", null, null);
                 mv.visitCode();
-                mv.visitLdcInsn(Type.getType(ruleClass));
+                mv.visitLdcInsn(ruleClass);
                 mv.visitInsn(Opcodes.ARETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
