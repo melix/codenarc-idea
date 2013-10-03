@@ -74,6 +74,10 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         public String getName() {
             return "Rule could not be loaded";
         }
+
+	    public int getCompilerPhase() {
+		    return 0;
+	    }
     };
 
     private ResourceBundle bundle;
