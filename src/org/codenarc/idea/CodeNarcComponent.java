@@ -67,6 +67,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             "convention",
             "design",
             "dry",
+            "enhanced",
             "exceptions",
             "formatting",
             "generic",
@@ -77,9 +78,9 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             "junit",
             "logging",
             "naming",
+            "size",
             "security",
             "serialization",
-            "size",
             "unnecessary",
             "unused"
     };

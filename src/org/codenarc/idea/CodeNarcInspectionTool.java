@@ -190,7 +190,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                 sourceStringCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<SourceString>() {
                                     public Result<SourceString> compute() {
                                         if (file.getText() == null || "".equals(file.getText())) return null;
-                                        return Result.create(new SourceString(file.getText()), file);
+                                        return Result.create(new SourceString(file.getText(), file.getParent().getName(), file.getName()), file);
                                     }
                                 }, false);
                                 file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue);
