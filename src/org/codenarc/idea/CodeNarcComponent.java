@@ -22,12 +22,10 @@ package org.codenarc.idea;
 
 import com.intellij.codeInspection.InspectionToolProvider;
 import com.intellij.openapi.components.ApplicationComponent;
-import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -162,7 +160,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             ClassWriter cw = new ClassWriter(0);
             MethodVisitor mv;
 
-            cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/codenarc/idea/CodeNarcInpectionTool$" + ruleClass.replaceAll("\\.","_"), null, "org/codenarc/idea/CodeNarcInspectionTool", null);
+            cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/codenarc/idea/CodeNarcInspectionTool$" + ruleClass.replaceAll("\\.","_"), null, "org/codenarc/idea/CodeNarcInspectionTool", null);
 
             {
                 mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);

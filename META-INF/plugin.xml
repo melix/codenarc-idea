@@ -6,9 +6,16 @@
     <version>0.1.17</version>
     <vendor url="http://twitter.com/CedricChampeau">Cédric Champeau</vendor>
 
-    <idea-version since-build="8000"/>
+    <idea-version since-build="123"/>
 
     <change-notes><![CDATA[
+            <b>Version 0.1.18</b>
+            <ul>
+            <li>Upgrade to CodeNarc 0.18</li>
+            <li>Works with IntelliJ 12 (Tested on 12.0.4)</li>
+            <li>Works with IntelliJ 13 (Tested on 13.0.4)</li>
+            <li>Works with IntelliJ 14 (Tested on 14.1.4)</li>
+            </ul>
             <b>Version 0.1.17</b>
             <ul>
             <li>Upgrade to CodeNarc 0.17</li>
