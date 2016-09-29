@@ -1,7 +1,7 @@
 /*
  *
  *
- *   Copyright 2011 C�dric Champeau
+ *   Copyright 2011 Cédric Champeau
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -103,7 +103,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
     }
 
     private void initializeRuleInspectionClasses() {
-        List<Class> proxyclasses = new LinkedList<Class>();
+        List<Class> proxyclasses = new LinkedList<>();
         for (String ruleset : rulesets) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream("/rulesets/" + ruleset + ".xml")));
             String line;
