@@ -9,7 +9,7 @@ plugins {
 }
 
 group 'org.codenarc.idea'
-version '0.2'
+version '0.1.19'
 
 apply plugin: 'idea'
 idea {
