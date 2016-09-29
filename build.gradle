@@ -1,0 +1,65 @@
+buildscript {
+    repositories {
+        maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+}
+
+plugins {
+    id "org.jetbrains.intellij" version "0.1.10"
+}
+
+group 'org.codenarc.idea'
+version '0.2'
+
+apply plugin: 'idea'
+idea {
+    project {
+        jdkName = 1.8
+        languageLevel = 1.8
+    }
+}
+
+apply plugin: 'java'
+
+//intellij.plugins=
+//intellij.pluginName=$project.name
+//intellij.sandboxDirectory=$project.buildDir/idea-sandbox
+//intellij.instrumentCode=true
+//intellij.updateSinceUntilBuild=true
+//intellij.sameSinceUntilBuild=false
+//intellij.downloadSources=true
+//intellij.systemProperties=[]
+//intellij.alternativeIdePath=
+//intellij.ideaDependencyCachePath=
+
+//intellij.publish.username
+//intellij.publish.password
+//intellij.publish.channel
+
+//https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/2016.2/ideaIC-2016.2.zip
+
+intellij {
+    version 'IC-2016.2'
+    type 'IC'
+    //plugins = ['coverage', 'org.intellij.plugins.markdown:8.5.0.20160208']
+    pluginName 'CodeNarcPlugin'
+
+    downloadSources false
+    /*publish {
+        username ''
+        password ''
+        channel ''
+    }*/
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.codenarc', name: 'CodeNarc', version: '0.25.2'
+    compile group: 'org.gmetrics', name: 'GMetrics', version: '0.7'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

@@ -1,3 +1,7 @@
-CodeNarcPlugin.zip
+.gradle
 .idea
-output
+build
+## Plugin-specific files:
+CodeNarcPlugin.iml
+CodeNarcPlugin.ipr
+CodeNarcPlugin.iws
