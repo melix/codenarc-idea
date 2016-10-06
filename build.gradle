@@ -5,13 +5,18 @@ buildscript {
 }
 
 plugins {
-    id "org.jetbrains.intellij" version "0.1.10"
+    id 'org.jetbrains.intellij' version '0.1.10'
+    id 'java'
+    id 'idea'
+}
+
+task wrapper(type: Wrapper) {
+    distributionUrl = 'https://services.gradle.org/distributions/gradle-2.14.1-bin.zip'
 }
 
 group 'org.codenarc.idea'
 version '0.1.19'
 
-apply plugin: 'idea'
 idea {
     project {
         jdkName = 1.8
@@ -19,29 +24,9 @@ idea {
     }
 }
 
-apply plugin: 'java'
-
-//intellij.plugins=
-//intellij.pluginName=$project.name
-//intellij.sandboxDirectory=$project.buildDir/idea-sandbox
-//intellij.instrumentCode=true
-//intellij.updateSinceUntilBuild=true
-//intellij.sameSinceUntilBuild=false
-//intellij.downloadSources=true
-//intellij.systemProperties=[]
-//intellij.alternativeIdePath=
-//intellij.ideaDependencyCachePath=
-
-//intellij.publish.username
-//intellij.publish.password
-//intellij.publish.channel
-
-//https://www.jetbrains.com/intellij-repository/releases/com/jetbrains/intellij/idea/ideaIC/2016.2/ideaIC-2016.2.zip
-
 intellij {
     version 'IC-2016.2'
     type 'IC'
-    //plugins = ['coverage', 'org.intellij.plugins.markdown:8.5.0.20160208']
     pluginName 'CodeNarcPlugin'
 
     downloadSources false

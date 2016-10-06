@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.gmetrics:GMetrics:0.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.gmetrics/GMetrics/0.7/7c772263571db39b38511906a51d8182de7b1ade/GMetrics-0.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.gmetrics/GMetrics/0.7/8d26dfb40927e76bce9b0af41d5e86c6bfaaa174/GMetrics-0.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

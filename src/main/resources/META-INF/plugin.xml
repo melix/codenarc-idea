@@ -13,6 +13,8 @@
             <b>Version 0.1.19</b>
             <ul>
             <li>Updated to IntelliJ IDEA 2016.2</li>
+            <li>Upgrade to CodeNarc 0.25.2</li>
+            <li>Upgrade to GMetrics 0.7</li>
             </ul>
             <b>Version 0.1.18</b>
             <ul>
@@ -24,7 +26,7 @@
             <b>Version 0.1.17</b>
             <ul>
             <li>Upgrade to CodeNarc 0.17</li>
-            <li>Upgrade to GMetricts 0.6</li>
+            <li>Upgrade to GMetrics 0.6</li>
             <li>Works with Intellij 11/12</li>
             </ul>
             <b>Version 0.1.16.1</b>

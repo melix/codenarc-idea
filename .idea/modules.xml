@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CodeNarcPlugin.iml" filepath="$PROJECT_DIR$/.idea/modules/CodeNarcPlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CodeNarcPlugin_main.iml" filepath="$PROJECT_DIR$/.idea/modules/CodeNarcPlugin_main.iml" group="CodeNarcPlugin" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CodeNarcPlugin_test.iml" filepath="$PROJECT_DIR$/.idea/modules/CodeNarcPlugin_test.iml" group="CodeNarcPlugin" />
+    </modules>
+  </component>
+</project>
