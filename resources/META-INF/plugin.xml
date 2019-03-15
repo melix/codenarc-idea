@@ -7,9 +7,15 @@
     fit into your project. Build tool, framework support, and report generation are all enterprise ready.]]></description>
   <vendor url="http://twitter.com/CedricChampeau">Cédric Champeau</vendor>
 
-  <idea-version since-build="8000"/>
+  <idea-version since-build="163"/>
 
   <change-notes><![CDATA[
+        <b>Version 4.0.0</b>
+        <ul>
+        <li>Updating to use the latest CodeNarc - 1.3</li>
+        <li>Additionally the lists of inspectinos is extracted directly from the embedded codenarc jar</li>
+        <li>All original code is from Cédric Champeau</li>
+        </ul>
         <b>Version 3.1</b>
         <ul>
         <li>Updating to work in newer IntelliJ version(s) (Sean LeBlanc) and using latest CodeNarc - 0.27.0</li>
