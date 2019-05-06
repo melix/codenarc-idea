@@ -8,7 +8,7 @@
   <vendor url="http://twitter.com/CedricChampeau">Daniel Demus, originally Cédric Champeau</vendor>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
-  <idea-version since-build="163"/>
+  <idea-version since-build="183"/>
 
   <change-notes><![CDATA[
         <b>Version 4.1.0</b>
@@ -37,9 +37,7 @@
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
        on how to target different products -->
-  <!-- uncomment to enable plugin in all products
-  <depends>com.intellij.modules.lang</depends>
-  -->
+  <depends>org.intellij.groovy</depends>
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->

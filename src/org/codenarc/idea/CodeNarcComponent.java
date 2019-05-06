@@ -21,7 +21,7 @@
 package org.codenarc.idea;
 
 import com.intellij.codeInspection.InspectionToolProvider;
-import com.intellij.openapi.components.ApplicationComponent;
+import com.intellij.openapi.components.BaseComponent;
 import groovy.lang.MetaBeanProperty;
 import groovy.lang.MetaProperty;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +67,7 @@ import java.util.regex.Pattern;
  *
  * @author Cédric Champeau
  */
-public class CodeNarcComponent implements ApplicationComponent, InspectionToolProvider {
+public class CodeNarcComponent implements BaseComponent, InspectionToolProvider {
 
     static final String BASE_MESSAGES_BUNDLE = "codenarc-base-messages";
     private static final String RULESETS_PATH = "rulesets/";
@@ -238,10 +238,11 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
         }
 
         byte[] toByteArray() {
-            PrintWriter printWriter = new PrintWriter(System.out);
-            ClassWriter cv = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-            TraceClassVisitor tcv = new TraceClassVisitor(cv, printWriter);
-            CheckClassAdapter cw = new CheckClassAdapter(tcv, false);
+//            PrintWriter printWriter = new PrintWriter(System.out);
+//            ClassWriter cv = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+//            TraceClassVisitor tcv = new TraceClassVisitor(cv, printWriter);
+//            CheckClassAdapter cw = new CheckClassAdapter(tcv, false);
+            ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
             MethodVisitor mv;
 
             cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, implementedClassInternalName, null, codeNarcInspectionToolsTypeInternalName, null);
@@ -323,7 +324,8 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
 
             cw.visitEnd();
 
-            return cv.toByteArray();
+            return cw.toByteArray();
+//            return cv.toByteArray();
         }
 
         private void prepareRegister(MethodVisitor mv, Class propType) {
