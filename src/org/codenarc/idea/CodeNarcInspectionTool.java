@@ -277,7 +277,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                         for (final Violation violation : list) {
                                             Integer lineNumber = violation.getLineNumber();
                                              // workaround for some rules which do not set the line number correctly
-                                            if (lineNumber==null) {
+                                            if (lineNumber==null || lineNumber < 1) {
                                                 lineNumber = 1;
                                             }
                                             final int startOffset = document.getLineStartOffset(lineNumber - 1);
