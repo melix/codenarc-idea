@@ -32,6 +32,7 @@ import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.CachedValue;
@@ -39,6 +40,7 @@ import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.xmlb.XmlSerializationException;
 import org.codenarc.idea.ui.Helpers;
 import org.codenarc.rule.AbstractRule;
@@ -99,12 +101,44 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         }
     };
 
+    private static final AbstractRule UNSUPPORTED_RULE = new AbstractRule() {
+        public List<Violation> applyTo(final SourceCode sourceCode) {
+            return Collections.emptyList();
+        }
+
+        public int getPriority() {
+            return 0;
+        }
+
+        @Override
+        public void setPriority(int priority) {
+        }
+
+        public String getName() {
+            return "Extended rule is not supported";
+        }
+
+        @Override
+        public void setName(String name) {
+        }
+
+        @Override
+        public int getCompilerPhase() {
+            return 0;
+        }
+
+        @Override
+        public void applyTo(SourceCode sourceCode, List<Violation> violations) {
+        }
+    };
+
     private ResourceBundle bundle;
 
     private String shortName;
     private String displayName;
     private String description;
 
+    @SuppressWarnings("AccessCanBePrivate")
     protected AbstractRule rule;
 
     public AbstractRule getRule() {
@@ -117,26 +151,32 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         rule.setDoNotApplyToFilesMatching(value);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public String getApplyToFilesMatching() {
         return rule.getApplyToFilesMatching();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void setApplyToFileMatching(String value) {
         rule.setApplyToFilesMatching(value);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public String getDoNotApplyToFileNames() {
         return rule.getDoNotApplyToFileNames();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void setDoNotApplyToFileNames(String value) {
         rule.setDoNotApplyToFileNames(value);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public String getApplyToFileNames() {
         return rule.getApplyToFileNames();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void setApplyToFileNames(String value) {
         rule.setApplyToFileNames(value);
     }
@@ -150,7 +190,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         return getResourceBundleString(resourceKey, "No description provided for rule named [" + rule.getName() + "]");
     }
 
-    protected String getResourceBundleString(String resourceKey, String defaultString) {
+    private String getResourceBundleString(String resourceKey, String defaultString) {
         String string;
         try {
             string = bundle.getString(resourceKey);
@@ -189,6 +229,10 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private void initRule() {
         try {
             rule = getRuleInstance();
+            if (rule.getCompilerPhase() > 3) {
+                defineUnsupportedRule();
+                return;
+            }
             String ruleName = rule.getName();
             shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
             displayName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
@@ -211,6 +255,13 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         StringWriter wrt = new StringWriter();
         e.printStackTrace(new PrintWriter(wrt));
         description = "Unable to load rule : "+wrt.toString();
+    }
+
+    private void defineUnsupportedRule() {
+        rule = UNSUPPORTED_RULE;
+        shortName = "UnsupportedRule_" + getRuleClass().replaceAll("[^a-zA-Z0-9]","_");
+        displayName = "Unsupported: " + getRuleClass();
+        description = "Extended rules need to be run in compiler phase 4, which does not happen while editing";
     }
 
     @Nls
@@ -244,11 +295,9 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject());
             CachedValue<Boolean> hasErrorsCachedValue = file.getUserData(HAS_SYNTAX_ERRORS_CACHE_KEY);
             if (hasErrorsCachedValue == null) {
-                hasErrorsCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<Boolean>() {
-                    public Result<Boolean> compute() {
-                        PsiErrorElement errorElement = PsiTreeUtil.findChildOfType(file, PsiErrorElement.class);
-                        return Result.create(errorElement != null, file);
-                    }
+                hasErrorsCachedValue = cachedValuesManager.createCachedValue(() -> {
+                    PsiErrorElement errorElement = PsiTreeUtil.findChildOfType(file, PsiErrorElement.class);
+                    return CachedValueProvider.Result.create(errorElement != null, file);
                 }, false);
             }
 
@@ -290,6 +339,11 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             ProblemDescriptor descriptor;
 
                                             TextRange violatingRange = new TextRange(startOffset + violationPosition, startOffset + violationPosition + sourceLine.length());
+
+                                            final PsiElement violatingElement = PsiUtil.getElementInclusiveRange(file, violatingRange);
+                                            if (violatingElement != null && this.isSuppressedFor(violatingElement)) {
+                                                continue;
+                                            }
 
                                             descriptor = manager.createProblemDescriptor(
                                                     file,
