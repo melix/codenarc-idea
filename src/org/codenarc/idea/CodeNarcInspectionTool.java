@@ -42,7 +42,6 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.xmlb.XmlSerializationException;
 import org.codenarc.idea.ui.Helpers;
 import org.codenarc.rule.AbstractRule;
-import org.codenarc.rule.Rule;
 import org.codenarc.rule.Violation;
 import org.codenarc.source.SourceCode;
 import org.codenarc.source.SourceString;
@@ -66,11 +65,11 @@ import java.util.ResourceBundle;
 public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final String GROUP_DISPLAY_NAME = "CodeNarc";
     private static final String RULESET_INTRO = " - Ruleset ";
-    private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.<CachedValue<SourceString>>create("CODENARC_SOURCE_AS_STRING");
-    private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.<CachedValue<Boolean>>create("CODENARC_HAS_SYNTAX_ERRORS");
-    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[], Rule>>create("CODENARC_VIOLATIONS");
+    private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create("CODENARC_SOURCE_AS_STRING");
+    private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create("CODENARC_HAS_SYNTAX_ERRORS");
+    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create("CODENARC_VIOLATIONS");
     private static final AbstractRule UNLOADED_RULE = new AbstractRule() {
-        public List<Violation> applyTo(final SourceCode sourceCode) throws Throwable {
+        public List<Violation> applyTo(final SourceCode sourceCode) {
             return Collections.emptyList();
         }
 
@@ -105,15 +104,14 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private String shortName;
     private String displayName;
     private String description;
+
     protected AbstractRule rule;
 
     public AbstractRule getRule() {
         return rule;
     }
 
-    public String getDoNotApplyToFilesMatching() {
-        return rule.getDoNotApplyToFilesMatching();
-    }
+    public String getDoNotApplyToFilesMatching() { return rule.getDoNotApplyToFilesMatching(); }
 
     public void setDoNotApplyToFilesMatching(String value) {
         rule.setDoNotApplyToFilesMatching(value);
@@ -147,7 +145,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         initRule();
     }
 
-    private String getRuleDescriptionOrDefaultMessage(Rule rule) {
+    private String getRuleDescriptionOrDefaultMessage(AbstractRule rule) {
         String resourceKey = rule.getName() + ".description";
         return getResourceBundleString(resourceKey, "No description provided for rule named [" + rule.getName() + "]");
     }
@@ -255,7 +253,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             }
 
             if (!hasErrorsCachedValue.getValue()) { // avoid inspection if any syntax error is found
-                ParameterizedCachedValue<ProblemDescriptor[], Rule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY);
+                ParameterizedCachedValue<ProblemDescriptor[], AbstractRule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY);
                 if (cachedViolations == null) {
                     cachedViolations = cachedValuesManager.createParameterizedCachedValue(rule -> {
                         final List<ProblemDescriptor> descriptors = new LinkedList<>();
@@ -287,12 +285,9 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             final String violatedLine = document.getText(new TextRange(startOffset, document.getLineEndOffset(lineNumber)));
                                             final String sourceLine = violation.getSourceLine();
                                             int violationPosition = violatedLine.indexOf(sourceLine);
-//                                            PsiElement startElement = PsiUtil.getElementAtOffset(file, startOffset + violationPosition);
 
                                             final LocalQuickFix [] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation);
                                             ProblemDescriptor descriptor;
-
-//                                            int startIndex = startElement.getTextOffset() + (startElement.getText().startsWith("\n") ? 1 : 0);
 
                                             TextRange violatingRange = new TextRange(startOffset + violationPosition, startOffset + violationPosition + sourceLine.length());
 
