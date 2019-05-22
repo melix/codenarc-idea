@@ -382,6 +382,7 @@ import org.codenarc.rule.unused.UnusedPrivateMethodRule
 import org.codenarc.rule.unused.UnusedVariableRule
 import org.jetbrains.annotations.NotNull
 import org.jetbrains.plugins.groovy.codeInspection.bugs.GrRemoveModifierFix
+import org.jetbrains.plugins.groovy.codeInspection.naming.RenameFix
 
 final class CodeNarcUiMappings {
 
@@ -391,7 +392,7 @@ final class CodeNarcUiMappings {
         Map<Class<? extends AbstractRule>, LocalQuickFix[]> map =
             [
                 (AbcMetricRule)                         : [],   // Requires the GMetrics jar
-                (AbstractClassNameRule)                 : [],
+                (AbstractClassNameRule)                 : [new RenameFix()],
                 (AbstractClassWithPublicConstructorRule)            : [new GrRemoveModifierFix(PsiModifier.PUBLIC) ],
                 (AbstractClassWithoutAbstractMethodRule)       : [],
                 (AddEmptyStringRule)                           : [],

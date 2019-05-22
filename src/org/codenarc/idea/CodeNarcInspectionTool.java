@@ -138,15 +138,17 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private String displayName;
     private String description;
 
-    @SuppressWarnings("AccessCanBePrivate")
+    @SuppressWarnings({"WeakerAccess"})
     protected AbstractRule rule;
 
     public AbstractRule getRule() {
         return rule;
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public String getDoNotApplyToFilesMatching() { return rule.getDoNotApplyToFilesMatching(); }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void setDoNotApplyToFilesMatching(String value) {
         rule.setDoNotApplyToFilesMatching(value);
     }
@@ -200,8 +202,10 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         return string;
     }
 
+    @SuppressWarnings("WeakerAccess")
     protected abstract String getRuleClass();
 
+    @SuppressWarnings("WeakerAccess")
     protected abstract String getRuleset();
 
     @Override
@@ -329,7 +333,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             if (lineNumber==null || lineNumber < 1) {
                                                 lineNumber = 1;
                                             }
-                                            final int startOffset = document.getLineStartOffset(lineNumber - 1);
+                                            final int startOffset = document.getLineStartOffset(lineNumber - 1) < 0 ? 0 : document.getLineStartOffset(lineNumber - 1);
                                             final String message = violation.getMessage();
                                             final String violatedLine = document.getText(new TextRange(startOffset, document.getLineEndOffset(lineNumber)));
                                             final String sourceLine = violation.getSourceLine();
@@ -355,7 +359,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             descriptors.add(descriptor);
                                         }
                                     }
-                                    return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
+                                    return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[0]), file);
                                 }
                             } catch (Throwable throwable) {
                                 return null;
