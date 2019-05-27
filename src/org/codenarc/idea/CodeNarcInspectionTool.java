@@ -188,7 +188,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     }
 
     private String getRuleDescriptionOrDefaultMessage(AbstractRule rule) {
-        String resourceKey = rule.getName() + ".description";
+        String resourceKey = rule.getName() + ".description.html";
         return getResourceBundleString(resourceKey, "No description provided for rule named [" + rule.getName() + "]");
     }
 
@@ -205,8 +205,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     @SuppressWarnings("WeakerAccess")
     protected abstract String getRuleClass();
 
-    @SuppressWarnings("WeakerAccess")
-    protected abstract String getRuleset();
+    public abstract String getRuleset();
 
     @Override
     public JPanel createOptionsPanel() {
@@ -239,7 +238,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             }
             String ruleName = rule.getName();
             shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
-            displayName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
+            displayName = ruleName != null ? Helpers.camelCaseToSentence(ruleName) : rule.getClass().getSimpleName();
             description = getRuleDescriptionOrDefaultMessage(rule);
         } catch (Throwable e) {
             defineErrorRule(e);
@@ -255,7 +254,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private void defineErrorRule(Throwable e) {
         rule = UNLOADED_RULE;
         shortName = "RuleCannotBeLoaded_"+getRuleClass().replaceAll("[^a-zA-Z0-9]","_");
-        displayName = "Not loaded: "+getRuleClass();
+        displayName = "Not loaded: " + getRuleClass();
         StringWriter wrt = new StringWriter();
         e.printStackTrace(new PrintWriter(wrt));
         description = "Unable to load rule : "+wrt.toString();

@@ -1,5 +1,8 @@
 package org.codenarc.idea.ui
 
+import com.intellij.ui.HyperlinkLabel
+import com.intellij.ui.components.labels.LinkLabel
+import cucumber.api.java.en_scouse.An
 import groovy.transform.CompileStatic
 import org.codenarc.idea.CodeNarcComponent
 import org.codenarc.idea.CodeNarcInspectionTool
@@ -79,6 +82,11 @@ class Helpers {
                 constraints.gridy = row++
             }
         }
+
+        HyperlinkLabel linkLabel = new HyperlinkLabel();
+        linkLabel.setHyperlinkTarget("http://codenarc.sourceforge.net/codenarc-rules-${instance.getRuleset().toLowerCase()}.html#${instance.shortName}")
+        linkLabel.setHyperlinkText('An explanation of the rule at the CodeNarc website')
+        panel.add(linkLabel, constraints)
 
         if (found) {
             return panel

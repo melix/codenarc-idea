@@ -100,6 +100,7 @@ public class CodeNarcComponent implements BaseComponent, InspectionToolProvider 
             "unused"
     };
     private final static Pattern RULE_CLASS_PATTERN = Pattern.compile(".*class='(.*?)'.*");
+    private final static Pattern RULE_GROUP_PATTERN = Pattern.compile(".*/([^.]*)\\.xml");
 
     public void initComponent() {
         inspectionsClassLoader = new InspectionsClassLoader();
@@ -138,7 +139,13 @@ public class CodeNarcComponent implements BaseComponent, InspectionToolProvider 
                 while ((line = reader.readLine()) != null) {
                     Matcher m = RULE_CLASS_PATTERN.matcher(line);
                     if (m.find()) {
-                        Class clazz = inspectionsClassLoader.defineClass(new ImplementGetRuleClassGenerator(m.group(1), ruleset).toByteArray());
+                        String groupName = ruleset;
+                        Matcher n = RULE_GROUP_PATTERN.matcher(ruleset);
+                        if (n.find())
+                        {
+                            groupName = Character.toUpperCase(n.group(1).charAt(0)) + n.group(1).substring(1);
+                        }
+                        Class clazz = inspectionsClassLoader.defineClass(new ImplementGetRuleClassGenerator(m.group(1), groupName).toByteArray());
                         // initialize rule
                         proxyclasses.add(clazz);
                     }
