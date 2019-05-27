@@ -1,16 +1,20 @@
 <idea-plugin>
   <id>dk.demus.idea.CodeNarc</id>
   <name>CodeNarc Updated</name>
-  <version>4.1.2</version>
+  <version>4.2.0</version>
   <description><![CDATA[<b>CodeNarc</b> analyzes Groovy code for defects, bad practices, inconsistencies, style issues and more.
     A flexible framework for rules, rulesets and custom rules means it's easy to configure CodeNarc to
     fit into your project. Build tool, framework support, and report generation are all enterprise ready.]]></description>
-  <vendor url="http://twitter.com/CedricChampeau">Daniel Demus, originally Cédric Champeau</vendor>
+  <vendor url="http://twitter.com/DanielDemus">Daniel Demus, originally Cédric Champeau</vendor>
 
   <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
   <idea-version since-build="183"/>
 
   <change-notes><![CDATA[
+        <b>Version 4.2.0</b>
+        <ul>
+        <li>New CodeNarc, new plugin.CodeNarc v1.4</li>
+        </ul>
         <b>Version 4.1.2</b>
         <ul>
         <li>Fix more range out of bounds exceptions</li>
