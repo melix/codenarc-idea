@@ -19,38 +19,45 @@
  */
 
 package org.codenarc.idea;
-/**
- * Created by IntelliJ IDEA.
- * User: cedric
- * Date: 20/01/11
- * Time: 23:09
- */
 
 import com.intellij.codeInspection.InspectionManager;
 import com.intellij.codeInspection.LocalInspectionTool;
+import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
-import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.configurationStore.XmlSerializer;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Key;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiWhiteSpace;
-import com.intellij.psi.util.*;
+import com.intellij.psi.util.CachedValue;
+import com.intellij.psi.util.CachedValueProvider;
+import com.intellij.psi.util.CachedValuesManager;
+import com.intellij.psi.util.ParameterizedCachedValue;
+import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.util.xmlb.XmlSerializationException;
+import org.codenarc.idea.ui.Helpers;
 import org.codenarc.rule.AbstractRule;
 import org.codenarc.rule.Rule;
 import org.codenarc.rule.Violation;
 import org.codenarc.source.SourceCode;
 import org.codenarc.source.SourceString;
+import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
  * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
@@ -62,7 +69,7 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.<CachedValue<SourceString>>create("CODENARC_SOURCE_AS_STRING");
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.<CachedValue<Boolean>>create("CODENARC_HAS_SYNTAX_ERRORS");
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], Rule>> VIOLATIONS_CACHE_KEY = Key.<ParameterizedCachedValue<ProblemDescriptor[], Rule>>create("CODENARC_VIOLATIONS");
-    private static final Rule UNLOADED_RULE = new Rule() {
+    private static final AbstractRule UNLOADED_RULE = new AbstractRule() {
         public List<Violation> applyTo(final SourceCode sourceCode) throws Throwable {
             return Collections.emptyList();
         }
@@ -71,8 +78,25 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             return 0;
         }
 
+        @Override
+        public void setPriority(int priority) {
+        }
+
         public String getName() {
             return "Rule could not be loaded";
+        }
+
+        @Override
+        public void setName(String name) {
+        }
+
+        @Override
+        public int getCompilerPhase() {
+            return 0;
+        }
+
+        @Override
+        public void applyTo(SourceCode sourceCode, List<Violation> violations) {
         }
     };
 
@@ -81,7 +105,43 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private String shortName;
     private String displayName;
     private String description;
-    protected Rule rule;
+    protected AbstractRule rule;
+
+    public AbstractRule getRule() {
+        return rule;
+    }
+
+    public String getDoNotApplyToFilesMatching() {
+        return rule.getDoNotApplyToFilesMatching();
+    }
+
+    public void setDoNotApplyToFilesMatching(String value) {
+        rule.setDoNotApplyToFilesMatching(value);
+    }
+
+    public String getApplyToFilesMatching() {
+        return rule.getApplyToFilesMatching();
+    }
+
+    public void setApplyToFileMatching(String value) {
+        rule.setApplyToFilesMatching(value);
+    }
+
+    public String getDoNotApplyToFileNames() {
+        return rule.getDoNotApplyToFileNames();
+    }
+
+    public void setDoNotApplyToFileNames(String value) {
+        rule.setDoNotApplyToFileNames(value);
+    }
+
+    public String getApplyToFileNames() {
+        return rule.getApplyToFileNames();
+    }
+
+    public void setApplyToFileNames(String value) {
+        rule.setApplyToFileNames(value);
+    }
 
     public CodeNarcInspectionTool() {
         initRule();
@@ -106,25 +166,44 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
 
     protected abstract String getRuleset();
 
+    @Override
+    public JPanel createOptionsPanel() {
+        return Helpers.createOptionsPanel(this);
+    }
+
+    @Override
+    public void writeSettings(@NotNull Element node) {
+        XmlSerializer.serializeObjectInto(this.rule, node, getSerializationFilter());
+    }
+
+    @Override
+    public void readSettings(@NotNull Element node) {
+        try {
+            if (node.getChild("option") != null) {
+                XmlSerializer.deserializeInto(node, this.rule);
+            }
+        }
+        catch (XmlSerializationException e) {
+            throw new InvalidDataException(e);
+        }
+    }
+
     private void initRule() {
         try {
-            bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE);
-            ClassLoader classLoader = CodeNarcInspectionTool.class.getClassLoader();
-            Class<?> clazz = Class.forName(getRuleClass(), true, classLoader);
-            rule = (Rule) clazz.newInstance();
+            rule = getRuleInstance();
             String ruleName = rule.getName();
             shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
             displayName = ruleName != null ? ruleName : rule.getClass().getSimpleName();
             description = getRuleDescriptionOrDefaultMessage(rule);
-        } catch (InstantiationException e) {
-            defineErrorRule(e);
-        } catch (IllegalAccessException e) {
-            defineErrorRule(e);
-        } catch (ClassNotFoundException e) {
-            defineErrorRule(e);
         } catch (Throwable e) {
             defineErrorRule(e);
         }
+    }
+
+    private AbstractRule getRuleInstance() throws Throwable {
+        bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE);
+        Class<?> clazz = Helpers.getRuleClassInstance(getRuleClass());
+        return (AbstractRule) clazz.newInstance();
     }
 
     private void defineErrorRule(Throwable e) {
@@ -178,55 +257,63 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             if (!hasErrorsCachedValue.getValue()) { // avoid inspection if any syntax error is found
                 ParameterizedCachedValue<ProblemDescriptor[], Rule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY);
                 if (cachedViolations == null) {
-                    cachedViolations = cachedValuesManager.createParameterizedCachedValue(new ParameterizedCachedValueProvider<ProblemDescriptor[], Rule>() {
-                        public CachedValueProvider.Result<ProblemDescriptor[]> compute(final Rule rule) {
-                            final List<ProblemDescriptor> descriptors = new LinkedList<ProblemDescriptor>();
-                            CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY);
-                            if (sourceStringCachedValue == null) {
-                                sourceStringCachedValue = cachedValuesManager.createCachedValue(new CachedValueProvider<SourceString>() {
-                                    public Result<SourceString> compute() {
-                                        if (file.getText() == null || "".equals(file.getText())) return null;
-                                        return Result.create(new SourceString(file.getText()), file);
-                                    }
-                                }, false);
-                                file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue);
-                            }
-                            final SourceCode code = sourceStringCachedValue.getValue();
-                            if (code != null) {
-                                try {
-                                    final List<Violation> list = rule.applyTo(code);
-                                    if (list != null) {
-                                        final FileDocumentManager documentManager = FileDocumentManager.getInstance();
-                                        final VirtualFile virtualFile = file.getVirtualFile();
-                                        if (virtualFile != null) {
-                                            for (final Violation violation : list) {
-                                                Document document = documentManager.getDocument(virtualFile);
-                                                Integer lineNumber = violation.getLineNumber();
-                                                 // workaround for some rules which do not set the line number correctly
-                                                if (lineNumber==null) lineNumber=1;
-                                                final int startOffset = document.getLineStartOffset(lineNumber - 1);
-                                                final String message = violation.getMessage();
-                                                PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
-
-                                                final LocalQuickFix [] localQuickFixes = CodeNarcQuickFixMappings.getQuickFixesFor(violation);
-                                                ProblemDescriptor descriptor = manager.createProblemDescriptor(
-                                                        element,
-                                                        message == null ? description == null ? rule.getName() : description : message,
-                                                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                                        isOnTheFly,
-                                                        false);
-                                                descriptors.add(descriptor);
+                    cachedViolations = cachedValuesManager.createParameterizedCachedValue(rule -> {
+                        final List<ProblemDescriptor> descriptors = new LinkedList<>();
+                        CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY);
+                        if (sourceStringCachedValue == null) {
+                            sourceStringCachedValue = cachedValuesManager.createCachedValue(() -> {
+                                if (file.getText() == null || "".equals(file.getText())) return null;
+                                return CachedValueProvider.Result.create(new SourceString(file.getText()), file);
+                            }, false);
+                            file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue);
+                        }
+                        final SourceCode code = sourceStringCachedValue.getValue();
+                        if (code != null) {
+                            try {
+                                final List<Violation> list = rule.applyTo(code);
+                                if (list != null) {
+                                    final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+                                    final VirtualFile virtualFile = file.getVirtualFile();
+                                    if (virtualFile != null) {
+                                        final Document document = documentManager.getDocument(virtualFile);
+                                        for (final Violation violation : list) {
+                                            Integer lineNumber = violation.getLineNumber();
+                                             // workaround for some rules which do not set the line number correctly
+                                            if (lineNumber==null) {
+                                                lineNumber = 1;
                                             }
+                                            final int startOffset = document.getLineStartOffset(lineNumber - 1);
+                                            final String message = violation.getMessage();
+                                            final String violatedLine = document.getText(new TextRange(startOffset, document.getLineEndOffset(lineNumber)));
+                                            final String sourceLine = violation.getSourceLine();
+                                            int violationPosition = violatedLine.indexOf(sourceLine);
+//                                            PsiElement startElement = PsiUtil.getElementAtOffset(file, startOffset + violationPosition);
+
+                                            final LocalQuickFix [] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation);
+                                            ProblemDescriptor descriptor;
+
+//                                            int startIndex = startElement.getTextOffset() + (startElement.getText().startsWith("\n") ? 1 : 0);
+
+                                            TextRange violatingRange = new TextRange(startOffset + violationPosition, startOffset + violationPosition + sourceLine.length());
+
+                                            descriptor = manager.createProblemDescriptor(
+                                                    file,
+                                                    violatingRange,
+                                                    message == null ? description == null ? rule.getName() : description : message,
+                                                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                                                    isOnTheFly,
+                                                    localQuickFixes);
+                                            descriptors.add(descriptor);
                                         }
-                                        return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                                     }
-                                } catch (Throwable throwable) {
-                                    return null;
+                                    return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[descriptors.size()]), file);
                                 }
-                                return null;
-                            } else {
+                            } catch (Throwable throwable) {
                                 return null;
                             }
+                            return null;
+                        } else {
+                            return null;
                         }
                     }, false);
                 }
