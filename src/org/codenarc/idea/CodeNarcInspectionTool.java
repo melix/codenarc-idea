@@ -207,12 +207,14 @@ public abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                                 final int startOffset = document.getLineStartOffset(lineNumber - 1);
                                                 final String message = violation.getMessage();
                                                 PsiElement element = PsiUtil.getElementAtOffset(file, startOffset);
+
+                                                final LocalQuickFix [] localQuickFixes = CodeNarcQuickFixMappings.getQuickFixesFor(violation);
                                                 ProblemDescriptor descriptor = manager.createProblemDescriptor(
                                                         element,
                                                         message == null ? description == null ? rule.getName() : description : message,
                                                         ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                                        null,
-                                                        isOnTheFly);
+                                                        isOnTheFly,
+                                                        false);
                                                 descriptors.add(descriptor);
                                             }
                                         }

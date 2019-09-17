@@ -72,6 +72,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
     private final static String[] rulesets = {
             "basic",
             "braces",
+            "comments",
             "concurrency",
             "convention",
             "design",
@@ -120,7 +121,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
         try {
             rulesetfiles = getResourceListing(CodeNarc.class, "rulesets/");
         } catch (URISyntaxException | IOException e) {
-            rulesetfiles = rulesets;
+            rulesetfiles = rulesets; // fallback
         }
 
         for (String ruleset : rulesetfiles) {
@@ -219,6 +220,8 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
     private static class ImplementGetRuleClassGenerator implements Opcodes {
         private final String ruleClass;
         private final String ruleSet;
+        private final static String codeNarcInspectionToolsTypeInternalName = Type.getInternalName(CodeNarcInspectionTool.class);
+        private final static String stringTypeDescriptor = Type.getDescriptor(String.class);
 
         public ImplementGetRuleClassGenerator(String ruleClass, String ruleSet) {
             this.ruleClass = ruleClass;
@@ -229,19 +232,19 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
             ClassWriter cw = new ClassWriter(0);
             MethodVisitor mv;
 
-            cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/codenarc/idea/CodeNarcInpectionTool$" + ruleClass.replaceAll("\\.","_"), null, "org/codenarc/idea/CodeNarcInspectionTool", null);
+            cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "org/codenarc/idea/CodeNarcInpectionTool$" + ruleClass.replaceAll("\\.","_"), null, codeNarcInspectionToolsTypeInternalName, null);
 
             {
                 mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
                 mv.visitCode();
                 mv.visitVarInsn(ALOAD, 0);
-                mv.visitMethodInsn(INVOKESPECIAL, "org/codenarc/idea/CodeNarcInspectionTool", "<init>", "()V");
+                mv.visitMethodInsn(INVOKESPECIAL, codeNarcInspectionToolsTypeInternalName, "<init>", "()V", false);
                 mv.visitInsn(RETURN);
                 mv.visitMaxs(1, 1);
                 mv.visitEnd();
             }
             {
-                mv = cw.visitMethod(ACC_PROTECTED, "getRuleClass", "()Ljava/lang/String;", null, null);
+                mv = cw.visitMethod(ACC_PROTECTED, "getRuleClass", stringTypeDescriptor, null, null);
                 mv.visitCode();
                 mv.visitLdcInsn(ruleClass);
                 mv.visitInsn(Opcodes.ARETURN);
@@ -249,7 +252,7 @@ public class CodeNarcComponent implements ApplicationComponent, InspectionToolPr
                 mv.visitEnd();
             }
             {
-                mv = cw.visitMethod(ACC_PROTECTED, "getRuleset", "()Ljava/lang/String;", null, null);
+                mv = cw.visitMethod(ACC_PROTECTED, "getRuleset", stringTypeDescriptor, null, null);
                 mv.visitCode();
                 mv.visitLdcInsn(ruleSet);
                 mv.visitInsn(Opcodes.ARETURN);
