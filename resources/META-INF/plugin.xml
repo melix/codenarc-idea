@@ -1,6 +1,5 @@
 <idea-plugin>
-  <id>dk.demus.idea.CodeNarc</id>
-  <name>CodeNarc Updated</name>
+  <name>CodeNarc</name>
   <version>4.2.1</version>
   <description><![CDATA[<b>CodeNarc</b> analyzes Groovy code for defects, bad practices, inconsistencies, style issues and more.
     A flexible framework for rules, rulesets and custom rules means it's easy to configure CodeNarc to
@@ -45,7 +44,41 @@
         <li>Updating to work in newer IntelliJ version(s) (Sean LeBlanc) and using latest CodeNarc - 0.27.0</li>
         <li>All original code is from Cédric Champeau</li>
         </ul>
-            ]]></change-notes>
+        <b>Version 0.1.17</b>
+        <ul>
+        <li>Upgrade to CodeNarc 0.17</li>
+        <li>Upgrade to GMetricts 0.6</li>
+        <li>Works with Intellij 11/12</li>
+        </ul>
+        <b>Version 0.1.16.1</b>
+        <ul>
+        <li>Upgrade to CodeNarc 0.16.1</li>
+        </ul>
+        <b>Version 0.1.14.1</b>
+        <ul>
+        <li>Upgrade to CodeNarc 0.14</li>
+        <li>Inspections are now grouped by ruleset</li>
+        </ul>
+        <b>Version 0.1.14</b>
+        <ul>
+        <li>Fixed NPE on empty files or newly created files</li>
+        <li>Fixed NPE when a CodeNarc rule doesn't set a line number</li>
+        </ul>
+        <b>Version 0.1.13</b>
+        <ul>
+        <li>Upgrade to CodeNarc 0.13</li>
+        </ul>
+        <b>Version 0.1.1</b>
+        <ul>
+        <li>Performance improvements</li>
+        <li>Fixed inspections not shown if an editor wasn't open on file</li>
+        </ul>
+        <b>Version 0.1</b>
+        <ul>
+        <li>Initial release</li>
+        <li>Integrates CodeNarc 0.12</li>
+        </ul>
+]]></change-notes>
   <application-components>
     <component>
       <implementation-class>org.codenarc.idea.CodeNarcComponent</implementation-class>
