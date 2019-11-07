@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '0.4.10'
+    id 'org.jetbrains.intellij' version '0.4.11'
     id 'java'
     id 'idea'
     id 'groovy'
@@ -22,106 +22,49 @@ idea {
     }
 }
 
-dependencies {
-	implementation "org.codehaus.groovy:groovy-all:${groovyVersion}"
-    compile 'org.codenarc:CodeNarc:1.4'
-    compile 'org.gmetrics:GMetrics:1.0'
+configurations {
+    implementation  {
+        exclude group: 'org.slf4j', module: 'slf4j-api'
+    }
+}
 
+dependencies {
+    compileOnly( 'org.codehaus.groovy:groovy-all') {
+        version {
+            strictly "$groovyVersion"
+        }
+        because 'there are version conflicts when building'
+    }
+    implementation('org.codenarc:CodeNarc:1.4') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
+    runtimeOnly('org.gmetrics:GMetrics:1.0') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+        exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
 }
 
 intellij {
     pluginName 'CodeNarc'
     downloadSources true
-    sameSinceUntilBuild true
     plugins 'java', 'Groovy', 'gradle'
+}
+
+publishPlugin {
+    channels [ 'testing' ]
+    token "${jbPluginsToken}"
+}
+
+buildPlugin {
+
 }
 
 patchPluginXml {
     version "${version}"
     sinceBuild '183'
-    changeNotes '''
-        <b>Version 4.2.1</b>
-        <ul>
-        <li>Improve the texts shown on the inspections' configuration panels</li>
-        <li>Link to the rule-description at the codenarc website from the inspections configuration panel</li>
-        </ul>
-        <b>Version 4.2.0</b>
-        <ul>
-        <li>New CodeNarc, new plugin.CodeNarc v1.4</li>
-        </ul>
-        <b>Version 4.1.2</b>
-        <ul>
-        <li>Fix more range out of bounds exceptions</li>
-        </ul>
-        <b>Version 4.1.1</b>
-        <ul>
-        <li>Respect @SurpressWarnings</li>
-        <li>Prevent some index out of bounds exceptions</li>
-        </ul>
-        <b>Version 4.1.0</b>
-        <ul>
-        <li>Expose the codenarc rule configuration in the IDEA inspection settings dialog</li>
-        <li>Improve the ranges that are highlighted</li>
-        </ul>
-        <b>Version 4.0.0</b>
-        <ul>
-        <li>Updating to use the latest CodeNarc - 1.3</li>
-        <li>Additionally the lists of inspections is extracted directly from the embedded codenarc jar</li>
-        <li>All original code is from Cédric Champeau and Sean LeBlanc</li>
-        </ul>
-        <b>Version 3.1</b>
-        <ul>
-        <li>Updating to work in newer IntelliJ version(s) (Sean LeBlanc) and using latest CodeNarc - 0.27.0</li>
-        <li>All original code is from Cédric Champeau</li>
-        </ul>
-        <b>Version 0.1.17</b>
-        <ul>
-        <li>Upgrade to CodeNarc 0.17</li>
-        <li>Upgrade to GMetricts 0.6</li>
-        <li>Works with Intellij 11/12</li>
-        </ul>
-        <b>Version 0.1.16.1</b>
-        <ul>
-        <li>Upgrade to CodeNarc 0.16.1</li>
-        </ul>
-        <b>Version 0.1.14.1</b>
-        <ul>
-        <li>Upgrade to CodeNarc 0.14</li>
-        <li>Inspections are now grouped by ruleset</li>
-        </ul>
-        <b>Version 0.1.14</b>
-        <ul>
-        <li>Fixed NPE on empty files or newly created files</li>
-        <li>Fixed NPE when a CodeNarc rule doesn't set a line number</li>
-        </ul>
-        <b>Version 0.1.13</b>
-        <ul>
-        <li>Upgrade to CodeNarc 0.13</li>
-        </ul>
-        <b>Version 0.1.1</b>
-        <ul>
-        <li>Performance improvements</li>
-        <li>Fixed inspections not shown if an editor wasn't open on file</li>
-        </ul>
-        <b>Version 0.1</b>
-        <ul>
-        <li>Initial release</li>
-        <li>Integrates CodeNarc 0.12</li>
-        </ul>
-'''
-    pluginDescription '''<b>CodeNarc</b> analyzes Groovy code for defects, bad practices, inconsistencies, style issues and more.
-    A flexible framework for rules, rulesets and custom rules means it's easy to configure CodeNarc to
-    fit into your project. Build tool, framework support, and report generation are all enterprise ready.'''
+    changeNotes file('changelog.html').text
+    pluginDescription file('description.html').text
 }
-
-//sourceSets {
-//    main {
-//        java {
-//            srcDirs = ['src/java']
-//        }
-//        resources {
-//            srcDirs = ['src/resources']
-//        }
-//    }
-//}
-//

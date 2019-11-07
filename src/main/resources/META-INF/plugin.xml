@@ -1,0 +1,29 @@
+<idea-plugin>
+  <name>CodeNarc</name>
+  <version>4.2.1</version>
+  <description><![CDATA[]]></description>
+  <vendor url="http://twitter.com/DanielDemus">Daniel Demus, originally Cédric Champeau</vendor>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="183"/>
+
+  <change-notes><![CDATA[]]></change-notes>
+  <application-components>
+    <component>
+      <implementation-class>org.codenarc.idea.CodeNarcComponent</implementation-class>
+    </component>
+  </application-components>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>org.intellij.groovy</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+
+</idea-plugin>

@@ -297,8 +297,9 @@ class CodeNarcComponent implements BaseComponent, InspectionToolProvider {
                 // silent
             }
 
-            ruleInspectionClasses = proxyClasses.toArray(new Class[0])
         }
+
+        ruleInspectionClasses = proxyClasses.toArray(new Class[0])
     }
 
     /**

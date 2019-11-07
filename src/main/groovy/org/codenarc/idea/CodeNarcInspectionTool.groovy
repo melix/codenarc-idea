@@ -33,6 +33,7 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.*
 import com.intellij.util.xmlb.XmlSerializationException
+import groovy.transform.CompileStatic
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
 import org.codenarc.rule.Violation
@@ -48,73 +49,15 @@ import javax.swing.*
  * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
  * plugin mechanism.
  */
+@CompileStatic
 abstract class CodeNarcInspectionTool extends LocalInspectionTool {
-    private static final String GROUP_DISPLAY_NAME = "CodeNarc"
-    private static final String RULESET_INTRO = " - Ruleset "
-    private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create("CODENARC_SOURCE_AS_STRING")
-    private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create("CODENARC_HAS_SYNTAX_ERRORS")
-    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create("CODENARC_VIOLATIONS")
-    private static final AbstractRule UNLOADED_RULE = new AbstractRule() {
-        List<Violation> applyTo(final SourceCode sourceCode) {
-            return Collections.emptyList()
-        }
-
-        int getPriority() {
-            return 0
-        }
-
-        @Override
-        void setPriority(int priority) {
-        }
-
-        String getName() {
-            return "Rule could not be loaded"
-        }
-
-        @Override
-        void setName(String name) {
-        }
-
-        @Override
-        int getCompilerPhase() {
-            return 0
-        }
-
-        @Override
-        void applyTo(SourceCode sourceCode, List<Violation> violations) {
-        }
-    }
-
-    private static final AbstractRule UNSUPPORTED_RULE = new AbstractRule() {
-        List<Violation> applyTo(final SourceCode sourceCode) {
-            return Collections.emptyList()
-        }
-
-        int getPriority() {
-            return 0
-        }
-
-        @Override
-        void setPriority(int priority) {
-        }
-
-        String getName() {
-            return "Extended rule is not supported"
-        }
-
-        @Override
-        void setName(String name) {
-        }
-
-        @Override
-        int getCompilerPhase() {
-            return 0
-        }
-
-        @Override
-        void applyTo(SourceCode sourceCode, List<Violation> violations) {
-        }
-    }
+    private static final String GROUP_DISPLAY_NAME = 'CodeNarc'
+    private static final String RULESET_INTRO = ' - Ruleset '
+    private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create('CODENARC_SOURCE_AS_STRING')
+    private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create('CODENARC_HAS_SYNTAX_ERRORS')
+    private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create('CODENARC_VIOLATIONS')
+    private static final AbstractRule UNLOADED_RULE = new InertRule('Rule could not be loaded')
+    private static final AbstractRule UNSUPPORTED_RULE = new InertRule('Extended rule is not supported')
 
     private ResourceBundle bundle
 
@@ -129,40 +72,40 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         return rule
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     String getDoNotApplyToFilesMatching() { return rule.getDoNotApplyToFilesMatching() }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     void setDoNotApplyToFilesMatching(String value) {
         rule.setDoNotApplyToFilesMatching(value)
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     String getApplyToFilesMatching() {
         return rule.getApplyToFilesMatching()
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     void setApplyToFileMatching(String value) {
         rule.setApplyToFilesMatching(value)
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     String getDoNotApplyToFileNames() {
         return rule.getDoNotApplyToFileNames()
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     void setDoNotApplyToFileNames(String value) {
         rule.setDoNotApplyToFileNames(value)
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     String getApplyToFileNames() {
         return rule.getApplyToFileNames()
     }
 
-    @SuppressWarnings("UnusedDeclaration")
+    @SuppressWarnings('UnusedDeclaration')
     void setApplyToFileNames(String value) {
         rule.setApplyToFileNames(value)
     }
@@ -172,8 +115,8 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     }
 
     private String getRuleDescriptionOrDefaultMessage(AbstractRule rule) {
-        String resourceKey = rule.getName() + ".description.html"
-        return getResourceBundleString(resourceKey, "No description provided for rule named [" + rule.getName() + "]")
+        String resourceKey = "${rule.getName()}.description.html"
+        return getResourceBundleString(resourceKey, "No description provided for rule named [${rule.getName()}]")
     }
 
     private String getResourceBundleString(String resourceKey, String defaultString) {
@@ -186,7 +129,7 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         return string
     }
 
-    @SuppressWarnings("WeakerAccess")
+    @SuppressWarnings('WeakerAccess')
     protected abstract String getRuleClass();
 
     abstract String getRuleset();
@@ -204,7 +147,7 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     @Override
     void readSettings(@NotNull Element node) {
         try {
-            if (node.getChild("option") != null) {
+            if (node.getChild('option') != null) {
                 XmlSerializer.deserializeInto(node, this.rule)
             }
         }
@@ -237,18 +180,18 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
 
     private void defineErrorRule(Throwable e) {
         rule = UNLOADED_RULE
-        shortName = "RuleCannotBeLoaded_"+getRuleClass().replaceAll("[^a-zA-Z0-9]","_")
-        displayName = "Not loaded: " + getRuleClass()
+        shortName = "RuleCannotBeLoaded_${getRuleClass().replaceAll('[^a-zA-Z0-9]','_')}"
+        displayName = "Not loaded: ${getRuleClass()}"
         StringWriter wrt = new StringWriter()
         e.printStackTrace(new PrintWriter(wrt))
-        description = "Unable to load rule : "+wrt.toString()
+        description = "Unable to load rule : ${wrt}"
     }
 
     private void defineUnsupportedRule() {
         rule = UNSUPPORTED_RULE
-        shortName = "UnsupportedRule_" + getRuleClass().replaceAll("[^a-zA-Z0-9]","_")
-        displayName = "Unsupported: " + getRuleClass()
-        description = "Extended rules need to be run in compiler phase 4, which does not happen while editing"
+        shortName = "UnsupportedRule_${getRuleClass().replaceAll('[^a-zA-Z0-9]', '_')}"
+        displayName = "Unsupported: ${rule.getName() != null ? Helpers.camelCaseToSentence(rule.getName()) : rule.getClass().getSimpleName()}"
+        description = 'Extended rules need to be run in compiler phase 4, which does not happen while editing'
     }
 
     @Nls
@@ -278,7 +221,7 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
 
     @Override
     ProblemDescriptor[] checkFile(@NotNull final PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
-        if (file.getFileType().getName().equalsIgnoreCase("groovy")) {
+        if (file.getFileType().getName().equalsIgnoreCase('groovy')) {
             final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject())
             CachedValue<Boolean> hasErrorsCachedValue = file.getUserData(HAS_SYNTAX_ERRORS_CACHE_KEY)
             if (hasErrorsCachedValue == null) {
@@ -361,6 +304,39 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
             }
         } else {
             return null
+        }
+    }
+
+    static class InertRule extends AbstractRule {
+
+        private String name
+
+        private InertRule() {}
+
+        InertRule(String name) {
+            this.name = name
+        }
+
+        @Override
+        String getName() {
+            return this.name
+        }
+
+        @Override
+        void setName(String name) {
+        }
+
+        @Override
+        int getPriority() {
+            return 0
+        }
+
+        @Override
+        void setPriority(int priority) {
+        }
+
+        @Override
+        void applyTo(SourceCode sourceCode, List<Violation> violations) {
         }
     }
 }
