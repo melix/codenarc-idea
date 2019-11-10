@@ -33,7 +33,6 @@ import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.util.*
 import com.intellij.util.xmlb.XmlSerializationException
-import groovy.transform.CompileStatic
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
 import org.codenarc.rule.Violation
@@ -49,10 +48,9 @@ import javax.swing.*
  * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
  * plugin mechanism.
  */
-@CompileStatic
 abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final String GROUP_DISPLAY_NAME = 'CodeNarc'
-    private static final String RULESET_INTRO = ' - Ruleset '
+//    private static final String RULESET_INTRO = ' - Ruleset '
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create('CODENARC_SOURCE_AS_STRING')
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create('CODENARC_HAS_SYNTAX_ERRORS')
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create('CODENARC_VIOLATIONS')
@@ -198,7 +196,17 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     @NotNull
     @Override
     String getGroupDisplayName() {
-        return GROUP_DISPLAY_NAME + RULESET_INTRO + getRuleset()
+        return getRuleset()
+    }
+
+    @Override
+    String getGroupKey() {
+        return getRuleset()
+    }
+
+    @Override
+    String[] getGroupPath() {
+        return [ GROUP_DISPLAY_NAME, getRuleset() ] as String[]
     }
 
     @Nls

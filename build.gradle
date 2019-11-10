@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'groovy'
+    id 'enterprise.groovy.plugin' version '1.0.3'
 }
 
 wrapper {

@@ -6,7 +6,9 @@ which was an update to this project:
 
 https://github.com/melix/CodenarcNG
 
-CodeNarc-Updated will be replced with this plugin.
+which was a fork the original project.
+
+CodeNarc-Updated will be replaced with this plugin.
 
 
 

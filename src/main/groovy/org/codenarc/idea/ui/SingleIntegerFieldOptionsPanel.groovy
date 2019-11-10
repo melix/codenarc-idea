@@ -2,7 +2,6 @@ package org.codenarc.idea.ui
 
 import com.intellij.ui.DocumentAdapter
 import com.intellij.util.ui.UIUtil
-import groovy.transform.CompileStatic
 import org.codenarc.rule.Rule
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.NotNull
@@ -15,7 +14,6 @@ import javax.swing.text.NumberFormatter
 import java.awt.*
 import java.text.NumberFormat
 
-@CompileStatic
 class SingleIntegerFieldOptionsPanel extends JPanel {
 
     SingleIntegerFieldOptionsPanel(String labelString,

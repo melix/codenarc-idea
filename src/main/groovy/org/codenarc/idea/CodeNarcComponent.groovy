@@ -22,7 +22,6 @@ package org.codenarc.idea
 
 import com.intellij.codeInspection.InspectionToolProvider
 import com.intellij.openapi.components.BaseComponent
-import groovy.transform.CompileStatic
 import org.apache.commons.lang3.StringUtils
 import org.codenarc.CodeNarc
 import org.codenarc.idea.ui.Helpers
@@ -48,7 +47,6 @@ import java.util.regex.Pattern
  *
  * @author Cédric Champeau
  */
-@CompileStatic
 class CodeNarcComponent implements BaseComponent, InspectionToolProvider {
 
     /**

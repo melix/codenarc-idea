@@ -1,6 +1,5 @@
 package org.codenarc.idea.ui
 
-import groovy.transform.CompileStatic
 import org.codenarc.rule.Rule
 import org.jetbrains.annotations.NonNls
 import org.jetbrains.annotations.NotNull
@@ -13,7 +12,6 @@ import javax.swing.event.ChangeListener
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 
-@CompileStatic
 class SingleCheckboxOptionsPanel extends JPanel {
 
     SingleCheckboxOptionsPanel(@NotNull String label,

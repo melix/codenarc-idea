@@ -1,14 +1,12 @@
 package org.codenarc.idea.ui
 
 import com.intellij.ui.HyperlinkLabel
-import groovy.transform.CompileStatic
 import org.codenarc.idea.CodeNarcInspectionTool
 
 import javax.swing.*
 import java.awt.*
 import java.util.List
 
-@CompileStatic
 class Helpers {
 
     private static final List<String> excludedFieldNames = Collections.unmodifiableList(
