@@ -50,7 +50,6 @@ import javax.swing.*
  */
 abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final String GROUP_DISPLAY_NAME = 'CodeNarc'
-//    private static final String RULESET_INTRO = ' - Ruleset '
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create('CODENARC_SOURCE_AS_STRING')
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create('CODENARC_HAS_SYNTAX_ERRORS')
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create('CODENARC_VIOLATIONS')
@@ -277,7 +276,9 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             final LocalQuickFix[] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation)
                                             ProblemDescriptor descriptor
 
-                                            TextRange violatingRange = new TextRange(startOffset + violationPosition, startOffset + violationPosition + sourceLine.length())
+                                            int violationStart = startOffset + violationPosition < 0 ? 0 : startOffset + violationPosition
+                                            int violationEnd = startOffset + violationPosition + sourceLine.length() > document.getTextLength() - 1 ? document.getTextLength() - 1 : startOffset + violationPosition + sourceLine.length()
+                                            TextRange violatingRange = new TextRange(violationStart, violationEnd)
 
                                             final PsiElement violatingElement = PsiUtil.getElementInclusiveRange(file, violatingRange)
                                             if (violatingElement != null && this.isSuppressedFor(violatingElement)) {
