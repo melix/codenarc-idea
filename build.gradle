@@ -11,7 +11,7 @@ wrapper {
 }
 
 group 'org.codenarc.idea'
-version '4.2.2'
+version "${pluginVersion}"
 
 repositories {
     mavenCentral()
@@ -46,26 +46,26 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
         exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
+
+    compile 'org.apache.commons:commons-lang3:3.9'
+
+    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4'
 }
 
 intellij {
     pluginName 'CodeNarc'
     downloadSources true
-    plugins 'java', 'Groovy', 'gradle'
+    plugins 'Groovy', 'gradle', 'java'
 }
 
 publishPlugin {
-    channels [ 'testing' ]
     token "${jbPluginsToken}"
 }
 
-buildPlugin {
-
-}
-
 patchPluginXml {
-    version "${version}"
-    sinceBuild '183'
+    version "${pluginVersion}"
+    sinceBuild '192.4147'
+    untilBuild null
     changeNotes file('changelog.html').text
     pluginDescription file('description.html').text
 }

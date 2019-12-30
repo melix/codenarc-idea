@@ -20,7 +20,11 @@
 
 package org.codenarc.idea
 
-import com.intellij.codeInspection.*
+import com.intellij.codeInspection.InspectionManager
+import com.intellij.codeInspection.LocalInspectionTool
+import com.intellij.codeInspection.LocalQuickFix
+import com.intellij.codeInspection.ProblemDescriptor
+import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.configurationStore.XmlSerializer
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManager
@@ -31,7 +35,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.*
+import com.intellij.psi.util.CachedValue
+import com.intellij.psi.util.CachedValueProvider
+import com.intellij.psi.util.CachedValuesManager
+import com.intellij.psi.util.ParameterizedCachedValue
+import com.intellij.psi.util.PsiTreeUtil
+import com.intellij.psi.util.PsiUtil
+import com.intellij.util.xmlb.SkipDefaultsSerializationFilter
 import com.intellij.util.xmlb.XmlSerializationException
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
@@ -42,7 +52,7 @@ import org.jdom.Element
 import org.jetbrains.annotations.Nls
 import org.jetbrains.annotations.NotNull
 
-import javax.swing.*
+import javax.swing.JPanel
 
 /**
  * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
@@ -138,7 +148,7 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
 
     @Override
     void writeSettings(@NotNull Element node) {
-        XmlSerializer.serializeObjectInto(this.rule, node, XmlSerializer.getJdomSerializer().getDefaultSerializationFilter())
+        XmlSerializer.serializeObjectInto(this.rule, node)
     }
 
     @Override
