@@ -14,7 +14,7 @@
   <depends>org.intellij.groovy</depends>
 
   <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
+    <inspectionToolProvider implementation="org.codenarc.idea.CodeNarcComponent"/>
   </extensions>
 
   <actions>
