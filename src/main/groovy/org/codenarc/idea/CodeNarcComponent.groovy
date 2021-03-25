@@ -21,7 +21,7 @@
 package org.codenarc.idea
 
 import com.intellij.codeInspection.InspectionToolProvider
-import com.intellij.openapi.components.BaseComponent
+import com.intellij.openapi.components.NamedComponent
 import org.apache.commons.lang3.StringUtils
 import org.codenarc.CodeNarc
 import org.codenarc.idea.ui.Helpers
@@ -47,7 +47,7 @@ import java.util.regex.Pattern
  *
  * @author Cédric Champeau
  */
-class CodeNarcComponent implements BaseComponent, InspectionToolProvider {
+class CodeNarcComponent implements NamedComponent, InspectionToolProvider {
 
     /**
      * A class generator which creates an implementation class for {@link CodeNarcInspectionTool}
@@ -237,14 +237,9 @@ class CodeNarcComponent implements BaseComponent, InspectionToolProvider {
     private final static Pattern RULE_CLASS_PATTERN = Pattern.compile(".*class='(.*?)'.*")
     private final static Pattern RULE_GROUP_PATTERN = Pattern.compile(".*/([^.]*)\\.xml")
 
-    void initComponent() {
+    CodeNarcComponent() {
         inspectionsClassLoader = new InspectionsClassLoader()
         initializeRuleInspectionClasses()
-    }
-
-    void disposeComponent() {
-        ruleInspectionClasses = null
-        inspectionsClassLoader = null
     }
 
     @NotNull
