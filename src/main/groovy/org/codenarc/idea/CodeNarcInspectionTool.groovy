@@ -26,6 +26,8 @@ import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.ProblemDescriptor
 import com.intellij.codeInspection.ProblemHighlightType
 import com.intellij.configurationStore.XmlSerializer
+import com.intellij.openapi.diagnostic.ControlFlowException
+import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.editor.Document
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.util.InvalidDataException
@@ -41,7 +43,6 @@ import com.intellij.psi.util.CachedValuesManager
 import com.intellij.psi.util.ParameterizedCachedValue
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.util.PsiUtil
-import com.intellij.util.xmlb.SkipDefaultsSerializationFilter
 import com.intellij.util.xmlb.XmlSerializationException
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
@@ -59,6 +60,9 @@ import javax.swing.JPanel
  * plugin mechanism.
  */
 abstract class CodeNarcInspectionTool extends LocalInspectionTool {
+
+    private static final Logger LOG = Logger.getInstance(CodeNarcInspectionTool)
+
     private static final String GROUP_DISPLAY_NAME = 'CodeNarc'
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create('CODENARC_SOURCE_AS_STRING')
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create('CODENARC_HAS_SYNTAX_ERRORS')
@@ -283,7 +287,6 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             final String sourceLine = violation.getSourceLine()
                                             int violationPosition = violatedLine.indexOf(sourceLine)
 
-                                            final LocalQuickFix[] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation)
                                             ProblemDescriptor descriptor
 
                                             int violationStart = startOffset + violationPosition < 0 ? 0 : startOffset + violationPosition
@@ -294,6 +297,8 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                             if (violatingElement != null && this.isSuppressedFor(violatingElement)) {
                                                 continue
                                             }
+
+                                            final LocalQuickFix[] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation, violatingElement)
 
                                             descriptor = manager.createProblemDescriptor(
                                                 file,
@@ -307,7 +312,10 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                     }
                                     return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[0]), file)
                                 }
-                            } catch (Throwable ignored) {
+                            } catch (Throwable e) {
+                                if (!(e instanceof ControlFlowException)) {
+                                    LOG.error("Exception checking rule $rule", e)
+                                }
                                 return null
                             }
                             return null
