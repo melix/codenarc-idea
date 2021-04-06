@@ -6,6 +6,8 @@ plugins {
     id 'enterprise.groovy.plugin' version '1.0.3'
 }
 
+if (!project.hasProperty('jbPluginsToken')) ext.jbPluginsToken = '**UNDEFINED**'
+
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
@@ -19,7 +21,7 @@ repositories {
 
 idea {
     project {
-        jdkName = '1.8'
+        jdkName = '11'
     }
 }
 

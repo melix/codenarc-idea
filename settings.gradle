@@ -1,1 +1,1 @@
-includeBuild '../gradle-intellij-plugin'
+rootProject.name = 'codenarc-idea'
