@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '0.4.11'
+    id 'org.jetbrains.intellij' version '0.7.2'
     id 'java'
     id 'idea'
     id 'groovy'
@@ -38,7 +38,7 @@ dependencies {
         }
         because 'there are version conflicts when building'
     }
-    implementation('org.codenarc:CodeNarc:1.4') {
+    implementation('org.codenarc:CodeNarc:2.0.0') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
         exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
         exclude group: 'org.codehaus.groovy', module: 'groovy'
@@ -58,6 +58,10 @@ intellij {
     pluginName 'CodeNarc'
     downloadSources true
     plugins 'Groovy', 'gradle', 'java'
+}
+
+runIde {
+    jvmArgs "-Xmx2g"
 }
 
 publishPlugin {

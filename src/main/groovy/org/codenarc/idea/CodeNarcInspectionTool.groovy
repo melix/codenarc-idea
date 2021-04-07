@@ -298,11 +298,18 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                                                 continue
                                             }
 
+                                            int relativeRangeStart = violatingElement.textRange.startOffset - violatingRange.startOffset
+                                            int relativeRangeEnd = violatingElement.textRange.endOffset - violatingRange.startOffset
+                                            final TextRange relativeRange = new TextRange(
+                                                    Math.max(0, relativeRangeStart),
+                                                    relativeRangeEnd
+                                            )
+
                                             final LocalQuickFix[] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation, violatingElement)
 
                                             descriptor = manager.createProblemDescriptor(
-                                                file,
-                                                violatingRange,
+                                                violatingElement,
+                                                relativeRange,
                                                 message == null ? description == null ? rule.getName() : description : message,
                                                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
                                                 isOnTheFly,

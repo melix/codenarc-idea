@@ -1,10 +1,24 @@
 package org.codenarc.idea;
 
+import com.intellij.codeInsight.daemon.impl.quickfix.AddDefaultConstructorFix;
 import com.intellij.codeInsight.daemon.impl.quickfix.DeleteElementFix;
+import com.intellij.codeInsight.intention.AddAnnotationPsiFix;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiModifier;
+import com.intellij.psi.PsiModifierListOwner;
+import com.intellij.util.containers.JBIterable;
+import groovy.transform.CompileDynamic;
+import groovy.transform.CompileStatic;
+import org.codenarc.idea.quickfix.ConvertGStringToStringReusableIntention;
+import org.codenarc.idea.quickfix.IntentionQuickFix;
+import org.codenarc.idea.quickfix.RemoveRedundantClassPropertyReusableIntention;
+import org.codenarc.idea.quickfix.RemoveUnnecessaryReturnReusableIntention;
+import org.codenarc.idea.quickfix.ReplaceStatementFix;
+import org.codenarc.idea.quickfix.ReusableIntention;
 import org.codenarc.rule.AbstractRule;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.basic.AssertWithinFinallyBlockRule;
@@ -100,6 +114,7 @@ import org.codenarc.rule.convention.CouldBeSwitchStatementRule;
 import org.codenarc.rule.convention.FieldTypeRequiredRule;
 import org.codenarc.rule.convention.HashtableIsObsoleteRule;
 import org.codenarc.rule.convention.IfStatementCouldBeTernaryRule;
+import org.codenarc.rule.convention.ImplicitReturnStatementRule;
 import org.codenarc.rule.convention.InvertedConditionRule;
 import org.codenarc.rule.convention.InvertedIfElseRule;
 import org.codenarc.rule.convention.LongLiteralWithLowerCaseLRule;
@@ -385,13 +400,12 @@ import org.codenarc.rule.unused.UnusedPrivateMethodParameterRule;
 import org.codenarc.rule.unused.UnusedPrivateMethodRule;
 import org.codenarc.rule.unused.UnusedVariableRule;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.groovy.codeInspection.bugs.GrModifierFix;
 import org.jetbrains.plugins.groovy.codeInspection.bugs.GrRemoveModifierFix;
 import org.jetbrains.plugins.groovy.codeInspection.naming.RenameFix;
 import org.jetbrains.plugins.groovy.codeInspection.style.JavaStylePropertiesInvocationFixer;
-import org.jetbrains.plugins.groovy.intentions.conversions.strings.ConvertConcatenationToGstringIntention;
-import org.jetbrains.plugins.groovy.intentions.conversions.strings.ConvertGStringToStringIntention;
-import org.jetbrains.plugins.groovy.intentions.style.RemoveRedundantClassPropertyIntention;
-import org.jetbrains.plugins.groovy.intentions.style.RemoveUnnecessaryReturnIntention;
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrAssignmentExpression;
+import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -407,21 +421,47 @@ public final class CodeNarcUiMappings {
     private static final Map<Class<? extends AbstractRule>, Function<PsiElement, List<LocalQuickFix>>> MAPPINGS = new HashMap<>();
 
     static {
-        registerQuickFixes(AbcMetricRule.class);   // Requires the GMetrics
-        registerQuickFixes(AbstractClassNameRule.class, new RenameFix());
+        registerQuickFixes(AbcMetricRule.class);   // Requires the GMetrics, no available action
+
+        registerQuickFixes(AbstractClassNameRule.class,
+                new GrModifierFix(CodeNarcBundle.message("add.modifier", "abstract"), PsiModifier.ABSTRACT, true, GrModifierFix.MODIFIER_LIST_CHILD),
+                new RenameFix()
+        );
+
         registerQuickFixes(AbstractClassWithPublicConstructorRule.class, new GrRemoveModifierFix(PsiModifier.PUBLIC));
-        registerQuickFixes(AbstractClassWithoutAbstractMethodRule.class);
-        registerQuickFixes(AddEmptyStringRule.class);
-        registerQuickFixes(AssertWithinFinallyBlockRule.class);
-        registerQuickFixes(AssignCollectionSortRule.class);
-        registerQuickFixes(AssignCollectionUniqueRule.class);
-        registerQuickFixes(AssignmentInConditionalRule.class);
+
+        registerQuickFixes(AbstractClassWithoutAbstractMethodRule.class, element -> {
+            PsiClass theClass = JBIterable.generate(element, PsiElement::getParent).takeWhile(e -> !(e instanceof PsiFile)).filter(PsiClass.class).first();
+            if (theClass == null) {
+                return Collections.singletonList(new GrRemoveModifierFix(PsiModifier.ABSTRACT));
+            }
+            return Arrays.asList(
+                    new GrModifierFix(theClass, PsiModifier.ABSTRACT, true, false, GrModifierFix.MODIFIER_LIST_CHILD),
+                    new AddDefaultConstructorFix(theClass, PsiModifier.PROTECTED)
+            );
+        });
+
+        registerQuickFixes(AddEmptyStringRule.class); // TODO: implement fix
+
+        registerQuickFixes(AssertWithinFinallyBlockRule.class); // TODO: implement fix
+
+        registerQuickFixes(AssignCollectionSortRule.class, new ReplaceStatementFix(GrMethodCall.class, "sort()", "sort(false)"));
+
+        registerQuickFixes(AssignCollectionUniqueRule.class, new ReplaceStatementFix(GrMethodCall.class, "unique()", "unique(false)"));
+
+        registerQuickFixes(AssignmentInConditionalRule.class, new ReplaceStatementFix(GrAssignmentExpression.class, "=", "=="));
+
+        // TODO: the following rules were not yet reviewed for their fixes (only randomly)
         registerQuickFixes(AssignmentToStaticFieldFromInstanceMethodRule.class);
         registerQuickFixes(BigDecimalInstantiationRule.class);
         registerQuickFixes(BitwiseOperatorInConditionalRule.class);
-        registerQuickFixes(BlankLineBeforePackageRule.class, element -> Collections.singletonList(new DeleteElementFix(element)));
-        registerQuickFixes(BlockEndsWithBlankLineRule.class, element -> Collections.singletonList(new DeleteElementFix(element)));
-        registerQuickFixes(BlockStartsWithBlankLineRule.class, element -> Collections.singletonList(new DeleteElementFix(element)));
+
+        registerQuickFix(BlankLineBeforePackageRule.class, DeleteElementFix::new);
+
+        registerQuickFix(BlockEndsWithBlankLineRule.class, DeleteElementFix::new);
+
+        registerQuickFix(BlockStartsWithBlankLineRule.class, DeleteElementFix::new);
+
         registerQuickFixes(BooleanGetBooleanRule.class);
         registerQuickFixes(BooleanMethodReturnsNullRule.class);
         registerQuickFixes(BracesForClassRule.class);
@@ -445,9 +485,13 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(ClassEndsWithBlankLineRule.class);
         registerQuickFixes(ClassForNameRule.class);
         registerQuickFixes(ClassJavadocRule.class);
-        registerQuickFixes(ClassNameRule.class);
-        registerQuickFixes(ClassNameSameAsFilenameRule.class);
-        registerQuickFixes(ClassNameSameAsSuperclassRule.class);
+
+        registerQuickFixes(ClassNameRule.class, new RenameFix());
+
+        registerQuickFixes(ClassNameSameAsFilenameRule.class, new RenameFix());
+
+        registerQuickFixes(ClassNameSameAsSuperclassRule.class, new RenameFix());
+
         registerQuickFixes(ClassSizeRule.class);
         registerQuickFixes(ClassStartsWithBlankLineRule.class);
         registerQuickFixes(CloneWithoutCloneableRule.class);
@@ -459,12 +503,27 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(CompareToWithoutComparableRule.class);
         registerQuickFixes(ComparisonOfTwoConstantsRule.class);
         registerQuickFixes(ComparisonWithSelfRule.class);
-        registerQuickFixes(CompileStaticRule.class);
-        registerQuickFixes(ConfusingClassNamedExceptionRule.class);
-        registerQuickFixes(ConfusingMethodNameRule.class);
+
+        registerQuickFixes(CompileStaticRule.class, element -> {
+            if (element instanceof PsiModifierListOwner) {
+                return Arrays.asList(
+                        new AddAnnotationPsiFix(CompileStatic.class.getName(), (PsiModifierListOwner) element),
+                        new AddAnnotationPsiFix(CompileDynamic.class.getName(), (PsiModifierListOwner) element),
+                        new AddAnnotationPsiFix("grails.compiler.GrailsCompileStatic", (PsiModifierListOwner) element)
+                );
+            }
+            return Collections.emptyList();
+        });
+
+        registerQuickFixes(ConfusingClassNamedExceptionRule.class, new RenameFix());
+
+        registerQuickFixes(ConfusingMethodNameRule.class, new RenameFix());
+
         registerQuickFixes(ConfusingMultipleReturnsRule.class);
         registerQuickFixes(ConfusingTernaryRule.class);
-        registerQuickFixes(ConsecutiveBlankLinesRule.class, element -> Collections.singletonList(new DeleteElementFix(element)));
+
+        registerQuickFix(ConsecutiveBlankLinesRule.class, DeleteElementFix::new);
+
         registerQuickFixes(ConsecutiveLiteralAppendsRule.class);
         registerQuickFixes(ConsecutiveStringConcatenationRule.class);
         registerQuickFixes(ConstantAssertExpressionRule.class);
@@ -476,7 +535,9 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(CoupledTestCaseRule.class);
         registerQuickFixes(CrapMetricRule.class);   // Requires the GMetrics jar and a Cobertura coverage
         registerQuickFixes(CyclomaticComplexityRule.class);   // Requires the GMetrics
-        registerQuickFixes(DeadCodeRule.class, element -> Collections.singletonList(new DeleteElementFix(element)));
+
+        registerQuickFix(DeadCodeRule.class, DeleteElementFix::new);
+
         registerQuickFixes(DirectConnectionManagementRule.class);
         registerQuickFixes(DoubleCheckedLockingRule.class);
         registerQuickFixes(DoubleNegativeRule.class);
@@ -579,6 +640,7 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(InterfaceNameSameAsSuperInterfaceRule.class);
         registerQuickFixes(InvertedConditionRule.class);
         registerQuickFixes(InvertedIfElseRule.class);
+        registerQuickFixes(ImplicitReturnStatementRule.class);
         registerQuickFixes(JUnitAssertAlwaysFailsRule.class);
         registerQuickFixes(JUnitAssertAlwaysSucceedsRule.class);
         registerQuickFixes(JUnitAssertEqualsConstantActualValueRule.class);
@@ -726,14 +788,19 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(UnnecessaryDefInFieldDeclarationRule.class);
         registerQuickFixes(UnnecessaryDefInMethodDeclarationRule.class);
         registerQuickFixes(UnnecessaryDefInVariableDeclarationRule.class);
-        registerQuickFixes(UnnecessaryDotClassRule.class, IntentionQuickFix.from(new RemoveRedundantClassPropertyIntention()));
+
+        registerQuickFix(UnnecessaryDotClassRule.class, new RemoveRedundantClassPropertyReusableIntention());
+
         registerQuickFixes(UnnecessaryDoubleInstantiationRule.class);
         registerQuickFixes(UnnecessaryElseStatementRule.class);
         registerQuickFixes(UnnecessaryFailRule.class);
         registerQuickFixes(UnnecessaryFinalOnPrivateMethodRule.class);
         registerQuickFixes(UnnecessaryFloatInstantiationRule.class);
-        registerQuickFixes(UnnecessaryGStringRule.class, IntentionQuickFix.from(new ConvertGStringToStringIntention()));
+
+        registerQuickFix(UnnecessaryGStringRule.class, new ConvertGStringToStringReusableIntention());
+
         registerQuickFixes(UnnecessaryGetterRule.class, new JavaStylePropertiesInvocationFixer());
+
         registerQuickFixes(UnnecessaryGroovyImportRule.class);
         registerQuickFixes(UnnecessaryIfStatementRule.class);
         registerQuickFixes(UnnecessaryInstanceOfCheckRule.class);
@@ -748,11 +815,15 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(UnnecessaryPackageReferenceRule.class);
         registerQuickFixes(UnnecessaryParenthesesForMethodCallWithClosureRule.class);
         registerQuickFixes(UnnecessaryPublicModifierRule.class);
-        registerQuickFixes(UnnecessaryReturnKeywordRule.class, IntentionQuickFix.from(new RemoveUnnecessaryReturnIntention()));
+
+        registerQuickFix(UnnecessaryReturnKeywordRule.class, new RemoveUnnecessaryReturnReusableIntention());
+
         registerQuickFixes(UnnecessarySafeNavigationOperatorRule.class);
         registerQuickFixes(UnnecessarySelfAssignmentRule.class);
         registerQuickFixes(UnnecessarySemicolonRule.class);
+
         registerQuickFixes(UnnecessarySetterRule.class, new JavaStylePropertiesInvocationFixer());
+
         registerQuickFixes(UnnecessaryStringInstantiationRule.class);
         registerQuickFixes(UnnecessarySubstringRule.class);
         registerQuickFixes(UnnecessaryTernaryExpressionRule.class);
@@ -767,7 +838,9 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(UnusedPrivateFieldRule.class);
         registerQuickFixes(UnusedPrivateMethodRule.class);
         registerQuickFixes(UnusedPrivateMethodParameterRule.class);
-        registerQuickFixes(UnusedVariableRule.class, element -> Collections.singletonList(new DeleteElementFix(element)));
+
+        registerQuickFix(UnusedVariableRule.class, DeleteElementFix::new);
+
         registerQuickFixes(UseAssertEqualsInsteadOfAssertTrueRule.class);
         registerQuickFixes(UseAssertFalseInsteadOfNegationRule.class);
         registerQuickFixes(UseAssertNullInsteadOfAssertEqualsRule.class);
@@ -796,12 +869,24 @@ public final class CodeNarcUiMappings {
                 });
     }
 
+    private static void registerQuickFixes(Class<? extends AbstractRule> ruleType) {
+        MAPPINGS.put(ruleType, psi -> Collections.emptyList());
+    }
+
     private static void registerQuickFixes(Class<? extends AbstractRule> ruleType, LocalQuickFix... quickFixes) {
         MAPPINGS.put(ruleType, psi -> Arrays.asList(quickFixes));
     }
 
     private static void registerQuickFixes(Class<? extends AbstractRule> ruleType, Function<PsiElement, List<LocalQuickFix>> quickFixesFunction) {
         MAPPINGS.put(ruleType, quickFixesFunction);
+    }
+
+    private static void registerQuickFix(Class<? extends AbstractRule> ruleType, Function<PsiElement, LocalQuickFix> quickFixFunction) {
+        registerQuickFixes(ruleType, quickFixFunction.andThen(Collections::singletonList));
+    }
+
+    private static void registerQuickFix(Class<? extends AbstractRule> ruleType, ReusableIntention intention) {
+        registerQuickFixes(ruleType, IntentionQuickFix.from(intention));
     }
 
     private CodeNarcUiMappings() { }
