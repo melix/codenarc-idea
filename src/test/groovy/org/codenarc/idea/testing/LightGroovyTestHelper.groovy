@@ -21,9 +21,6 @@ class LightGroovyTestHelper extends LightJavaCodeInsightFixtureTestCase implemen
     static LightGroovyTestHelper groovy25() {
         return new LightGroovyTestHelper(GroovyProjectDescriptors.GROOVY_2_5, null)
     }
-    static LightGroovyTestHelper groovy24() {
-        return new LightGroovyTestHelper(GroovyProjectDescriptors.GROOVY_2_4, null)
-    }
 
     private final LightProjectDescriptor projectDescriptor;
     private final @NonNls String basePath;

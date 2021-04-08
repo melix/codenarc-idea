@@ -61,9 +61,20 @@ import javax.swing.JPanel
  */
 abstract class CodeNarcInspectionTool<A extends AbstractRule> extends LocalInspectionTool {
 
+    static final String getShortName(AbstractRule rule) {
+        String ruleName = rule.name
+        return GROUP_DISPLAY_NAME + '.' +  (ruleName != null ? ruleName : rule.getClass().simpleName)
+    }
+
+    static final String getDisplayName(AbstractRule rule) {
+        String ruleName = rule.name
+        return ruleName != null ? Helpers.camelCaseToSentence(ruleName) : rule.getClass().simpleName
+    }
+
+    public static final String GROUP_DISPLAY_NAME = 'CodeNarc'
+
     private static final Logger LOG = Logger.getInstance(CodeNarcInspectionTool)
 
-    private static final String GROUP_DISPLAY_NAME = 'CodeNarc'
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create('CODENARC_SOURCE_AS_STRING')
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create('CODENARC_HAS_SYNTAX_ERRORS')
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create('CODENARC_VIOLATIONS')
@@ -77,10 +88,8 @@ abstract class CodeNarcInspectionTool<A extends AbstractRule> extends LocalInspe
     protected CodeNarcInspectionTool(A rule) {
         this.rule = rule
 
-        String ruleName = rule.getName()
-
-        this.shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName()
-        this.displayName = ruleName != null ? Helpers.camelCaseToSentence(ruleName) : rule.getClass().getSimpleName()
+        this.shortName = getShortName(rule)
+        this.displayName = getDisplayName(rule)
         this.description = getRuleDescriptionOrDefaultMessage(rule)
     }
 
@@ -180,19 +189,6 @@ abstract class CodeNarcInspectionTool<A extends AbstractRule> extends LocalInspe
     @Override
     String[] getGroupPath() {
         return [ GROUP_DISPLAY_NAME, getRuleset() ] as String[]
-    }
-
-    @Nls
-    @NotNull
-    @Override
-    String getDisplayName() {
-        return displayName
-    }
-
-    @NotNull
-    @Override
-    String getShortName() {
-        return shortName
     }
 
     @Override

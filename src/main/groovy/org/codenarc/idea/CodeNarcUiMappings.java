@@ -17,6 +17,7 @@ import org.codenarc.idea.quickfix.ConvertGStringToStringReusableIntention;
 import org.codenarc.idea.quickfix.IntentionQuickFix;
 import org.codenarc.idea.quickfix.RemoveRedundantClassPropertyReusableIntention;
 import org.codenarc.idea.quickfix.RemoveUnnecessaryReturnReusableIntention;
+import org.codenarc.idea.quickfix.ReplacePrintlnWithAnnotationFix;
 import org.codenarc.idea.quickfix.ReplaceStatementFix;
 import org.codenarc.idea.quickfix.ReusableIntention;
 import org.codenarc.rule.AbstractRule;
@@ -706,7 +707,9 @@ public final class CodeNarcUiMappings {
         registerQuickFixes(ParameterNameRule.class);
         registerQuickFixes(ParameterReassignmentRule.class);
         registerQuickFixes(PrintStackTraceRule.class);
-        registerQuickFixes(PrintlnRule.class);
+
+        registerQuickFixes(PrintlnRule.class, new ReplacePrintlnWithAnnotationFix());
+
         registerQuickFixes(PrivateFieldCouldBeFinalRule.class);
         registerQuickFixes(PropertyNameRule.class);
         registerQuickFixes(PublicFinalizeMethodRule.class);

@@ -1,8 +1,11 @@
 package org.codenarc.idea.gen
 
+import com.intellij.codeHighlighting.HighlightDisplayLevel
+import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import org.apache.commons.lang3.StringUtils
 import org.codenarc.CodeNarc
+import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
 import org.jetbrains.annotations.Nullable
@@ -12,8 +15,26 @@ import java.util.jar.JarFile
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+/**
+ * Run this class using <code>/.gradlew run</code> to
+ */
 @CompileStatic
 class RuleInspectionsGenerator {
+
+    static class InspectionDescriptor {
+
+        String implementationClass
+        String shortName
+        String displayName
+        String groupPath
+        String groupKey
+        String level
+
+        // not used yet
+        String groupBundle
+        boolean enabledByDefault
+
+    }
 
     static void main(String[] args) {
         if (args.length != 1) {
@@ -29,7 +50,7 @@ class RuleInspectionsGenerator {
 
     private static final String RULESETS_PATH = "rulesets/"
 
-    private final static String[] rulesets = [
+    private static final String[] rulesets = [
             "basic",
             "braces",
             "comments",
@@ -66,6 +87,11 @@ class RuleInspectionsGenerator {
     }
 
     private static void generateClasses(String projectRoot) {
+        updatePluginXml(projectRoot, generateClassFiles(projectRoot))
+    }
+
+    private static List<InspectionDescriptor> generateClassFiles(String projectRoot) {
+        List<InspectionDescriptor> generatedClasses = []
         String[] rulesetFiles = getRulesetFiles()
 
         for (String ruleset in rulesetFiles) {
@@ -80,22 +106,56 @@ class RuleInspectionsGenerator {
                             if (n.find()) {
                                 groupName = Character.toUpperCase(n.group(1).charAt(0)).toString() + n.group(1).substring(1)
                             }
-                            String generated = new RuleInspectionsGenerator(m.group(1), groupName).generateClass(projectRoot)
+                            InspectionDescriptor generated = new RuleInspectionsGenerator(m.group(1), groupName).generateSingleClassFile(projectRoot)
+
                             if (generated) {
-                                println("""<localInspection implementationClass="$generated"/>""")
+                                generatedClasses.add(generated)
                             }
                         }
                     }
-                } catch (IOException e) {
+                } catch (IOException | ClassFormatError e) {
                     e.printStackTrace()
-                }
-                catch (ClassFormatError e) {
-                    e.printStackTrace()
-                    throw (e)
                 }
                 // silent
             }
         }
+
+        return generatedClasses
+    }
+
+    @CompileDynamic
+    private static void updatePluginXml(String projectRoot, List<InspectionDescriptor> generatedClasses) {
+        List<String> pathSegmentsToPluginXml = [
+                projectRoot,
+                'src',
+                'main',
+                'resources',
+                'META-INF',
+        ]
+
+        File pluginDescriptor = new File(pathSegmentsToPluginXml.join(File.separator), 'plugin.xml')
+
+        XmlParser parser = new XmlParser()
+        Node ideaPlugin = parser.parse(pluginDescriptor)
+
+        ideaPlugin.extensions.localInspection.each { it.parent().remove(it) }
+
+        for (InspectionDescriptor generatedClass in generatedClasses) {
+            Node inspectionNode = new NodeBuilder().localInspection(
+                    language: 'Groovy',
+                    implementationClass: generatedClass.implementationClass,
+                    shortName: generatedClass.shortName,
+                    displayName: generatedClass.displayName,
+                    groupPath: generatedClass.groupPath,
+                    groupKey: generatedClass.groupKey,
+                    level: generatedClass.level
+            )
+            ideaPlugin.extensions[0].append(inspectionNode)
+        }
+
+        XmlNodePrinter printer = new XmlNodePrinter(new PrintWriter(new FileWriter(pluginDescriptor)))
+        printer.preserveWhitespace = true
+        printer.print(ideaPlugin)
     }
 
     private static String[] getRulesetFiles() {
@@ -157,18 +217,25 @@ class RuleInspectionsGenerator {
         throw new UnsupportedOperationException("Cannot list files for URL " + dirURL)
     }
 
+    private static String getLevelFromPriority(int priority) {
+        switch (priority) {
+            case 1: return HighlightDisplayLevel.ERROR.name
+            case 2: return HighlightDisplayLevel.WARNING.name
+            default: return HighlightDisplayLevel.WEAK_WARNING.name
+        }
+    }
+
     /**
      * Generates class Java code and returns the fully qualified name name of the class
      * @return the fully qualified name of the newly generated class or null if the rule cannot be supported
      */
     @Nullable
     @SuppressWarnings('TrailingWhitespace')
-    private String generateClass(String projectRoot) {
+    private InspectionDescriptor generateSingleClassFile(String projectRoot) {
         StringWriter sw = new StringWriter()
         PrintWriter printWriter = new PrintWriter(sw);
 
         Class<?> ruleClassInstance = Helpers.getRuleClassInstance(ruleClass);
-
         AbstractRule ruleInstance = ruleClassInstance.newInstance() as AbstractRule
 
         if (ruleInstance.compilerPhase > 3) {
@@ -176,7 +243,7 @@ class RuleInspectionsGenerator {
         }
 
         String newClassPackage = "org.codenarc.idea.inspections.${group.toLowerCase()}"
-        String newClassName = "${ruleClassInstance.simpleName}InspectionTool"
+        String newClassName = "${ruleClassInstance.simpleName[0..-5]}InspectionTool"
 
         printWriter.println """
         package $newClassPackage;
@@ -186,8 +253,10 @@ class RuleInspectionsGenerator {
         import org.codenarc.idea.CodeNarcInspectionTool;
         import $ruleClass;
         
-        @Generated("Generated Inspection - remove this line if you have made custom changes to prevent overiding this class")
+        @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
         public class $newClassName extends CodeNarcInspectionTool<$ruleClassInstance.simpleName> {
+        
+            // this code has been generated from $ruleClass
         
             public static final String GROUP = "$group";
         
@@ -215,26 +284,66 @@ class RuleInspectionsGenerator {
                 setter = 'set' + capitalizedPropName;
             }
 
+            String propTypeString = prop.type.isPrimitive() || prop.type.package.equals(String.package) ? prop.type.simpleName : prop.type.name
+
             printWriter.println """
-            public void $setter(${prop.type.simpleName} value) {
+            public void $setter(${propTypeString} value) {
                 getRule().$setter(value);
             }
             
-            public ${prop.type.simpleName} $getter() {
+            public ${ propTypeString} $getter() {
                 return getRule().$getter();
             }
             """
         }
 
-        printWriter.println '''
+        List<String> paths = [
+                projectRoot,
+                'src',
+                'main',
+                'groovy',
+        ]
+
+        paths.addAll(newClassPackage.split('\\.'))
+
+        File parentFile = new File(paths.join(File.separator))
+        parentFile.mkdirs()
+
+        File newSourceFile = new File(parentFile, newClassName + '.java')
+
+        String customCode = '''
+            // custom code can be written after this line and it will be preserved during the regeneration
+
         }
         '''
 
+        InspectionDescriptor descriptor = new InspectionDescriptor(
+                implementationClass: "${newClassPackage}.${newClassName}",
+                groupPath: [CodeNarcInspectionTool.GROUP_DISPLAY_NAME, group].join(','),
+                groupKey: group,
+                shortName: CodeNarcInspectionTool.getShortName(ruleInstance),
+                displayName: CodeNarcInspectionTool.getDisplayName(ruleInstance),
+                level: getLevelFromPriority(ruleInstance.priority)
+        )
 
+        if (newSourceFile.exists()) {
+            String text = newSourceFile.text
 
-        System.out.println(sw.toString().stripIndent().trim())
+            if (!text.contains('@Generated')) {
+                // already exits and it highly customised
+                // returning fully qualified name to keep the inclusion in plugin.xml
+                return descriptor
+            }
 
-        return "${newClassPackage}.${newClassName}"
+            String customCodeDelimiter = '// custom code'
+            if (text.contains(customCodeDelimiter)) {
+                customCode = text.substring(text.lastIndexOf(customCodeDelimiter))
+            }
+        }
+
+        newSourceFile.text = sw.toString().stripIndent().trim() + '\n\n    ' + customCode.stripIndent().trim()
+
+        return descriptor
     }
 
 }

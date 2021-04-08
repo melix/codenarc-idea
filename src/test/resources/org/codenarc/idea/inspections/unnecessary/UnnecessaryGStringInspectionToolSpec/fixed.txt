@@ -1,0 +1,10 @@
+package rules
+
+class UnnecessaryGString {
+
+    void someMethod() {
+        def something = 'Should be single quote'
+        def other = 'Should be single quote as well'
+    }
+
+}

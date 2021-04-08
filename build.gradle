@@ -55,6 +55,8 @@ dependencies {
         exclude group: 'org.codehaus.groovy'
     }
 
+    testCompile 'com.agorapulse.testing:fixt:0.2.1.1'
+
     generator( 'org.codehaus.groovy:groovy-all') {
         version {
             strictly "$groovyVersion"
@@ -71,6 +73,17 @@ intellij {
 
 runIde {
     jvmArgs "-Xmx2g"
+}
+
+runPluginVerifier {
+    ideVersions = [
+            'IC-2019.2.4',
+            'IC-2019.3.5',
+            'IC-2020.1.4',
+            'IC-2020.2.4',
+            'IC-2020.3.3',
+            'IC-2021.1',
+    ]
 }
 
 publishPlugin {

@@ -1,0 +1,9 @@
+package rules
+
+class Snippet {
+
+    void someMethod() {
+        <warning descr="println should be replaced with something more robust">println 'Hello'</warning>
+    }
+
+}
