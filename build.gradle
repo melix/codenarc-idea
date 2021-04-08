@@ -68,7 +68,8 @@ dependencies {
 
 intellij {
     pluginName 'CodeNarc'
-    downloadSources true
+    downloadSources !providers.environmentVariable('CI').forUseAtConfigurationTime().present
+    version "${ideVersion}"
     plugins 'Groovy', 'gradle', 'java'
 }
 
