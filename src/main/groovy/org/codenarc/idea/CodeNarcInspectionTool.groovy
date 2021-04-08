@@ -61,6 +61,8 @@ import javax.swing.JPanel
  */
 abstract class CodeNarcInspectionTool<A extends AbstractRule> extends LocalInspectionTool {
 
+    public static final String BASE_MESSAGES_BUNDLE = 'codenarc-base-messages';
+
     static final String getShortName(AbstractRule rule) {
         String ruleName = rule.name
         return GROUP_DISPLAY_NAME + '.' +  (ruleName != null ? ruleName : rule.getClass().simpleName)
@@ -80,7 +82,7 @@ abstract class CodeNarcInspectionTool<A extends AbstractRule> extends LocalInspe
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create('CODENARC_VIOLATIONS')
 
     private final A rule
-    private final ResourceBundle bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE)
+    private final ResourceBundle bundle = ResourceBundle.getBundle(BASE_MESSAGES_BUNDLE)
     private final String displayName
     private final String shortName
     private final String description
