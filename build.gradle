@@ -4,6 +4,7 @@ plugins {
     id 'idea'
     id 'groovy'
     id 'enterprise.groovy.plugin' version '1.0.3'
+    id 'application'
 }
 
 if (!project.hasProperty('jbPluginsToken')) ext.jbPluginsToken = '**UNDEFINED**'
@@ -29,6 +30,8 @@ configurations {
     implementation  {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
+
+    generator.extendsFrom compile, implementation, runtimeOnly
 }
 
 dependencies {
@@ -39,19 +42,25 @@ dependencies {
         because 'there are version conflicts when building'
     }
     implementation('org.codenarc:CodeNarc:2.0.0') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
-        exclude group: 'org.codehaus.groovy', module: 'groovy'
+        exclude group: 'org.codehaus.groovy'
     }
+
     runtimeOnly('org.gmetrics:GMetrics:1.0') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
-        exclude group: 'org.codehaus.groovy', module: 'groovy'
+        exclude group: 'org.codehaus.groovy'
     }
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
-    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4'
+    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4', {
+        exclude group: 'org.codehaus.groovy'
+    }
+
+    generator( 'org.codehaus.groovy:groovy-all') {
+        version {
+            strictly "$groovyVersion"
+        }
+        because 'there are version conflicts when building'
+    }
 }
 
 intellij {
@@ -74,4 +83,14 @@ patchPluginXml {
     untilBuild null
     changeNotes file('changelog.html').text
     pluginDescription file('description.html').text
+}
+
+application {
+    mainClassName = 'org.codenarc.idea.gen.RuleInspectionsGenerator'
+}
+
+run {
+    // generate classes
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath + configurations.generator
+    args project.rootDir.canonicalPath
 }

@@ -59,7 +59,7 @@ import javax.swing.JPanel
  * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
  * plugin mechanism.
  */
-abstract class CodeNarcInspectionTool extends LocalInspectionTool {
+abstract class CodeNarcInspectionTool<A extends AbstractRule> extends LocalInspectionTool {
 
     private static final Logger LOG = Logger.getInstance(CodeNarcInspectionTool)
 
@@ -67,19 +67,24 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create('CODENARC_SOURCE_AS_STRING')
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create('CODENARC_HAS_SYNTAX_ERRORS')
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY = Key.create('CODENARC_VIOLATIONS')
-    private static final AbstractRule UNLOADED_RULE = new InertRule('Rule could not be loaded')
-    private static final AbstractRule UNSUPPORTED_RULE = new InertRule('Extended rule is not supported')
 
-    private ResourceBundle bundle
+    private final A rule
+    private final ResourceBundle bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE)
+    private final String displayName
+    private final String shortName
+    private final String description
 
-    private String shortName
-    private String displayName
-    private String description
+    protected CodeNarcInspectionTool(A rule) {
+        this.rule = rule
 
-    @SuppressWarnings('WeakerAccess')
-    protected AbstractRule rule
+        String ruleName = rule.getName()
 
-    AbstractRule getRule() {
+        this.shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName()
+        this.displayName = ruleName != null ? Helpers.camelCaseToSentence(ruleName) : rule.getClass().getSimpleName()
+        this.description = getRuleDescriptionOrDefaultMessage(rule)
+    }
+
+    A getRule() {
         return rule
     }
 
@@ -121,10 +126,6 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         rule.setApplyToFileNames(value)
     }
 
-    CodeNarcInspectionTool() {
-        initRule()
-    }
-
     private String getRuleDescriptionOrDefaultMessage(AbstractRule rule) {
         String resourceKey = "${rule.getName()}.description.html"
         return getResourceBundleString(resourceKey, "No description provided for rule named [${rule.getName()}]")
@@ -139,9 +140,6 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         }
         return string
     }
-
-    @SuppressWarnings('WeakerAccess')
-    protected abstract String getRuleClass();
 
     abstract String getRuleset();
 
@@ -165,44 +163,6 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
         catch (XmlSerializationException e) {
             throw new InvalidDataException(e)
         }
-    }
-
-    private void initRule() {
-        try {
-            rule = getRuleInstance()
-            if (rule.getCompilerPhase() > 3) {
-                defineUnsupportedRule()
-                return
-            }
-            String ruleName = rule.getName()
-            shortName = ruleName != null ? ruleName : rule.getClass().getSimpleName()
-            displayName = ruleName != null ? Helpers.camelCaseToSentence(ruleName) : rule.getClass().getSimpleName()
-            description = getRuleDescriptionOrDefaultMessage(rule)
-        } catch (Throwable e) {
-            defineErrorRule(e)
-        }
-    }
-
-    private AbstractRule getRuleInstance() throws Throwable {
-        bundle = ResourceBundle.getBundle(CodeNarcComponent.BASE_MESSAGES_BUNDLE)
-        Class<?> clazz = Helpers.getRuleClassInstance(getRuleClass())
-        return (AbstractRule) clazz.newInstance()
-    }
-
-    private void defineErrorRule(Throwable e) {
-        rule = UNLOADED_RULE
-        shortName = "RuleCannotBeLoaded_${getRuleClass().replaceAll('[^a-zA-Z0-9]','_')}"
-        displayName = "Not loaded: ${getRuleClass()}"
-        StringWriter wrt = new StringWriter()
-        e.printStackTrace(new PrintWriter(wrt))
-        description = "Unable to load rule : ${wrt}"
-    }
-
-    private void defineUnsupportedRule() {
-        rule = UNSUPPORTED_RULE
-        shortName = "UnsupportedRule_${getRuleClass().replaceAll('[^a-zA-Z0-9]', '_')}"
-        displayName = "Unsupported: ${rule.getName() != null ? Helpers.camelCaseToSentence(rule.getName()) : rule.getClass().getSimpleName()}"
-        description = 'Extended rules need to be run in compiler phase 4, which does not happen while editing'
     }
 
     @Nls
@@ -242,8 +202,11 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
 
     @Override
     ProblemDescriptor[] checkFile(@NotNull final PsiFile file, @NotNull final InspectionManager manager, final boolean isOnTheFly) {
-        if (file.getFileType().getName().equalsIgnoreCase('groovy')) {
-            final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject())
+        if (!file.getFileType().getName().equalsIgnoreCase('groovy')) {
+            return null
+        }
+
+        final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject())
             CachedValue<Boolean> hasErrorsCachedValue = file.getUserData(HAS_SYNTAX_ERRORS_CACHE_KEY)
             if (hasErrorsCachedValue == null) {
                 hasErrorsCachedValue = cachedValuesManager.createCachedValue({ ->
@@ -252,125 +215,94 @@ abstract class CodeNarcInspectionTool extends LocalInspectionTool {
                 }, false)
             }
 
-            if (!hasErrorsCachedValue.getValue()) { // avoid inspection if any syntax error is found
-                ParameterizedCachedValue<ProblemDescriptor[], AbstractRule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY)
-                if (cachedViolations == null) {
-                    cachedViolations = cachedValuesManager.createParameterizedCachedValue({ AbstractRule rule ->
-                        final List<ProblemDescriptor> descriptors = new LinkedList<>()
-                        CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY)
-                        if (sourceStringCachedValue == null) {
-                            sourceStringCachedValue = cachedValuesManager.createCachedValue({ ->
-                                if (file.getText() == null || '' == file.getText()) return null
-                                return CachedValueProvider.Result.create(new SourceString(file.getText()), file)
-                            }, false)
-                            file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue)
-                        }
-
-                        final SourceCode code = sourceStringCachedValue.getValue()
-                        if (code != null) {
-                            try {
-                                final List<Violation> list = rule.applyTo(code)
-                                if (list != null) {
-                                    final FileDocumentManager documentManager = FileDocumentManager.getInstance()
-                                    final VirtualFile virtualFile = file.getVirtualFile()
-                                    if (virtualFile != null) {
-                                        final Document document = documentManager.getDocument(virtualFile)
-                                        for (final Violation violation : list) {
-                                            Integer lineNumber = violation.getLineNumber()
-                                            // workaround for some rules which do not set the line number correctly
-                                            if (lineNumber == null || lineNumber < 1) {
-                                                lineNumber = 1
-                                            }
-                                            final int startOffset = document.getLineStartOffset(lineNumber - 1) < 0 ? 0 : document.getLineStartOffset(lineNumber - 1)
-                                            final String message = violation.getMessage()
-                                            final String violatedLine = document.getText(new TextRange(startOffset, document.getLineEndOffset(lineNumber)))
-                                            final String sourceLine = violation.getSourceLine()
-                                            int violationPosition = violatedLine.indexOf(sourceLine)
-
-                                            ProblemDescriptor descriptor
-
-                                            int violationStart = startOffset + violationPosition < 0 ? 0 : startOffset + violationPosition
-                                            int violationEnd = startOffset + violationPosition + sourceLine.length() > document.getTextLength() - 1 ? document.getTextLength() - 1 : startOffset + violationPosition + sourceLine.length()
-                                            TextRange violatingRange = new TextRange(violationStart, violationEnd)
-
-                                            final PsiElement violatingElement = PsiUtil.getElementInclusiveRange(file, violatingRange)
-                                            if (violatingElement != null && this.isSuppressedFor(violatingElement)) {
-                                                continue
-                                            }
-
-                                            int relativeRangeStart = violatingElement.textRange.startOffset - violatingRange.startOffset
-                                            int relativeRangeEnd = violatingElement.textRange.endOffset - violatingRange.startOffset
-                                            final TextRange relativeRange = new TextRange(
-                                                    Math.max(0, relativeRangeStart),
-                                                    relativeRangeEnd
-                                            )
-
-                                            final LocalQuickFix[] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation, violatingElement)
-
-                                            descriptor = manager.createProblemDescriptor(
-                                                violatingElement,
-                                                relativeRange,
-                                                message == null ? description == null ? rule.getName() : description : message,
-                                                ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                                                isOnTheFly,
-                                                localQuickFixes)
-                                            descriptors.add(descriptor)
-                                        }
-                                    }
-                                    return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[0]), file)
-                                }
-                            } catch (Throwable e) {
-                                if (!(e instanceof ControlFlowException)) {
-                                    LOG.error("Exception checking rule $rule", e)
-                                }
-                                return null
-                            }
-                            return null
-                        } else {
-                            return null
-                        }
-                    }, false) as ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>
-                }
-
-                return cachedViolations.getValue(rule) as ProblemDescriptor[]
-            } else {
-                return null
-            }
-        } else {
+        if (hasErrorsCachedValue.getValue()) {
+            // avoid inspection if any syntax error is found
             return null
         }
+
+        ParameterizedCachedValue<ProblemDescriptor[], AbstractRule> cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY)
+
+        if (cachedViolations != null) {
+            return null
+        }
+
+        cachedViolations = cachedValuesManager.createParameterizedCachedValue({ AbstractRule rule ->
+            final List<ProblemDescriptor> descriptors = new LinkedList<>()
+            CachedValue<SourceString> sourceStringCachedValue = file.getUserData(SOURCE_AS_STRING_CACHE_KEY)
+            if (sourceStringCachedValue == null) {
+                sourceStringCachedValue = cachedValuesManager.createCachedValue({ ->
+                    if (file.getText() == null || '' == file.getText()) return null
+                    return CachedValueProvider.Result.create(new SourceString(file.getText()), file)
+                }, false)
+                file.putUserData(SOURCE_AS_STRING_CACHE_KEY, sourceStringCachedValue)
+            }
+
+            final SourceCode code = sourceStringCachedValue.getValue()
+            if (code == null) {
+                return null
+            }
+            try {
+                final List<Violation> list = rule.applyTo(code)
+                if (list == null) {
+                    return null
+                }
+                final FileDocumentManager documentManager = FileDocumentManager.getInstance()
+                    final VirtualFile virtualFile = file.getVirtualFile()
+                if (virtualFile == null) {
+                    return null
+                }
+                final Document document = documentManager.getDocument(virtualFile)
+                    for (final Violation violation : list) {
+                        Integer lineNumber = violation.getLineNumber()
+                        // workaround for some rules which do not set the line number correctly
+                        if (lineNumber == null || lineNumber < 1) {
+                            lineNumber = 1
+                        }
+                        final int startOffset = document.getLineStartOffset(lineNumber - 1) < 0 ? 0 : document.getLineStartOffset(lineNumber - 1)
+                        final String message = violation.getMessage()
+                        final String violatedLine = document.getText(new TextRange(startOffset, document.getLineEndOffset(lineNumber)))
+                        final String sourceLine = violation.getSourceLine()
+                        int violationPosition = violatedLine.indexOf(sourceLine)
+
+                        ProblemDescriptor descriptor
+
+                        int violationStart = startOffset + violationPosition < 0 ? 0 : startOffset + violationPosition
+                        int violationEnd = startOffset + violationPosition + sourceLine.length() > document.getTextLength() - 1 ? document.getTextLength() - 1 : startOffset + violationPosition + sourceLine.length()
+                        TextRange violatingRange = new TextRange(violationStart, violationEnd)
+
+                        final PsiElement violatingElement = PsiUtil.getElementInclusiveRange(file, violatingRange)
+                        if (violatingElement != null && this.isSuppressedFor(violatingElement)) {
+                            continue
+                        }
+
+                        int relativeRangeStart = violatingElement.textRange.startOffset - violatingRange.startOffset
+                        int relativeRangeEnd = violatingElement.textRange.endOffset - violatingRange.startOffset
+                        final TextRange relativeRange = new TextRange(
+                                Math.max(0, relativeRangeStart),
+                                relativeRangeEnd
+                        )
+
+                        final LocalQuickFix[] localQuickFixes = CodeNarcUiMappings.getQuickFixesFor(violation, violatingElement)
+
+                        descriptor = manager.createProblemDescriptor(
+                            violatingElement,
+                            relativeRange,
+                            message == null ? description == null ? rule.getName() : description : message,
+                            ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                            isOnTheFly,
+                            localQuickFixes)
+                        descriptors.add(descriptor)
+                    }
+                return CachedValueProvider.Result.create(descriptors.toArray(new ProblemDescriptor[0]), file)
+            } catch (Throwable e) {
+                if (!(e instanceof ControlFlowException)) {
+                    LOG.error("Exception checking rule $rule", e)
+                }
+                return null
+            }
+        }, false) as ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>
+
+        return cachedViolations.getValue(rule) as ProblemDescriptor[]
     }
 
-    static class InertRule extends AbstractRule {
-
-        private String name
-
-        private InertRule() {}
-
-        InertRule(String name) {
-            this.name = name
-        }
-
-        @Override
-        String getName() {
-            return this.name
-        }
-
-        @Override
-        void setName(String name) {
-        }
-
-        @Override
-        int getPriority() {
-            return 0
-        }
-
-        @Override
-        void setPriority(int priority) {
-        }
-
-        @Override
-        void applyTo(SourceCode sourceCode, List<Violation> violations) {
-        }
-    }
 }
