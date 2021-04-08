@@ -68,7 +68,10 @@ dependencies {
 
 intellij {
     pluginName 'CodeNarc'
-    downloadSources !providers.environmentVariable('CI').forUseAtConfigurationTime().present
+
+    // TODO: replace when Gradle is upgraded
+    // downloadSources !providers.environmentVariable('CI').forUseAtConfigurationTime().present
+    downloadSources System.getenv('CI') != 'true'
     version "${ideVersion}"
     plugins 'Groovy', 'gradle', 'java'
 }
