@@ -9,6 +9,7 @@ jobs:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
       CI: true
     strategy:
+      fail-fast: false # we need to know which version is failing
       matrix:
         version:
           - IC-2019.2.4
