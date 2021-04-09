@@ -18,7 +18,7 @@ jobs:
           - IC-2020.2.4
           - IC-2020.3.3
           - IC-2021.1
-          - LATEST
+          - LATEST-EAP-SNAPSHOT
     steps:
       - uses: actions/checkout@v1
 
