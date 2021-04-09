@@ -7,7 +7,7 @@ plugins {
 }
 
 if (!project.hasProperty('jbPluginsToken')) ext.jbPluginsToken = '**UNDEFINED**'
-if (!project.hasProperty('ideVersion')) ext.ideVersion = 'IC-2020.1.4'
+if (!project.hasProperty('ideVersion')) ext.ideVersion = 'LATEST-EAP-SNAPSHOT'
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
@@ -67,6 +67,8 @@ dependencies {
 
 String idePlatformVersion = "${ideVersion}"
 
+logger.lifecycle("Using IDE version $idePlatformVersion")
+
 intellij {
     pluginName 'CodeNarc'
 
@@ -74,10 +76,8 @@ intellij {
     // downloadSources !providers.environmentVariable('CI').forUseAtConfigurationTime().present
     downloadSources System.getenv('CI') != 'true'
     plugins 'Groovy', 'gradle', 'java'
+    version "${ideVersion}"
 
-    if (idePlatformVersion != 'LATEST') {
-        version "${ideVersion}"
-    }
 }
 
 runIde {
@@ -85,16 +85,14 @@ runIde {
 }
 
 runPluginVerifier {
-    if (idePlatformVersion != 'LATEST') {
-        ideVersions = [
-                "${ideVersion}"
-        ]
-    }
+    ideVersions = [
+            idePlatformVersion
+    ]
 }
 
 patchPluginXml {
     version "${pluginVersion}"
-    sinceBuild '201.8743.12'
+    sinceBuild '202.8194.7'
     untilBuild null
     changeNotes file('changelog.html').text
     pluginDescription file('description.html').text
