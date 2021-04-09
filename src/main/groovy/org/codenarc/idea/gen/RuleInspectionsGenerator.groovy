@@ -8,6 +8,8 @@ import org.codenarc.CodeNarc
 import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
+import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule
+import org.codenarc.rule.unnecessary.UnnecessarySubstringRule
 import org.jetbrains.annotations.Nullable
 
 import java.util.jar.JarEntry
@@ -29,10 +31,10 @@ class RuleInspectionsGenerator {
         String groupPath
         String groupKey
         String level
+        boolean enabledByDefault
 
         // not used yet
         String groupBundle
-        boolean enabledByDefault
 
     }
 
@@ -47,6 +49,11 @@ class RuleInspectionsGenerator {
 
         generateClasses(projectRoot)
     }
+
+    private static final Set<Class<?>> DISABLED_BY_DEFAULT_RULES = new HashSet<>([
+            UnnecessarySubstringRule, // deprecated
+            UnnecessaryReturnKeywordRule, // clashes with ImplicitReturnStatementRule
+    ])
 
     private static final String RULESETS_PATH = "rulesets/"
 
@@ -148,7 +155,8 @@ class RuleInspectionsGenerator {
                     displayName: generatedClass.displayName,
                     groupPath: generatedClass.groupPath,
                     groupKey: generatedClass.groupKey,
-                    level: generatedClass.level
+                    level: generatedClass.level,
+                    enabledByDefault: generatedClass.enabledByDefault
             )
             ideaPlugin.extensions[0].append(inspectionNode)
         }
@@ -245,14 +253,47 @@ class RuleInspectionsGenerator {
         String newClassPackage = "org.codenarc.idea.inspections.${group.toLowerCase()}"
         String newClassName = "${ruleClassInstance.simpleName[0..-5]}InspectionTool"
 
+        List<String> paths = [
+                projectRoot,
+                'src',
+                'main',
+                'groovy',
+        ]
+
+        paths.addAll(newClassPackage.split('\\.'))
+
+        File parentFile = new File(paths.join(File.separator))
+        parentFile.mkdirs()
+
+        File newSourceFile = new File(parentFile, newClassName + '.java')
+
         printWriter.println """
         package $newClassPackage;
-        
-        import javax.annotation.Generated;
+        """
 
-        import org.codenarc.idea.CodeNarcInspectionTool;
-        import $ruleClass;
-        
+        Set<String> imports = new TreeSet<>([
+                'javax.annotation.Generated',
+                'com.intellij.codeInspection.LocalQuickFix',
+                'com.intellij.psi.PsiElement',
+                'org.codenarc.idea.CodeNarcInspectionTool',
+                'org.codenarc.rule.Violation',
+                ruleClass,
+                'org.jetbrains.annotations.NotNull',
+                'java.util.Collection',
+                'java.util.Collections',
+        ])
+
+        if (newSourceFile.exists()) {
+            imports.addAll newSourceFile.readLines()
+                    .findAll { it.startsWith('import') }
+                    .collect { it.substring(7, it.length() - 1) }
+        }
+
+        for (String imported in imports.sort()) {
+            printWriter.println("        import $imported;")
+        }
+
+        printWriter.println """
         @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
         public class $newClassName extends CodeNarcInspectionTool<$ruleClassInstance.simpleName> {
         
@@ -297,27 +338,14 @@ class RuleInspectionsGenerator {
             """
         }
 
-        List<String> paths = [
-                projectRoot,
-                'src',
-                'main',
-                'groovy',
-        ]
-
-        paths.addAll(newClassPackage.split('\\.'))
-
-        File parentFile = new File(paths.join(File.separator))
-        parentFile.mkdirs()
-
-        File newSourceFile = new File(parentFile, newClassName + '.java')
-
         String customCode = '''
             // custom code can be written after this line and it will be preserved during the regeneration
 
-            // @Override
-            // protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-            //     return Collections.singleton(myfix);
-            // }
+            @Override
+            protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+                return Collections.emptyList();
+            }
+
         }
         '''
 
@@ -327,7 +355,8 @@ class RuleInspectionsGenerator {
                 groupKey: group,
                 shortName: CodeNarcInspectionTool.getShortName(ruleInstance),
                 displayName: CodeNarcInspectionTool.getDisplayName(ruleInstance),
-                level: getLevelFromPriority(ruleInstance.priority)
+                level: getLevelFromPriority(ruleInstance.priority),
+                enabledByDefault: !DISABLED_BY_DEFAULT_RULES.contains(ruleClassInstance)
         )
 
         if (newSourceFile.exists()) {

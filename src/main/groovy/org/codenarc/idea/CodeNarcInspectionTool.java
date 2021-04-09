@@ -34,6 +34,7 @@ import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.PropertyKey;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -124,7 +125,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return getResourceBundleString(resourceKey, "No description provided for rule named [" + rule.getName() + "]");
     }
 
-    private String getResourceBundleString(String resourceKey, String defaultString) {
+    private String getResourceBundleString(@PropertyKey(resourceBundle = BASE_MESSAGES_BUNDLE) String resourceKey, String defaultString) {
         String string;
         try {
             string = bundle.getString(resourceKey);
@@ -275,9 +276,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         );
     }
 
-    protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Arrays.asList(CodeNarcUiMappings.getQuickFixesFor(violation, violatingElement));
-    }
+    protected abstract @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement);
 
     @NotNull
     protected TextRange convertViolationRangeToRelative(PsiElement violatingElement, TextRange violatingRange) {
