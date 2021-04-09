@@ -9,11 +9,24 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Pair
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiFile
+import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
+import org.jetbrains.annotations.NotNull
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 abstract class InspectionSpec extends Specification {
+
+    public static final String JAVA_UTIL_LIST = '''
+        package java.util;
+        public class List {
+            public List sort() { return this }
+            public List sort(boolean mutate) { return this }
+            public List unique() { return this }
+            public List unique(boolean mutate) { return this }
+        }
+    '''
 
     private static final String FILE_NAME = 'Snippet.groovy'
 
@@ -24,7 +37,12 @@ abstract class InspectionSpec extends Specification {
 
     @AutoCleanup FixtureHelper helper = FixtureHelper.groovy25().start {
         enableInspections(inspection)
-        configureByText(FILE_NAME, readFile('before.txt'))
+
+        for (String classToInclude in classesToInclude) {
+            addClass(classToInclude)
+        }
+
+        configureByText(FILE_NAME, readBeforeFile(it))
     }
 
     void 'check highlighting and then apply fix one by one'() {
@@ -39,7 +57,7 @@ abstract class InspectionSpec extends Specification {
             helper.fixture.launchAction fixes.first()
             helper.fixture.launchAction fixes.last()
         then:
-            helper.fixture.checkResult readFile('fixed.txt')
+            helper.fixture.checkResult readAfterFile()
     }
 
     void 'check highlighting and then apply fix all'() {
@@ -53,10 +71,14 @@ abstract class InspectionSpec extends Specification {
         when:
             triggerFirstFixAll()
         then:
-            helper.fixture.checkResult readFile('fixed.txt')
+            helper.fixture.checkResult readAfterFile()
     }
 
     protected abstract LocalInspectionTool createInspection()
+
+    protected Iterable<String> getClassesToInclude() {
+        return Collections.emptyList()
+    }
 
     protected String readFile(String file) {
         String content = fixt.readText(file)
@@ -87,6 +109,61 @@ abstract class InspectionSpec extends Specification {
         assert action, 'Clean up action is present'
 
         helper.fixture.launchAction action
+    }
+
+    @SuppressWarnings('TrailingWhitespace')
+    @NotNull
+    protected String readBeforeFile(JavaCodeInsightTestFixture fixture) {
+        String before = fixt.readText('before.txt')
+
+        if (before) {
+            return before
+        }
+
+        String snippet = fixt.readText(FILE_NAME)
+
+        if (snippet) {
+            PsiFile file = fixture.configureByText(FILE_NAME, snippet)
+            List<HighlightInfo> infos = fixture.doHighlighting()
+            HighlightingDataExtractor data = new HighlightingDataExtractor(
+                    fixture.editor.document, true, true, false, false
+            )
+            String highlighted = data.extractResult(file, infos, snippet)
+
+            fixt.writeText('before.txt', highlighted)
+
+            throw new IllegalStateException('Highlighted file before.txt has been created. Please, check its contents')
+        }
+
+        fixt.writeText(FILE_NAME, """
+        package rules
+        
+        /**
+         * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+         * are only generated when missing so you need to delete these files if you want to regenerated them.
+         */
+        class ${getClass().name}Snippet {
+        
+            void doSomething() {
+                // TODO: write offending code
+            }
+
+        }
+        """.stripIndent().trim())
+
+        throw new IllegalStateException('Source Snippet.groovy file has been created. Please, add the violating code')
+    }
+
+    protected String readAfterFile() {
+        String after = fixt.readText('fixed.txt')
+
+        if (after) {
+            return after
+        }
+
+        fixt.writeText('fixed.txt', helper.fixture.file.text)
+
+        throw new IllegalStateException('Verification file fixed.txt has been created. Please, check its contents')
     }
 
 }
