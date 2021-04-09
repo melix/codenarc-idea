@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
+import org.codenarc.idea.quickfix.ReplacePrintlnWithAnnotationFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.logging.PrintlnRule;
 import org.jetbrains.annotations.NotNull;
@@ -48,7 +49,7 @@ public class PrintlnInspectionTool extends CodeNarcInspectionTool<PrintlnRule> {
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.emptyList();
+        return Collections.singleton(new ReplacePrintlnWithAnnotationFix());
     }
 
 }
