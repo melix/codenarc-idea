@@ -6,7 +6,8 @@ plugins {
     id 'application'
 }
 
-if (!project.hasProperty('jbPluginsToken')) ext.jbPluginsToken = '**UNDEFINED**'
+if (!project.hasProperty('publishPluginChannels')) ext.publishPluginChannels = ''
+if (!project.hasProperty('publishPluginToken')) ext.publishPluginToken = '**UNDEFINED**'
 if (!project.hasProperty('ideVersion')) ext.ideVersion = 'LATEST-EAP-SNAPSHOT'
 
 wrapper {
@@ -78,6 +79,13 @@ intellij {
     plugins 'Groovy', 'gradle', 'java'
     version "${ideVersion}"
 
+}
+
+publishPlugin {
+    token = publishPluginToken
+    if (publishPluginChannels) {
+        channels = publishPluginChannels.split(',')
+    }
 }
 
 runIde {
