@@ -1,12 +1,13 @@
 plugins {
-    id 'org.jetbrains.intellij' version '0.4.11'
+    id 'org.jetbrains.intellij' version '0.7.2'
     id 'java'
     id 'idea'
     id 'groovy'
-    id 'enterprise.groovy.plugin' version '1.0.3'
+    id 'application'
 }
 
 if (!project.hasProperty('jbPluginsToken')) ext.jbPluginsToken = '**UNDEFINED**'
+if (!project.hasProperty('ideVersion')) ext.ideVersion = 'LATEST-EAP-SNAPSHOT'
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
@@ -29,6 +30,8 @@ configurations {
     implementation  {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
+
+    generator.extendsFrom compile, implementation, runtimeOnly
 }
 
 dependencies {
@@ -38,36 +41,69 @@ dependencies {
         }
         because 'there are version conflicts when building'
     }
-    implementation('org.codenarc:CodeNarc:1.4') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
-        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    implementation('org.codenarc:CodeNarc:2.0.0') {
+        exclude group: 'org.codehaus.groovy'
     }
+
     runtimeOnly('org.gmetrics:GMetrics:1.0') {
-        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-        exclude group: 'org.codehaus.groovy', module: 'groovy-ant'
-        exclude group: 'org.codehaus.groovy', module: 'groovy'
+        exclude group: 'org.codehaus.groovy'
     }
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
-    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4'
+    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4', {
+        exclude group: 'org.codehaus.groovy'
+    }
+
+    testCompile 'com.agorapulse.testing:fixt:0.2.1.1'
+
+    generator( 'org.codehaus.groovy:groovy-all') {
+        version {
+            strictly "$groovyVersion"
+        }
+        because 'there are version conflicts when building'
+    }
 }
+
+String idePlatformVersion = "${ideVersion}"
+
+logger.lifecycle("Using IDE version $idePlatformVersion")
 
 intellij {
     pluginName 'CodeNarc'
-    downloadSources true
+
+    // TODO: replace when Gradle is upgraded
+    // downloadSources !providers.environmentVariable('CI').forUseAtConfigurationTime().present
+    downloadSources System.getenv('CI') != 'true'
     plugins 'Groovy', 'gradle', 'java'
+    version "${ideVersion}"
+
 }
 
-publishPlugin {
-    token "${jbPluginsToken}"
+runIde {
+    jvmArgs "-Xmx2g"
+}
+
+runPluginVerifier {
+    ideVersions = [
+            idePlatformVersion
+    ]
 }
 
 patchPluginXml {
     version "${pluginVersion}"
-    sinceBuild '192.4147'
+    sinceBuild '202.8194.7'
     untilBuild null
     changeNotes file('changelog.html').text
     pluginDescription file('description.html').text
+}
+
+application {
+    mainClassName = 'org.codenarc.idea.gen.RuleInspectionsGenerator'
+}
+
+run {
+    // generate classes
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath + configurations.generator
+    args project.rootDir.canonicalPath
 }

@@ -1,0 +1,15 @@
+package rules
+
+/**
+ * Class to demonstrate code violations. <code>before.txt</code> and <code>fixed.txt</code>
+ * files are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class AssignCollectionUniqueInspectionToolSpecSnippet {
+
+    void doSomething() {
+        List one = ['foo', 'bar']
+        <warning descr="unique() mutates the original list.">List unique1 = one.unique()</warning>
+        <warning descr="unique() mutates the original list.">List unique2 = one.unique()</warning>
+    }
+
+}

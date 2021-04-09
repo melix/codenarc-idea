@@ -1,0 +1,13 @@
+package rules
+
+import groovy.util.logging.Slf4j
+
+@Slf4j
+class Snippet {
+
+    void someMethod() {
+        log.info 'Hello'
+        log.info 'World'
+    }
+
+}
