@@ -2,9 +2,9 @@ package org.codenarc.idea.quickfix;
 
 import com.intellij.codeInsight.intention.AddAnnotationPsiFix;
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiNameValuePair;
 import com.intellij.psi.util.PsiUtil;
 import com.intellij.util.IncorrectOperationException;
 import groovy.util.logging.Slf4j;
@@ -23,12 +23,12 @@ public class ReplacePrintlnWithAnnotationFix extends GroovyFix {
             return;
         }
 
-        new AddAnnotationPsiFix(Slf4j.class.getName(), topLevelClass).applyFix();
+        new AddAnnotationPsiFix(Slf4j.class.getName(), topLevelClass, new PsiNameValuePair[0]).applyFix();
         new ReplaceStatementFix(GrMethodCall.class, "println", "log.info").applyFix(project, descriptor);
     }
 
     @Override
-    public @IntentionFamilyName @NotNull String getFamilyName() {
+    public @NotNull String getFamilyName() {
         return CodeNarcBundle.message("use.logging.instead.of.println");
     }
 }

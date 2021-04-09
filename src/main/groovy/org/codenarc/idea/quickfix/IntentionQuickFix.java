@@ -2,7 +2,6 @@ package org.codenarc.idea.quickfix;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
@@ -28,8 +27,7 @@ public class IntentionQuickFix extends GroovyFix {
 
     @Override
     @NotNull
-    public @IntentionFamilyName
-    String getFamilyName() {
+    public String getFamilyName() {
         return GroovyIntentionsBundle.message(getPrefix(intention.getClass().getSuperclass()) + ".family.name");
     }
 

@@ -1,7 +1,6 @@
 package org.codenarc.idea.quickfix;
 
 import com.intellij.codeInspection.ProblemDescriptor;
-import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
@@ -23,7 +22,7 @@ public class ReplaceStatementFix extends GroovyFix {
     }
 
     @Override
-    public @IntentionFamilyName @NotNull String getFamilyName() {
+    public @NotNull String getFamilyName() {
         return CodeNarcBundle.message("replace.text", original, replacement);
     }
 
