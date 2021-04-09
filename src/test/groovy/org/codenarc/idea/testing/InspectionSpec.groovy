@@ -10,6 +10,7 @@ import com.intellij.openapi.util.Pair
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.testFramework.ExpectedHighlightingData
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import org.jetbrains.annotations.NotNull
 import spock.lang.AutoCleanup
@@ -133,6 +134,7 @@ abstract class InspectionSpec extends Specification {
             HighlightingDataExtractor data = new HighlightingDataExtractor(
                     fixture.editor.document, true, true, false, false
             )
+
             String highlighted = data.extractResult(file, infos, snippet)
 
             fixt.writeText('before.txt', highlighted)
