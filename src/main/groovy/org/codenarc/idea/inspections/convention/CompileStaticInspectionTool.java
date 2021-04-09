@@ -3,15 +3,13 @@ package org.codenarc.idea.inspections.convention;
 import com.intellij.codeInsight.intention.AddAnnotationPsiFix;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
-
+import com.intellij.psi.PsiModifierListOwner;
+import groovy.transform.CompileDynamic;
+import groovy.transform.CompileStatic;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
-
-import com.intellij.psi.PsiModifierListOwner;
-import groovy.transform.CompileDynamic;
-import groovy.transform.CompileStatic;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.convention.CompileStaticRule;

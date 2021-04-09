@@ -33,6 +33,10 @@ class RuleInspectionsGenerator {
         String level
         boolean enabledByDefault
 
+        // status flags
+        boolean hasQuickFix
+        boolean hasSpec
+
         // not used yet
         String groupBundle
 
@@ -47,7 +51,8 @@ class RuleInspectionsGenerator {
 
         println "Generating rule classes for project root: ${projectRoot}"
 
-        generateClasses(projectRoot)
+        List<InspectionDescriptor> classes = generateClasses(projectRoot)
+        report classes
     }
 
     private static final Set<Class<?>> DISABLED_BY_DEFAULT_RULES = new HashSet<>([
@@ -93,8 +98,10 @@ class RuleInspectionsGenerator {
         this.group = group
     }
 
-    private static void generateClasses(String projectRoot) {
-        updatePluginXml(projectRoot, generateClassFiles(projectRoot))
+    private static List<InspectionDescriptor> generateClasses(String projectRoot) {
+        List<InspectionDescriptor> classes = generateClassFiles(projectRoot)
+        updatePluginXml(projectRoot, classes)
+        return classes
     }
 
     private static List<InspectionDescriptor> generateClassFiles(String projectRoot) {
@@ -233,6 +240,28 @@ class RuleInspectionsGenerator {
         }
     }
 
+    @SuppressWarnings('Println')
+    private static void report(List<InspectionDescriptor> classes) {
+        println()
+        println 'Inspection Tool Classes Generation Finished'
+        println()
+        println "${classes.size()} classes generated"
+        println "${classes.size() - classes.count { it.hasQuickFix }}/${classes.size()} requires quick fix"
+        println "${classes.size() - classes.count { it.hasSpec }}/${classes.size()} requires spec"
+
+        println()
+        println 'The following classes requires quick fix handling'
+        for (InspectionDescriptor descriptor in classes.findAll { !it.hasQuickFix }) {
+            println " * ${descriptor.implementationClass}"
+        }
+
+        println()
+        println 'The following classes are waiting for a specification'
+        for (InspectionDescriptor descriptor in classes.findAll { !it.hasSpec }) {
+            println " * ${descriptor.implementationClass}"
+        }
+    }
+
     /**
      * Generates class Java code and returns the fully qualified name name of the class
      * @return the fully qualified name of the newly generated class or null if the rule cannot be supported
@@ -332,22 +361,26 @@ class RuleInspectionsGenerator {
                 getRule().$setter(value);
             }
             
-            public ${ propTypeString} $getter() {
+            public ${propTypeString} $getter() {
                 return getRule().$getter();
             }
             """
         }
 
-        String customCode = '''
-            // custom code can be written after this line and it will be preserved during the regeneration
-
+        String emptyListQuickFixImplementation = '''
             @Override
             protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
                 return Collections.emptyList();
             }
+        '''
+
+        String customCode = """
+            // custom code can be written after this line and it will be preserved during the regeneration
+
+            ${emptyListQuickFixImplementation.trim()}
 
         }
-        '''
+        """
 
         InspectionDescriptor descriptor = new InspectionDescriptor(
                 implementationClass: "${newClassPackage}.${newClassName}",
@@ -360,21 +393,36 @@ class RuleInspectionsGenerator {
         )
 
         if (newSourceFile.exists()) {
-            String text = newSourceFile.text
+            String existingFileText = newSourceFile.text
 
-            if (!text.contains('@Generated')) {
+            descriptor.hasQuickFix = !existingFileText.replaceAll(/\s+/, ' ').contains(emptyListQuickFixImplementation.replaceAll(/\s+/, ' '))
+
+            List<String> pathsToTestClass = [
+                    projectRoot,
+                    'src',
+                    'test',
+                    'groovy',
+            ]
+
+            pathsToTestClass.addAll(newClassPackage.split('\\.'))
+
+            File testFile = new File(pathsToTestClass.join(File.separator), "${newClassName}Spec.groovy")
+
+            descriptor.hasSpec = testFile.exists()
+
+            if (!existingFileText.contains('@Generated')) {
                 // already exits and it highly customised
                 // returning fully qualified name to keep the inclusion in plugin.xml
                 return descriptor
             }
 
             String customCodeDelimiter = '// custom code'
-            if (text.contains(customCodeDelimiter)) {
-                customCode = text.substring(text.lastIndexOf(customCodeDelimiter))
+            if (existingFileText.contains(customCodeDelimiter)) {
+                customCode = existingFileText.substring(existingFileText.lastIndexOf(customCodeDelimiter))
             }
         }
 
-        newSourceFile.text = sw.toString().stripIndent().trim() + '\n\n    ' + customCode.stripIndent().trim()
+        newSourceFile.text = sw.toString().stripIndent().trim() + '\n\n    ' + customCode.stripIndent().trim() + '\n'
 
         return descriptor
     }

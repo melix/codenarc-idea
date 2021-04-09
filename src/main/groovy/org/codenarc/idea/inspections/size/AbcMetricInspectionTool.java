@@ -84,6 +84,7 @@ public class AbcMetricInspectionTool extends CodeNarcInspectionTool<AbcMetricRul
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+        // cannot implement, too complex
         return Collections.emptyList();
     }
 

@@ -4,15 +4,13 @@ import com.intellij.codeInsight.daemon.impl.quickfix.AddDefaultConstructorFix;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiModifier;
+import com.intellij.util.containers.JBIterable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
-
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiModifier;
-import com.intellij.util.containers.JBIterable;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.design.AbstractClassWithoutAbstractMethodRule;

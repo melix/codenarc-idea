@@ -2,11 +2,10 @@ package org.codenarc.idea.inspections.design;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiModifier;
 import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
-
-import com.intellij.psi.PsiModifier;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.design.AbstractClassWithPublicConstructorRule;
