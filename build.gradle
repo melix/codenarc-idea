@@ -85,10 +85,6 @@ runPluginVerifier {
     ]
 }
 
-publishPlugin {
-    token "${jbPluginsToken}"
-}
-
 patchPluginXml {
     version "${pluginVersion}"
     sinceBuild '192.4147'
