@@ -28,6 +28,11 @@ abstract class InspectionSpec extends Specification {
         }
     '''
 
+    public static final String JAVA_LANG_STRING = '''
+        package java.lang;
+        public class String { }
+    '''
+
     private static final String FILE_NAME = 'Snippet.groovy'
 
     @Shared
@@ -142,7 +147,7 @@ abstract class InspectionSpec extends Specification {
          * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
          * are only generated when missing so you need to delete these files if you want to regenerated them.
          */
-        class ${getClass().name}Snippet {
+        class ${getClass().simpleName}Snippet {
         
             void doSomething() {
                 // TODO: write offending code

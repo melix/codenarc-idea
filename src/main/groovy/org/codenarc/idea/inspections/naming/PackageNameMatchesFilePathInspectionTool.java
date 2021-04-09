@@ -32,4 +32,8 @@ public class PackageNameMatchesFilePathInspectionTool extends CodeNarcInspection
 
     // custom code can be written after this line and it will be preserved during the regeneration
 
+    // @Override
+    // protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+    //     return Collections.singleton(myfix);
+    // }
 }
