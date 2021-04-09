@@ -2,13 +2,20 @@ package org.codenarc.idea.inspections.dry;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
-import java.util.Collection;
-import java.util.Collections;
-import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
+import org.codenarc.idea.quickfix.RefactoringQuickFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.dry.DuplicateStringLiteralRule;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.groovy.GroovyBundle;
+import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceContext;
+import org.jetbrains.plugins.groovy.refactoring.introduce.GrIntroduceDialog;
+import org.jetbrains.plugins.groovy.refactoring.introduce.constant.GrIntroduceConstantHandler;
+import org.jetbrains.plugins.groovy.refactoring.introduce.constant.GrIntroduceConstantSettings;
+
+import javax.annotation.Generated;
+import java.util.Collection;
+import java.util.Collections;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class DuplicateStringLiteralInspectionTool extends CodeNarcInspectionTool<DuplicateStringLiteralRule> {
@@ -75,7 +82,12 @@ public class DuplicateStringLiteralInspectionTool extends CodeNarcInspectionTool
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.emptyList();
+        return Collections.singleton(RefactoringQuickFix.from(GroovyBundle.message("introduce.constant.title"), ctx -> new GrIntroduceConstantHandler() {
+            @Override
+            protected @NotNull GrIntroduceDialog<GrIntroduceConstantSettings> getDialog(@NotNull GrIntroduceContext context) {
+                return super.getDialog(context);
+            }
+        }));
     }
 
 }
