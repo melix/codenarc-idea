@@ -9,6 +9,7 @@ import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
 import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule
+import org.codenarc.rule.unnecessary.UnnecessarySemicolonRule
 import org.codenarc.rule.unnecessary.UnnecessarySubstringRule
 import org.jetbrains.annotations.Nullable
 
@@ -56,39 +57,40 @@ class RuleInspectionsGenerator {
     }
 
     private static final Set<Class<?>> DISABLED_BY_DEFAULT_RULES = new HashSet<>([
-            UnnecessarySubstringRule, // deprecated
-            UnnecessaryReturnKeywordRule, // clashes with ImplicitReturnStatementRule
+            UnnecessarySubstringRule,       // deprecated
+            UnnecessaryReturnKeywordRule,   // clashes with ImplicitReturnStatementRule
+            UnnecessarySemicolonRule,       // unreliable
     ])
 
-    private static final String RULESETS_PATH = "rulesets/"
+    private static final String RULESETS_PATH = 'rulesets/'
 
     private static final String[] rulesets = [
-            "basic",
-            "braces",
-            "comments",
-            "concurrency",
-            "convention",
-            "design",
-            "dry",
-            "exceptions",
-            "formatting",
-            "generic",
-            "grails",
-            "groovyism",
-            "imports",
-            "jdbc",
-            "junit",
-            "logging",
-            "naming",
-            "security",
-            "serialization",
-            "size",
-            "unnecessary",
-            "unused"
+            'basic',
+            'braces',
+            'comments',
+            'concurrency',
+            'convention',
+            'design',
+            'dry',
+            'exceptions',
+            'formatting',
+            'generic',
+            'grails',
+            'groovyism',
+            'imports',
+            'jdbc',
+            'junit',
+            'logging',
+            'naming',
+            'security',
+            'serialization',
+            'size',
+            'unnecessary',
+            'unused'
     ]
 
     private final static Pattern RULE_CLASS_PATTERN = Pattern.compile(".*class='(.*?)'.*")
-    private final static Pattern RULE_GROUP_PATTERN = Pattern.compile(".*/([^.]*)\\.xml")
+    private final static Pattern RULE_GROUP_PATTERN = Pattern.compile('.*/([^.]*)\\.xml')
 
     private final String ruleClass;
     private final String group;
@@ -109,7 +111,7 @@ class RuleInspectionsGenerator {
         String[] rulesetFiles = getRulesetFiles()
 
         for (String ruleset in rulesetFiles) {
-            new BufferedReader(new InputStreamReader(RuleInspectionsGenerator.getResourceAsStream("/" + ruleset))).withCloseable { reader ->
+            new BufferedReader(new InputStreamReader(RuleInspectionsGenerator.getResourceAsStream('/' + ruleset))).withCloseable { reader ->
                 try {
                     String line
                     while ((line = reader.readLine()) != null) {
@@ -192,7 +194,7 @@ class RuleInspectionsGenerator {
      */
     private static String[] getResourceListing() {
         URL dirURL = CodeNarc.class.getClassLoader().getResource(RULESETS_PATH)
-        if (dirURL != null && dirURL.getProtocol() == "file") {
+        if (dirURL != null && dirURL.getProtocol() == 'file') {
             /* A file path: easy enough */
             return new File(dirURL.toURI()).list()
         }
@@ -202,17 +204,17 @@ class RuleInspectionsGenerator {
              * In case of a jar file, we can't actually find a directory.
              * Have to assume the same jar as clazz.
              */
-            String me = CodeNarc.class.getName().replace(".", "/") + ".class"
+            String me = CodeNarc.class.getName().replace('.', '/') + '.class'
             dirURL = CodeNarc.class.getClassLoader().getResource(me)
         }
 
         if (dirURL != null) {
             String proto = dirURL.getProtocol()
-            if (proto != null && proto == "jar") {
+            if (proto != null && proto == 'jar') {
                 /* A JAR path */
-                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!"))
+                String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf('!'))
                 //strip out only the JAR file
-                JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"))
+                JarFile jar = new JarFile(URLDecoder.decode(jarPath, 'UTF-8'))
                 Enumeration<JarEntry> entries = jar.entries() //gives ALL entries in jar
                 Set<String> result = new HashSet<>() //avoid duplicates in case it is a subdirectory
                 while (entries.hasMoreElements()) {
@@ -229,7 +231,7 @@ class RuleInspectionsGenerator {
             }
         }
 
-        throw new UnsupportedOperationException("Cannot list files for URL " + dirURL)
+        throw new UnsupportedOperationException('Cannot list files for URL ' + dirURL)
     }
 
     private static String getLevelFromPriority(int priority) {

@@ -10,7 +10,6 @@ import com.intellij.openapi.util.Pair
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.testFramework.ExpectedHighlightingData
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import org.jetbrains.annotations.NotNull
 import spock.lang.AutoCleanup
