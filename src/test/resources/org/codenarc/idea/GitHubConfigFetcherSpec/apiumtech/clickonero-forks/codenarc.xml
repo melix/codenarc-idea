@@ -1,0 +1,27 @@
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://codenarc.org/ruleset/1.0"
+         xsi:schemaLocation="http://codenarc.org/ruleset/1.0 http://codenarc.org/ruleset-schema.xsd"
+         xsi:noNamespaceSchemaLocation="http://codenarc.org/ruleset-schema.xsd">
+
+  <description>Sample rule set</description>
+
+  <ruleset-ref path='rulesets/imports.xml'>
+    <rule-config name='DuplicateImport'>
+      <property name='priority' value='1'/>
+    </rule-config>
+  </ruleset-ref>
+
+  <ruleset-ref path='rulesets/basic.xml'>
+    <exclude name='StringInstantiation'/>
+  </ruleset-ref>
+
+  <ruleset-ref path='rulesets/logging.xml'>
+    <exclude name="LoggingSwallowsStacktrace"/>
+  </ruleset-ref>
+
+  <rule class='org.codenarc.rule.generic.IllegalRegexRule'>
+    <property name="name" value="AuthorTagNotAllowed"/>
+    <property name='regex' value='\@author'/>
+    <property name="description" value="Checks that class document comment contains @author"/>
+  </rule>
+</ruleset>

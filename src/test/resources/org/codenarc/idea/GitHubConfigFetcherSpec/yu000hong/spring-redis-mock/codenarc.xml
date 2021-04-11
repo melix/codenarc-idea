@@ -1,0 +1,55 @@
+<ruleset xmlns="http://codenarc.org/ruleset/1.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://codenarc.org/ruleset/1.0 https://raw.githubusercontent.com/CodeNarc/CodeNarc/master/src/main/resources/ruleset-schema.xsd"
+         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/CodeNarc/CodeNarc/master/src/main/resources/ruleset-schema.xsd">
+
+    <description>xiancheng Groovy rule set</description>
+
+    <ruleset-ref path="rulesets/basic.xml"/>
+    <ruleset-ref path="rulesets/braces.xml"/>
+    <ruleset-ref path="rulesets/concurrency.xml"/>
+    <ruleset-ref path="rulesets/convention.xml">
+        <exclude name="IfStatementCouldBeTernary"/>
+        <exclude name="TrailingComma"/>
+        <exclude name="NoDef"/><!--NoPublicDef-->
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/design.xml"/>
+    <ruleset-ref path="rulesets/exceptions.xml"/>
+    <ruleset-ref path="rulesets/formatting.xml">
+        <exclude name="ClassJavadoc"/>
+        <exclude name="SpaceAfterOpeningBrace"/><!--??-->
+        <exclude name="SpaceAfterClosingBrace"/><!--??-->
+        <exclude name="SpaceAroundMapEntryColon"/><!--??-->
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/generic.xml"/><!--??-->
+    <ruleset-ref path="rulesets/groovyism.xml">
+        <exclude name="GetterMethodCouldBeProperty"/>
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/imports.xml">
+        <rule-config name="MisorderedStaticImports">
+            <property name="comesBefore" value="false"/>
+        </rule-config>
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/logging.xml"/>
+    <ruleset-ref path="rulesets/naming.xml">
+        <rule-config name="AbstractClassName">
+            <property name="regex" value="Abstract.*"/><!--?-->
+        </rule-config>
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/size.xml">
+        <rule-config name="ParameterCount">
+            <property name="maxParameters" value="8"/>
+        </rule-config>
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/security.xml"/>
+    <ruleset-ref path="rulesets/serialization.xml"/>
+    <ruleset-ref path="rulesets/unnecessary.xml">
+        <exclude name="UnnecessaryElseStatement"/>
+        <exclude name="UnnecessaryGetter"/>
+        <exclude name="UnnecessaryObjectReferences"/>
+        <exclude name="UnnecessaryPublicModifier"/>
+        <exclude name="UnnecessaryReturnKeyword"/>
+    </ruleset-ref>
+    <ruleset-ref path="rulesets/unused.xml"/>
+
+</ruleset>

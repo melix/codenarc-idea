@@ -1,0 +1,45 @@
+<ruleset xmlns="http://codenarc.org/ruleset/1.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://codenarc.org/ruleset/1.0 http://codenarc.org/ruleset-schema.xsd"
+        xsi:noNamespaceSchemaLocation="http://codenarc.org/ruleset-schema.xsd">
+    <description>Codenarc rule set</description>
+
+    <ruleset-ref path='rulesets/basic.xml'/>
+    <ruleset-ref path='rulesets/braces.xml'/>
+    <ruleset-ref path='rulesets/concurrency.xml'/>
+    <ruleset-ref path='rulesets/convention.xml'>
+        <!-- I don't necessarilly agree, specially when static is recommended just because no fields are used -->
+        <exclude name='StaticMethodsBeforeInstanceMethods'/>
+	<exclude name='ImplicitClosureParameter'/>
+	<exclude name='NoDouble'/>
+	<exclude name='NoFloat'/>
+    </ruleset-ref>
+    <ruleset-ref path='rulesets/design.xml'/>
+    <ruleset-ref path='rulesets/dry.xml'>
+        <rule-config name='DuplicateStringLiteral'>
+            <property name='ignoreStrings' value='NoDef,VariableTypeRequired'/>
+        </rule-config>
+    </ruleset-ref>
+<!--    <ruleset-ref path='rulesets/enhanced.xml'/> -->
+    <ruleset-ref path='rulesets/exceptions.xml'/>
+    <ruleset-ref path='rulesets/formatting.xml'>
+        <exclude name='ClassEndsWithBlankLine' />
+        <exclude name='ClassStartsWithBlankLine' />
+    </ruleset-ref>
+    <ruleset-ref path='rulesets/generic.xml'/>
+    <ruleset-ref path='rulesets/groovyism.xml'/>
+    <ruleset-ref path='rulesets/imports.xml'>
+      <rule-config name='MisorderedStaticImports'>
+          <property name='comesBefore' value='false'/>
+      </rule-config>
+    </ruleset-ref>
+    <ruleset-ref path='rulesets/naming.xml'/>
+    <ruleset-ref path='rulesets/security.xml'>
+        <exclude name='JavaIoPackageAccess'/>
+    </ruleset-ref>
+    <ruleset-ref path='rulesets/size.xml'>
+        <exclude name='CrapMetric'/>
+    </ruleset-ref>
+    <ruleset-ref path='rulesets/unnecessary.xml'/>
+    <ruleset-ref path='rulesets/unused.xml'/>
+</ruleset>
