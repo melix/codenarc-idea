@@ -8,13 +8,16 @@ import org.codenarc.CodeNarc
 import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
+import org.codenarc.rule.comments.JavadocEmptyFirstLineRule
 import org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule
+import org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule
 import org.codenarc.rule.grails.GrailsDomainHasEqualsRule
 import org.codenarc.rule.grails.GrailsDomainHasToStringRule
 import org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule
 import org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule
 import org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule
 import org.codenarc.rule.security.JavaIoPackageAccessRule
+import org.codenarc.rule.unnecessary.UnnecessaryDotClassRule
 import org.codenarc.rule.unnecessary.UnnecessaryGStringRule
 import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule
 import org.codenarc.rule.unnecessary.UnnecessarySemicolonRule
@@ -80,7 +83,9 @@ class RuleInspectionsGenerator {
             GrailsDomainHasEqualsRule,                              // quite difficult to implement
             GrailsDomainHasToStringRule,                            // not always a good thing, may trigger db calls
             JavaIoPackageAccessRule,                                // often disabled
+            JavadocEmptyFirstLineRule,                              // unreliable
             // ImplicitClosureParameterRule,                        // we might consider disabling this by default as well
+            SpaceAroundMapEntryColonRule,                           // sometimes we want to align the colons in a column
             UnnecessarySubstringRule,                               // deprecated
             UnnecessaryReturnKeywordRule,                           // clashes with ImplicitReturnStatementRule
             UnnecessarySemicolonRule,                               // unreliable
@@ -94,7 +99,8 @@ class RuleInspectionsGenerator {
     ])
 
     private static final Set<Class<?>> CLEANUP_AVAILABLE = new HashSet<>([
-            UnnecessaryGStringRule
+            UnnecessaryDotClassRule,
+            UnnecessaryGStringRule,
     ])
 
     private static final String RULESETS_PATH = 'rulesets/'
@@ -210,6 +216,10 @@ class RuleInspectionsGenerator {
         XmlNodePrinter printer = new XmlNodePrinter(new PrintWriter(new FileWriter(pluginDescriptor)))
         printer.preserveWhitespace = true
         printer.print(ideaPlugin)
+
+        while (printer = null) {
+
+        }
     }
 
     private static String[] getRulesetFiles() {
