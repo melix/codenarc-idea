@@ -1,6 +1,6 @@
 on:
-  repository_dispatch:
-    types: [codenarc-new-version]
+  schedule:
+    - cron: '30 0 * * *'
 jobs:
   update-bom:
     name: Updates Version and Opens PR
@@ -31,10 +31,10 @@ jobs:
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: Upgraded to the latest CodeNarc
-          title: '[Ugrade] Upgraded to the latest CodeNarc version'
+          commit-message: Upgraded to CodeNarc ${{ steps.xpath.outputs.result }}
+          title: '[Upgrade] Upgraded to the CodeNarc ${{ steps.xpath.outputs.result }}'
           body: |
-            There is a newer version of codenarc available. The dependency has been updated and the inspection tools
+            There is a newer version ${{ steps.xpath.outputs.result }} of CodeNarc available. The dependency has been updated and the inspection tools
             have been regenerated.
           labels: chore,upgrade
           assignees: musketyr

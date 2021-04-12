@@ -1,6 +1,6 @@
 <idea-plugin>
   <name>CodeNarc</name>
-  <vendor url="http://twitter.com/DanielDemus">Daniel Demus, originally Cédric Champeau</vendor>
+  <vendor url="http://github.com/melix/codenarc-idea">Vladimir Orany, originally Cédric Champeau and Daniel Demus</vendor>
   <depends>com.intellij.modules.java</depends>
   <depends>org.intellij.groovy</depends>
   <extensions defaultExtensionNs="com.intellij">
