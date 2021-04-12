@@ -1,4 +1,4 @@
-package org.codenarc.idea.inspections.unused;
+package org.codenarc.idea.inspections.formatting;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
@@ -7,32 +7,23 @@ import java.util.Collections;
 import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
-import org.codenarc.rule.unused.UnusedPrivateFieldRule;
+import org.codenarc.rule.formatting.SpaceInsideParenthesesRule;
 import org.jetbrains.annotations.NotNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-public class UnusedPrivateFieldInspectionTool extends CodeNarcInspectionTool<UnusedPrivateFieldRule> {
+public class SpaceInsideParenthesesInspectionTool extends CodeNarcInspectionTool<SpaceInsideParenthesesRule> {
 
-    // this code has been generated from org.codenarc.rule.unused.UnusedPrivateFieldRule
+    // this code has been generated from org.codenarc.rule.formatting.SpaceInsideParenthesesRule
 
-    public static final String GROUP = "Unused";
+    public static final String GROUP = "Formatting";
 
-    public UnusedPrivateFieldInspectionTool() {
-        super(new UnusedPrivateFieldRule());
+    public SpaceInsideParenthesesInspectionTool() {
+        super(new SpaceInsideParenthesesRule());
     }
 
     @Override
     public String getRuleset() {
         return GROUP;
-    }
-
-
-    public void setAllowConstructorOnlyUsages(boolean value) {
-        getRule().setAllowConstructorOnlyUsages(value);
-    }
-
-    public boolean getAllowConstructorOnlyUsages() {
-        return getRule().getAllowConstructorOnlyUsages();
     }
 
 
@@ -51,15 +42,6 @@ public class UnusedPrivateFieldInspectionTool extends CodeNarcInspectionTool<Unu
 
     public String getDoNotApplyToClassNames() {
         return getRule().getDoNotApplyToClassNames();
-    }
-
-
-    public void setIgnoreFieldNames(String value) {
-        getRule().setIgnoreFieldNames(value);
-    }
-
-    public String getIgnoreFieldNames() {
-        return getRule().getIgnoreFieldNames();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration
