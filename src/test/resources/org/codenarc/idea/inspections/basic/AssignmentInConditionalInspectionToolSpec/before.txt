@@ -1,0 +1,22 @@
+package rules
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class AssignmentInConditionalInspectionToolSpecSnippet {
+
+    void doSomething() {
+        String a = 'hello'
+        String b = 'world'
+
+        <warning descr="Assignment used as conditional value, which always results in true. Use the == operator instead">while (a = 'hola') {
+            a = 'hola'
+        }</warning>
+
+        <warning descr="Assignment used as conditional value, which always results in true. Use the == operator instead">while (b = 'svete') {
+            b = 'svete'
+        }</warning>
+    }
+
+}

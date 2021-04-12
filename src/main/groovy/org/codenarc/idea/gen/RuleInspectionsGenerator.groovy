@@ -8,13 +8,17 @@ import org.codenarc.CodeNarc
 import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
+import org.codenarc.rule.comments.JavadocEmptyFirstLineRule
 import org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule
+import org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule
 import org.codenarc.rule.grails.GrailsDomainHasEqualsRule
 import org.codenarc.rule.grails.GrailsDomainHasToStringRule
 import org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule
 import org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule
 import org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule
 import org.codenarc.rule.security.JavaIoPackageAccessRule
+import org.codenarc.rule.unnecessary.UnnecessaryDotClassRule
+import org.codenarc.rule.unnecessary.UnnecessaryGStringRule
 import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule
 import org.codenarc.rule.unnecessary.UnnecessarySemicolonRule
 import org.codenarc.rule.unnecessary.UnnecessarySubstringRule
@@ -51,6 +55,7 @@ class RuleInspectionsGenerator {
         // status flags
         boolean hasQuickFix
         boolean hasSpec
+        boolean cleanupTool
 
         // not used yet
         String groupBundle
@@ -78,7 +83,9 @@ class RuleInspectionsGenerator {
             GrailsDomainHasEqualsRule,                              // quite difficult to implement
             GrailsDomainHasToStringRule,                            // not always a good thing, may trigger db calls
             JavaIoPackageAccessRule,                                // often disabled
+            JavadocEmptyFirstLineRule,                              // unreliable
             // ImplicitClosureParameterRule,                        // we might consider disabling this by default as well
+            SpaceAroundMapEntryColonRule,                           // sometimes we want to align the colons in a column
             UnnecessarySubstringRule,                               // deprecated
             UnnecessaryReturnKeywordRule,                           // clashes with ImplicitReturnStatementRule
             UnnecessarySemicolonRule,                               // unreliable
@@ -89,6 +96,11 @@ class RuleInspectionsGenerator {
             UnusedPrivateMethodRule,                                // handled by IntelliJ
             UnusedPrivateMethodParameterRule,                       // handled by IntelliJ
             UnusedVariableRule,                                     // handled by IntelliJ
+    ])
+
+    private static final Set<Class<?>> CLEANUP_AVAILABLE = new HashSet<>([
+            UnnecessaryDotClassRule,
+            UnnecessaryGStringRule,
     ])
 
     private static final String RULESETS_PATH = 'rulesets/'
@@ -195,7 +207,8 @@ class RuleInspectionsGenerator {
                     groupKey: generatedClass.groupKey,
                     level: generatedClass.level,
                     enabledByDefault: generatedClass.enabledByDefault,
-                    hasStaticDescription: true
+                    hasStaticDescription: true,
+                    cleanupTool: generatedClass.cleanupTool
             )
             ideaPlugin.extensions[0].append(inspectionNode)
         }
@@ -203,6 +216,10 @@ class RuleInspectionsGenerator {
         XmlNodePrinter printer = new XmlNodePrinter(new PrintWriter(new FileWriter(pluginDescriptor)))
         printer.preserveWhitespace = true
         printer.print(ideaPlugin)
+
+        while (printer = null) {
+
+        }
     }
 
     private static String[] getRulesetFiles() {
@@ -272,7 +289,7 @@ class RuleInspectionsGenerator {
         }
     }
 
-    @SuppressWarnings('Println')
+    @SuppressWarnings(['CodeNarc.Println'])
     private static void report(List<InspectionDescriptor> classes) {
         println()
         println 'Inspection Tool Classes Generation Finished'
@@ -299,7 +316,7 @@ class RuleInspectionsGenerator {
      * @return the fully qualified name of the newly generated class or null if the rule cannot be supported
      */
     @Nullable
-    @SuppressWarnings('TrailingWhitespace')
+    @SuppressWarnings(['CodeNarc.TrailingWhitespace', 'CodeNarc.AbcMetric'])
     private InspectionDescriptor generateSingleClassFile(String projectRoot) {
         StringWriter sw = new StringWriter()
         PrintWriter printWriter = new PrintWriter(sw);
@@ -344,6 +361,10 @@ class RuleInspectionsGenerator {
                 'java.util.Collections',
         ])
 
+        if (ruleClassInstance in CLEANUP_AVAILABLE) {
+            imports.add 'com.intellij.codeInspection.CleanupLocalInspectionTool'
+        }
+
         if (newSourceFile.exists()) {
             imports.addAll newSourceFile.readLines()
                     .findAll { it.startsWith('import') }
@@ -356,7 +377,7 @@ class RuleInspectionsGenerator {
 
         printWriter.println """
         @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-        public class $newClassName extends CodeNarcInspectionTool<$ruleClassInstance.simpleName> {
+        public class $newClassName extends CodeNarcInspectionTool<$ruleClassInstance.simpleName> ${ ruleClassInstance in CLEANUP_AVAILABLE ? 'implements CleanupLocalInspectionTool ' : '' }{
         
             // this code has been generated from $ruleClass
         
@@ -422,13 +443,15 @@ class RuleInspectionsGenerator {
                 shortName: CodeNarcInspectionTool.getShortName(ruleInstance),
                 displayName: CodeNarcInspectionTool.getDisplayName(ruleInstance),
                 level: getLevelFromPriority(ruleInstance.priority),
-                enabledByDefault: !DISABLED_BY_DEFAULT_RULES.contains(ruleClassInstance)
+                enabledByDefault: !DISABLED_BY_DEFAULT_RULES.contains(ruleClassInstance),
+                cleanupTool: ruleClassInstance in CLEANUP_AVAILABLE
         )
 
         if (newSourceFile.exists()) {
             String existingFileText = newSourceFile.text
 
-            descriptor.hasQuickFix = !existingFileText.replaceAll(/\s+/, ' ').contains(emptyListQuickFixImplementation.replaceAll(/\s+/, ' ')) && !existingFileText.contains('TODO')
+            descriptor.hasQuickFix = !existingFileText.replaceAll(/\s+/, ' ')
+                    .contains(emptyListQuickFixImplementation.replaceAll(/\s+/, ' ')) && !existingFileText.contains('TODO')
 
             List<String> pathsToTestClass = [
                     projectRoot,

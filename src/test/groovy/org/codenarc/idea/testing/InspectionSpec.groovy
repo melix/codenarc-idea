@@ -127,23 +127,7 @@ abstract class InspectionSpec extends Specification {
             return before
         }
 
-        String snippet = fixt.readText(FILE_NAME)
-
-        if (snippet) {
-            PsiFile file = fixture.configureByText(FILE_NAME, snippet)
-            List<HighlightInfo> infos = fixture.doHighlighting()
-            HighlightingDataExtractor data = new HighlightingDataExtractor(
-                    fixture.editor.document, true, true, false, false
-            )
-
-            String highlighted = data.extractResult(file, infos, snippet)
-
-            fixt.writeText('before.txt', highlighted)
-
-            throw new IllegalStateException('Highlighted file before.txt has been created. Please, check its contents')
-        }
-
-        fixt.writeText(FILE_NAME, """
+        fixt.writeText('before.txt', """
         package rules
         
         /**
@@ -159,7 +143,7 @@ abstract class InspectionSpec extends Specification {
         }
         """.stripIndent().trim())
 
-        throw new IllegalStateException('Source Snippet.groovy file has been created. Please, add the violating code')
+        throw new IllegalStateException('Source before.txt file has been created. Please, add the violating code')
     }
 
     protected String readAfterFile() {

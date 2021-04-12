@@ -1,5 +1,6 @@
 package org.codenarc.idea.inspections.unnecessary;
 
+import com.intellij.codeInspection.CleanupLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
 import java.util.Collection;
@@ -13,7 +14,7 @@ import org.codenarc.rule.unnecessary.UnnecessaryGStringRule;
 import org.jetbrains.annotations.NotNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-public class UnnecessaryGStringInspectionTool extends CodeNarcInspectionTool<UnnecessaryGStringRule> {
+public class UnnecessaryGStringInspectionTool extends CodeNarcInspectionTool<UnnecessaryGStringRule> implements CleanupLocalInspectionTool {
 
     // this code has been generated from org.codenarc.rule.unnecessary.UnnecessaryGStringRule
 

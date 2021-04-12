@@ -6,8 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
-import org.codenarc.idea.quickfix.IntentionQuickFix;
-import org.codenarc.idea.quickfix.RemoveUnnecessaryReturnReusableIntention;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +49,7 @@ public class UnnecessaryReturnKeywordInspectionTool extends CodeNarcInspectionTo
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(IntentionQuickFix.from(new RemoveUnnecessaryReturnReusableIntention()));
+        return Collections.emptyList();
     }
 
 }
