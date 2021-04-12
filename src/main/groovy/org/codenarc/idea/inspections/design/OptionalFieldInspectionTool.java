@@ -19,6 +19,7 @@ public class OptionalFieldInspectionTool extends CodeNarcInspectionTool<Optional
 
     public OptionalFieldInspectionTool() {
         super(new OptionalFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

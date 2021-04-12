@@ -19,6 +19,7 @@ public class ExplicitCallToRightShiftMethodInspectionTool extends CodeNarcInspec
 
     public ExplicitCallToRightShiftMethodInspectionTool() {
         super(new ExplicitCallToRightShiftMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

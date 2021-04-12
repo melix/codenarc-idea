@@ -19,6 +19,7 @@ public class StaticSimpleDateFormatFieldInspectionTool extends CodeNarcInspectio
 
     public StaticSimpleDateFormatFieldInspectionTool() {
         super(new StaticSimpleDateFormatFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

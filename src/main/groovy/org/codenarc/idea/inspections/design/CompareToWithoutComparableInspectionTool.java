@@ -19,6 +19,7 @@ public class CompareToWithoutComparableInspectionTool extends CodeNarcInspection
 
     public CompareToWithoutComparableInspectionTool() {
         super(new CompareToWithoutComparableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

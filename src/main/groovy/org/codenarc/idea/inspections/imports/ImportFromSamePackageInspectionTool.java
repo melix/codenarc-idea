@@ -19,6 +19,7 @@ public class ImportFromSamePackageInspectionTool extends CodeNarcInspectionTool<
 
     public ImportFromSamePackageInspectionTool() {
         super(new ImportFromSamePackageRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

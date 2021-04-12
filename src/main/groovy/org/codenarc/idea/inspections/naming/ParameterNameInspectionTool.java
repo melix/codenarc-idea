@@ -19,6 +19,7 @@ public class ParameterNameInspectionTool extends CodeNarcInspectionTool<Paramete
 
     public ParameterNameInspectionTool() {
         super(new ParameterNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

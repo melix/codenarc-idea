@@ -19,6 +19,7 @@ public class UnnecessaryNullCheckBeforeInstanceOfInspectionTool extends CodeNarc
 
     public UnnecessaryNullCheckBeforeInstanceOfInspectionTool() {
         super(new UnnecessaryNullCheckBeforeInstanceOfRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

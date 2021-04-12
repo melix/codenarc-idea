@@ -19,6 +19,7 @@ public class CatchRuntimeExceptionInspectionTool extends CodeNarcInspectionTool<
 
     public CatchRuntimeExceptionInspectionTool() {
         super(new CatchRuntimeExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

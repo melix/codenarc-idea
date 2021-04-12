@@ -19,6 +19,7 @@ public class RequiredStringInspectionTool extends CodeNarcInspectionTool<Require
 
     public RequiredStringInspectionTool() {
         super(new RequiredStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

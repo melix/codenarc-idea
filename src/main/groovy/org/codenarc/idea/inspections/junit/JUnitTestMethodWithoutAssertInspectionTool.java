@@ -19,6 +19,7 @@ public class JUnitTestMethodWithoutAssertInspectionTool extends CodeNarcInspecti
 
     public JUnitTestMethodWithoutAssertInspectionTool() {
         super(new JUnitTestMethodWithoutAssertRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

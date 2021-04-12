@@ -19,6 +19,7 @@ public class GrailsServletContextReferenceInspectionTool extends CodeNarcInspect
 
     public GrailsServletContextReferenceInspectionTool() {
         super(new GrailsServletContextReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

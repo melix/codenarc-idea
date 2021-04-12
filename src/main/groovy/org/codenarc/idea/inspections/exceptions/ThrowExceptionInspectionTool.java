@@ -19,6 +19,7 @@ public class ThrowExceptionInspectionTool extends CodeNarcInspectionTool<ThrowEx
 
     public ThrowExceptionInspectionTool() {
         super(new ThrowExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

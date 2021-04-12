@@ -19,6 +19,7 @@ public class SynchronizedOnReentrantLockInspectionTool extends CodeNarcInspectio
 
     public SynchronizedOnReentrantLockInspectionTool() {
         super(new SynchronizedOnReentrantLockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

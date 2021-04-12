@@ -19,6 +19,7 @@ public class AbcMetricInspectionTool extends CodeNarcInspectionTool<AbcMetricRul
 
     public AbcMetricInspectionTool() {
         super(new AbcMetricRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

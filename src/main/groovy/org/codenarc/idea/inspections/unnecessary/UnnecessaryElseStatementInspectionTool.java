@@ -19,6 +19,7 @@ public class UnnecessaryElseStatementInspectionTool extends CodeNarcInspectionTo
 
     public UnnecessaryElseStatementInspectionTool() {
         super(new UnnecessaryElseStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

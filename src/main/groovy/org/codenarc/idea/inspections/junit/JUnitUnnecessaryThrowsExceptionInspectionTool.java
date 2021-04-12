@@ -19,6 +19,7 @@ public class JUnitUnnecessaryThrowsExceptionInspectionTool extends CodeNarcInspe
 
     public JUnitUnnecessaryThrowsExceptionInspectionTool() {
         super(new JUnitUnnecessaryThrowsExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

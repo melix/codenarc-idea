@@ -19,6 +19,7 @@ public class SynchronizedOnStringInspectionTool extends CodeNarcInspectionTool<S
 
     public SynchronizedOnStringInspectionTool() {
         super(new SynchronizedOnStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

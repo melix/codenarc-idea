@@ -19,6 +19,7 @@ public class DoubleCheckedLockingInspectionTool extends CodeNarcInspectionTool<D
 
     public DoubleCheckedLockingInspectionTool() {
         super(new DoubleCheckedLockingRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

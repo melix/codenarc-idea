@@ -19,6 +19,7 @@ public class UnnecessaryBigIntegerInstantiationInspectionTool extends CodeNarcIn
 
     public UnnecessaryBigIntegerInstantiationInspectionTool() {
         super(new UnnecessaryBigIntegerInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

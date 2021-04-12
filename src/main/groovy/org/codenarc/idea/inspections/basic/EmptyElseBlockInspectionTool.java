@@ -19,6 +19,7 @@ public class EmptyElseBlockInspectionTool extends CodeNarcInspectionTool<EmptyEl
 
     public EmptyElseBlockInspectionTool() {
         super(new EmptyElseBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ClosureStatementOnOpeningLineOfMultipleLineClosureInspectionTool ex
 
     public ClosureStatementOnOpeningLineOfMultipleLineClosureInspectionTool() {
         super(new ClosureStatementOnOpeningLineOfMultipleLineClosureRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class MisorderedStaticImportsInspectionTool extends CodeNarcInspectionToo
 
     public MisorderedStaticImportsInspectionTool() {
         super(new MisorderedStaticImportsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

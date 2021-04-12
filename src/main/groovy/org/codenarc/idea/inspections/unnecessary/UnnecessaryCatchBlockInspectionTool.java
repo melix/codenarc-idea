@@ -19,6 +19,7 @@ public class UnnecessaryCatchBlockInspectionTool extends CodeNarcInspectionTool<
 
     public UnnecessaryCatchBlockInspectionTool() {
         super(new UnnecessaryCatchBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

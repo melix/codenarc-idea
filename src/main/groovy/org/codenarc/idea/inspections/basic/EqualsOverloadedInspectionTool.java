@@ -19,6 +19,7 @@ public class EqualsOverloadedInspectionTool extends CodeNarcInspectionTool<Equal
 
     public EqualsOverloadedInspectionTool() {
         super(new EqualsOverloadedRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ThreadGroupInspectionTool extends CodeNarcInspectionTool<ThreadGrou
 
     public ThreadGroupInspectionTool() {
         super(new ThreadGroupRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

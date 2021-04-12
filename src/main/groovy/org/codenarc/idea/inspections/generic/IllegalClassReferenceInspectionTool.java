@@ -19,6 +19,7 @@ public class IllegalClassReferenceInspectionTool extends CodeNarcInspectionTool<
 
     public IllegalClassReferenceInspectionTool() {
         super(new IllegalClassReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

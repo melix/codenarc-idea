@@ -19,6 +19,7 @@ public class LocaleSetDefaultInspectionTool extends CodeNarcInspectionTool<Local
 
     public LocaleSetDefaultInspectionTool() {
         super(new LocaleSetDefaultRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

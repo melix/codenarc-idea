@@ -19,6 +19,7 @@ public class RequiredRegexInspectionTool extends CodeNarcInspectionTool<Required
 
     public RequiredRegexInspectionTool() {
         super(new RequiredRegexRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

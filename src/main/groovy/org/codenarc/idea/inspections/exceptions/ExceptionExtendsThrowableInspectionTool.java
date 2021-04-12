@@ -19,6 +19,7 @@ public class ExceptionExtendsThrowableInspectionTool extends CodeNarcInspectionT
 
     public ExceptionExtendsThrowableInspectionTool() {
         super(new ExceptionExtendsThrowableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class JUnitSetUpCallsSuperInspectionTool extends CodeNarcInspectionTool<J
 
     public JUnitSetUpCallsSuperInspectionTool() {
         super(new JUnitSetUpCallsSuperRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

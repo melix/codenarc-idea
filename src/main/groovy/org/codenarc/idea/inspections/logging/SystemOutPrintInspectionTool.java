@@ -19,6 +19,7 @@ public class SystemOutPrintInspectionTool extends CodeNarcInspectionTool<SystemO
 
     public SystemOutPrintInspectionTool() {
         super(new SystemOutPrintRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ClassSizeInspectionTool extends CodeNarcInspectionTool<ClassSizeRul
 
     public ClassSizeInspectionTool() {
         super(new ClassSizeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

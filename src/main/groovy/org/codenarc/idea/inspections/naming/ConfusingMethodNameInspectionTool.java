@@ -20,6 +20,7 @@ public class ConfusingMethodNameInspectionTool extends CodeNarcInspectionTool<Co
 
     public ConfusingMethodNameInspectionTool() {
         super(new ConfusingMethodNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

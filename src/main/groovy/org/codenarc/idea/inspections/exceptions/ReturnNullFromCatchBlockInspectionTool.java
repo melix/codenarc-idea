@@ -19,6 +19,7 @@ public class ReturnNullFromCatchBlockInspectionTool extends CodeNarcInspectionTo
 
     public ReturnNullFromCatchBlockInspectionTool() {
         super(new ReturnNullFromCatchBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

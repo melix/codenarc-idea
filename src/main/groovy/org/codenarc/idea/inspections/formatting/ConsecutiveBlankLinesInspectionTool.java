@@ -20,6 +20,7 @@ public class ConsecutiveBlankLinesInspectionTool extends CodeNarcInspectionTool<
 
     public ConsecutiveBlankLinesInspectionTool() {
         super(new ConsecutiveBlankLinesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

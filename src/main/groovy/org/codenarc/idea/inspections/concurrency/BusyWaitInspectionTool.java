@@ -19,6 +19,7 @@ public class BusyWaitInspectionTool extends CodeNarcInspectionTool<BusyWaitRule>
 
     public BusyWaitInspectionTool() {
         super(new BusyWaitRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

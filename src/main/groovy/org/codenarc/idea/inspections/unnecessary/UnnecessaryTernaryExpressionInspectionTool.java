@@ -19,6 +19,7 @@ public class UnnecessaryTernaryExpressionInspectionTool extends CodeNarcInspecti
 
     public UnnecessaryTernaryExpressionInspectionTool() {
         super(new UnnecessaryTernaryExpressionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class JavadocEmptyReturnTagInspectionTool extends CodeNarcInspectionTool<
 
     public JavadocEmptyReturnTagInspectionTool() {
         super(new JavadocEmptyReturnTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ExplicitCallToXorMethodInspectionTool extends CodeNarcInspectionToo
 
     public ExplicitCallToXorMethodInspectionTool() {
         super(new ExplicitCallToXorMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

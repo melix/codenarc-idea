@@ -19,6 +19,7 @@ public class JavadocEmptyAuthorTagInspectionTool extends CodeNarcInspectionTool<
 
     public JavadocEmptyAuthorTagInspectionTool() {
         super(new JavadocEmptyAuthorTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

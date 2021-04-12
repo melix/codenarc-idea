@@ -19,6 +19,7 @@ public class BracesForIfElseInspectionTool extends CodeNarcInspectionTool<Braces
 
     public BracesForIfElseInspectionTool() {
         super(new BracesForIfElseRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

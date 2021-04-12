@@ -19,6 +19,7 @@ public class IllegalRegexInspectionTool extends CodeNarcInspectionTool<IllegalRe
 
     public IllegalRegexInspectionTool() {
         super(new IllegalRegexRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

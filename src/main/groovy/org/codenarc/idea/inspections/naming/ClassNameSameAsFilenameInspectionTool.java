@@ -20,6 +20,7 @@ public class ClassNameSameAsFilenameInspectionTool extends CodeNarcInspectionToo
 
     public ClassNameSameAsFilenameInspectionTool() {
         super(new ClassNameSameAsFilenameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

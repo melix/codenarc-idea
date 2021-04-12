@@ -19,6 +19,7 @@ public class JavadocMissingThrowsDescriptionInspectionTool extends CodeNarcInspe
 
     public JavadocMissingThrowsDescriptionInspectionTool() {
         super(new JavadocMissingThrowsDescriptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

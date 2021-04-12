@@ -19,6 +19,7 @@ public class UnnecessaryLongInstantiationInspectionTool extends CodeNarcInspecti
 
     public UnnecessaryLongInstantiationInspectionTool() {
         super(new UnnecessaryLongInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class RemoveAllOnSelfInspectionTool extends CodeNarcInspectionTool<Remove
 
     public RemoveAllOnSelfInspectionTool() {
         super(new RemoveAllOnSelfRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

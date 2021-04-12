@@ -19,6 +19,7 @@ public class SpaceAfterSemicolonInspectionTool extends CodeNarcInspectionTool<Sp
 
     public SpaceAfterSemicolonInspectionTool() {
         super(new SpaceAfterSemicolonRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

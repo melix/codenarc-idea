@@ -19,6 +19,7 @@ public class VariableTypeRequiredInspectionTool extends CodeNarcInspectionTool<V
 
     public VariableTypeRequiredInspectionTool() {
         super(new VariableTypeRequiredRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

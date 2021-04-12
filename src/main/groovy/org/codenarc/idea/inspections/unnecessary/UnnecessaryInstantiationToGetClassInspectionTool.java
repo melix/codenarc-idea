@@ -19,6 +19,7 @@ public class UnnecessaryInstantiationToGetClassInspectionTool extends CodeNarcIn
 
     public UnnecessaryInstantiationToGetClassInspectionTool() {
         super(new UnnecessaryInstantiationToGetClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

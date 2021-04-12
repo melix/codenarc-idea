@@ -19,6 +19,7 @@ public class JdbcConnectionReferenceInspectionTool extends CodeNarcInspectionToo
 
     public JdbcConnectionReferenceInspectionTool() {
         super(new JdbcConnectionReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

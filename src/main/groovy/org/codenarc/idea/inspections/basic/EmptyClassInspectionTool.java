@@ -19,6 +19,7 @@ public class EmptyClassInspectionTool extends CodeNarcInspectionTool<EmptyClassR
 
     public EmptyClassInspectionTool() {
         super(new EmptyClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

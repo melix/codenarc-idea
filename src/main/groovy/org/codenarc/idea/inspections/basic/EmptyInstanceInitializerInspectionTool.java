@@ -19,6 +19,7 @@ public class EmptyInstanceInitializerInspectionTool extends CodeNarcInspectionTo
 
     public EmptyInstanceInitializerInspectionTool() {
         super(new EmptyInstanceInitializerRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

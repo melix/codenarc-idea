@@ -19,6 +19,7 @@ public class CloseWithoutCloseableInspectionTool extends CodeNarcInspectionTool<
 
     public CloseWithoutCloseableInspectionTool() {
         super(new CloseWithoutCloseableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

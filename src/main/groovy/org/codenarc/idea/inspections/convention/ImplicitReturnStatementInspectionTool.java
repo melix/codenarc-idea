@@ -19,6 +19,7 @@ public class ImplicitReturnStatementInspectionTool extends CodeNarcInspectionToo
 
     public ImplicitReturnStatementInspectionTool() {
         super(new ImplicitReturnStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

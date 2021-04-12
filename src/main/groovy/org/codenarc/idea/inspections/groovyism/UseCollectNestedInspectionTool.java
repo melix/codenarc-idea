@@ -19,6 +19,7 @@ public class UseCollectNestedInspectionTool extends CodeNarcInspectionTool<UseCo
 
     public UseCollectNestedInspectionTool() {
         super(new UseCollectNestedRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

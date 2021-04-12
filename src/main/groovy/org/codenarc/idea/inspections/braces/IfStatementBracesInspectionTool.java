@@ -19,6 +19,7 @@ public class IfStatementBracesInspectionTool extends CodeNarcInspectionTool<IfSt
 
     public IfStatementBracesInspectionTool() {
         super(new IfStatementBracesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -20,6 +20,7 @@ public class ConfusingClassNamedExceptionInspectionTool extends CodeNarcInspecti
 
     public ConfusingClassNamedExceptionInspectionTool() {
         super(new ConfusingClassNamedExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

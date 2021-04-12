@@ -19,6 +19,7 @@ public class ExplicitCallToMinusMethodInspectionTool extends CodeNarcInspectionT
 
     public ExplicitCallToMinusMethodInspectionTool() {
         super(new ExplicitCallToMinusMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

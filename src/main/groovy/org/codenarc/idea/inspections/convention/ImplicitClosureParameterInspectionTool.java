@@ -19,6 +19,7 @@ public class ImplicitClosureParameterInspectionTool extends CodeNarcInspectionTo
 
     public ImplicitClosureParameterInspectionTool() {
         super(new ImplicitClosureParameterRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

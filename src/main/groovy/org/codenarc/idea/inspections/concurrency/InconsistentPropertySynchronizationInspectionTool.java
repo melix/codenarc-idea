@@ -19,6 +19,7 @@ public class InconsistentPropertySynchronizationInspectionTool extends CodeNarcI
 
     public InconsistentPropertySynchronizationInspectionTool() {
         super(new InconsistentPropertySynchronizationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

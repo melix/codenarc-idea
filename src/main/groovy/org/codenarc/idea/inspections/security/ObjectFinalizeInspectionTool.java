@@ -19,6 +19,7 @@ public class ObjectFinalizeInspectionTool extends CodeNarcInspectionTool<ObjectF
 
     public ObjectFinalizeInspectionTool() {
         super(new ObjectFinalizeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

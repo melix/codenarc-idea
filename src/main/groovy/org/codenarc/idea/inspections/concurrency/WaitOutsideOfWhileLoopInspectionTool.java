@@ -19,6 +19,7 @@ public class WaitOutsideOfWhileLoopInspectionTool extends CodeNarcInspectionTool
 
     public WaitOutsideOfWhileLoopInspectionTool() {
         super(new WaitOutsideOfWhileLoopRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

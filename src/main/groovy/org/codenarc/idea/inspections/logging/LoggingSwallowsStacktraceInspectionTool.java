@@ -19,6 +19,7 @@ public class LoggingSwallowsStacktraceInspectionTool extends CodeNarcInspectionT
 
     public LoggingSwallowsStacktraceInspectionTool() {
         super(new LoggingSwallowsStacktraceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

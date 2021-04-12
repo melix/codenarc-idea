@@ -19,6 +19,7 @@ public class UnusedObjectInspectionTool extends CodeNarcInspectionTool<UnusedObj
 
     public UnusedObjectInspectionTool() {
         super(new UnusedObjectRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

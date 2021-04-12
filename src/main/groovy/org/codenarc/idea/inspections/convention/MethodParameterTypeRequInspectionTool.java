@@ -19,6 +19,7 @@ public class MethodParameterTypeRequInspectionTool extends CodeNarcInspectionToo
 
     public MethodParameterTypeRequInspectionTool() {
         super(new MethodParameterTypeRequired());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class SpaceAfterForInspectionTool extends CodeNarcInspectionTool<SpaceAft
 
     public SpaceAfterForInspectionTool() {
         super(new SpaceAfterForRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

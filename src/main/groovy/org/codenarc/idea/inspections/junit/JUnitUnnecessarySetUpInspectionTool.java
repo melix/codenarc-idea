@@ -19,6 +19,7 @@ public class JUnitUnnecessarySetUpInspectionTool extends CodeNarcInspectionTool<
 
     public JUnitUnnecessarySetUpInspectionTool() {
         super(new JUnitUnnecessarySetUpRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

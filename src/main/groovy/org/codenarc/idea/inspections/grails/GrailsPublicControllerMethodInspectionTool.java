@@ -19,6 +19,7 @@ public class GrailsPublicControllerMethodInspectionTool extends CodeNarcInspecti
 
     public GrailsPublicControllerMethodInspectionTool() {
         super(new GrailsPublicControllerMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

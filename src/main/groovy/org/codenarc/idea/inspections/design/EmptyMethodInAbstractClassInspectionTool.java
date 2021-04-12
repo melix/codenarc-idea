@@ -19,6 +19,7 @@ public class EmptyMethodInAbstractClassInspectionTool extends CodeNarcInspection
 
     public EmptyMethodInAbstractClassInspectionTool() {
         super(new EmptyMethodInAbstractClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

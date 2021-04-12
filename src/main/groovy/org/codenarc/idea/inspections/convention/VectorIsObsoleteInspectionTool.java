@@ -19,6 +19,7 @@ public class VectorIsObsoleteInspectionTool extends CodeNarcInspectionTool<Vecto
 
     public VectorIsObsoleteInspectionTool() {
         super(new VectorIsObsoleteRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

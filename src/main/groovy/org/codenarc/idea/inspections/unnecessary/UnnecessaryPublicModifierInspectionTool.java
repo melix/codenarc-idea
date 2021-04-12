@@ -19,6 +19,7 @@ public class UnnecessaryPublicModifierInspectionTool extends CodeNarcInspectionT
 
     public UnnecessaryPublicModifierInspectionTool() {
         super(new UnnecessaryPublicModifierRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class UnusedArrayInspectionTool extends CodeNarcInspectionTool<UnusedArra
 
     public UnusedArrayInspectionTool() {
         super(new UnusedArrayRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

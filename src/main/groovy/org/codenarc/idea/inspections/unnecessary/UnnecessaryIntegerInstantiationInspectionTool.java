@@ -19,6 +19,7 @@ public class UnnecessaryIntegerInstantiationInspectionTool extends CodeNarcInspe
 
     public UnnecessaryIntegerInstantiationInspectionTool() {
         super(new UnnecessaryIntegerInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

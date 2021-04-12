@@ -19,6 +19,7 @@ public class PackageNameMatchesFilePathInspectionTool extends CodeNarcInspection
 
     public PackageNameMatchesFilePathInspectionTool() {
         super(new PackageNameMatchesFilePathRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

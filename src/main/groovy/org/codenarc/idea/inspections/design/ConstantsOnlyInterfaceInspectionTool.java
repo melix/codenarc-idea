@@ -19,6 +19,7 @@ public class ConstantsOnlyInterfaceInspectionTool extends CodeNarcInspectionTool
 
     public ConstantsOnlyInterfaceInspectionTool() {
         super(new ConstantsOnlyInterfaceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

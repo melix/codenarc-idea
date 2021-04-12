@@ -19,6 +19,7 @@ public class ThrowThrowableInspectionTool extends CodeNarcInspectionTool<ThrowTh
 
     public ThrowThrowableInspectionTool() {
         super(new ThrowThrowableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

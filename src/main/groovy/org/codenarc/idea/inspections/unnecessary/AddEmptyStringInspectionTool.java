@@ -19,6 +19,7 @@ public class AddEmptyStringInspectionTool extends CodeNarcInspectionTool<AddEmpt
 
     public AddEmptyStringInspectionTool() {
         super(new AddEmptyStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

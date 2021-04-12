@@ -19,6 +19,7 @@ public class NoTabCharacterInspectionTool extends CodeNarcInspectionTool<NoTabCh
 
     public NoTabCharacterInspectionTool() {
         super(new NoTabCharacterRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

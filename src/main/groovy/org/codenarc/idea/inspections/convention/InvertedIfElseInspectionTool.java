@@ -19,6 +19,7 @@ public class InvertedIfElseInspectionTool extends CodeNarcInspectionTool<Inverte
 
     public InvertedIfElseInspectionTool() {
         super(new InvertedIfElseRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

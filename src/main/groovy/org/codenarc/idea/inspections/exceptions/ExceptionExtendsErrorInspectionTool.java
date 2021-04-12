@@ -19,6 +19,7 @@ public class ExceptionExtendsErrorInspectionTool extends CodeNarcInspectionTool<
 
     public ExceptionExtendsErrorInspectionTool() {
         super(new ExceptionExtendsErrorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

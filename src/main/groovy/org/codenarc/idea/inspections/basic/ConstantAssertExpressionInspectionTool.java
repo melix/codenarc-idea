@@ -19,6 +19,7 @@ public class ConstantAssertExpressionInspectionTool extends CodeNarcInspectionTo
 
     public ConstantAssertExpressionInspectionTool() {
         super(new ConstantAssertExpressionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

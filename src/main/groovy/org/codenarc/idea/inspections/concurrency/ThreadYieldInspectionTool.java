@@ -19,6 +19,7 @@ public class ThreadYieldInspectionTool extends CodeNarcInspectionTool<ThreadYiel
 
     public ThreadYieldInspectionTool() {
         super(new ThreadYieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

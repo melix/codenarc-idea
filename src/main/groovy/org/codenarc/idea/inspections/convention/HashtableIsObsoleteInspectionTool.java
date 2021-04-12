@@ -19,6 +19,7 @@ public class HashtableIsObsoleteInspectionTool extends CodeNarcInspectionTool<Ha
 
     public HashtableIsObsoleteInspectionTool() {
         super(new HashtableIsObsoleteRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

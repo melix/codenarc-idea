@@ -19,6 +19,7 @@ public class EmptyCatchBlockInspectionTool extends CodeNarcInspectionTool<EmptyC
 
     public EmptyCatchBlockInspectionTool() {
         super(new EmptyCatchBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

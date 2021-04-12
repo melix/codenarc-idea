@@ -19,6 +19,7 @@ public class CyclomaticComplexityInspectionTool extends CodeNarcInspectionTool<C
 
     public CyclomaticComplexityInspectionTool() {
         super(new CyclomaticComplexityRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

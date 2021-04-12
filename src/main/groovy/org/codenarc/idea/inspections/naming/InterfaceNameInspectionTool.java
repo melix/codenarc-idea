@@ -19,6 +19,7 @@ public class InterfaceNameInspectionTool extends CodeNarcInspectionTool<Interfac
 
     public InterfaceNameInspectionTool() {
         super(new InterfaceNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

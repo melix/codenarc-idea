@@ -19,6 +19,7 @@ public class JdbcResultSetReferenceInspectionTool extends CodeNarcInspectionTool
 
     public JdbcResultSetReferenceInspectionTool() {
         super(new JdbcResultSetReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

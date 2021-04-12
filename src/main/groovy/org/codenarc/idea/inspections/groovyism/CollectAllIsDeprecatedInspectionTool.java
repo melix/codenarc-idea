@@ -19,6 +19,7 @@ public class CollectAllIsDeprecatedInspectionTool extends CodeNarcInspectionTool
 
     public CollectAllIsDeprecatedInspectionTool() {
         super(new CollectAllIsDeprecatedRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

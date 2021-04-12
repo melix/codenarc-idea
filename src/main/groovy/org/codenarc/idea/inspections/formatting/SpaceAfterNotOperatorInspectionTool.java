@@ -19,6 +19,7 @@ public class SpaceAfterNotOperatorInspectionTool extends CodeNarcInspectionTool<
 
     public SpaceAfterNotOperatorInspectionTool() {
         super(new SpaceAfterNotOperatorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

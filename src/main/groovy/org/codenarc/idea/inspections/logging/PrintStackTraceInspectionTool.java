@@ -19,6 +19,7 @@ public class PrintStackTraceInspectionTool extends CodeNarcInspectionTool<PrintS
 
     public PrintStackTraceInspectionTool() {
         super(new PrintStackTraceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

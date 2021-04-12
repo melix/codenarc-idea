@@ -19,6 +19,7 @@ public class BrokenNullCheckInspectionTool extends CodeNarcInspectionTool<Broken
 
     public BrokenNullCheckInspectionTool() {
         super(new BrokenNullCheckRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

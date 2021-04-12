@@ -19,6 +19,7 @@ public class HardCodedWindowsFileSeparatorInspectionTool extends CodeNarcInspect
 
     public HardCodedWindowsFileSeparatorInspectionTool() {
         super(new HardCodedWindowsFileSeparatorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

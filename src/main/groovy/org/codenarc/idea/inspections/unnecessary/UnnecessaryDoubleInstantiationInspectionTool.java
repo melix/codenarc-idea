@@ -19,6 +19,7 @@ public class UnnecessaryDoubleInstantiationInspectionTool extends CodeNarcInspec
 
     public UnnecessaryDoubleInstantiationInspectionTool() {
         super(new UnnecessaryDoubleInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class BuilderMethodWithSideEffectsInspectionTool extends CodeNarcInspecti
 
     public BuilderMethodWithSideEffectsInspectionTool() {
         super(new BuilderMethodWithSideEffectsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

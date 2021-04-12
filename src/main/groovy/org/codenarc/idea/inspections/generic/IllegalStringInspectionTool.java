@@ -19,6 +19,7 @@ public class IllegalStringInspectionTool extends CodeNarcInspectionTool<IllegalS
 
     public IllegalStringInspectionTool() {
         super(new IllegalStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

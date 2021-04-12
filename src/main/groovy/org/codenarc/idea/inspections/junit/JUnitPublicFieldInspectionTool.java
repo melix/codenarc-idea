@@ -19,6 +19,7 @@ public class JUnitPublicFieldInspectionTool extends CodeNarcInspectionTool<JUnit
 
     public JUnitPublicFieldInspectionTool() {
         super(new JUnitPublicFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class JUnitPublicFieldInspectionTool extends CodeNarcInspectionTool<JUnit
 
     @Override
     protected void applyDefaultConfiguration(JUnitPublicFieldRule rule) {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ExplicitLinkedListInstantiationInspectionTool extends CodeNarcInspe
 
     public ExplicitLinkedListInstantiationInspectionTool() {
         super(new ExplicitLinkedListInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

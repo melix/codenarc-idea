@@ -19,6 +19,7 @@ public class ToStringReturnsNullInspectionTool extends CodeNarcInspectionTool<To
 
     public ToStringReturnsNullInspectionTool() {
         super(new ToStringReturnsNullRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

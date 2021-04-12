@@ -19,6 +19,7 @@ public class MethodReturnTypeRequiredInspectionTool extends CodeNarcInspectionTo
 
     public MethodReturnTypeRequiredInspectionTool() {
         super(new MethodReturnTypeRequiredRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class MethodReturnTypeRequiredInspectionTool extends CodeNarcInspectionTo
 
     @Override
     protected void applyDefaultConfiguration(MethodReturnTypeRequiredRule rule) {
-        rule.setDoNotApplyToFilesMatching("*Controller.groovy");
+        rule.setDoNotApplyToFilesMatching(".*Controller\\.groovy");
     }
 
     @Override

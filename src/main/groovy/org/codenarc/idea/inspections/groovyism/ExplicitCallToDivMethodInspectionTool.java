@@ -19,6 +19,7 @@ public class ExplicitCallToDivMethodInspectionTool extends CodeNarcInspectionToo
 
     public ExplicitCallToDivMethodInspectionTool() {
         super(new ExplicitCallToDivMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class GrailsDuplicateMappingInspectionTool extends CodeNarcInspectionTool
 
     public GrailsDuplicateMappingInspectionTool() {
         super(new GrailsDuplicateMappingRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class UnnecessaryPackageReferenceInspectionTool extends CodeNarcInspectio
 
     public UnnecessaryPackageReferenceInspectionTool() {
         super(new UnnecessaryPackageReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ExplicitHashMapInstantiationInspectionTool extends CodeNarcInspecti
 
     public ExplicitHashMapInstantiationInspectionTool() {
         super(new ExplicitHashMapInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

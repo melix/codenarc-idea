@@ -19,6 +19,7 @@ public class UnnecessarySafeNavigationOperatorInspectionTool extends CodeNarcIns
 
     public UnnecessarySafeNavigationOperatorInspectionTool() {
         super(new UnnecessarySafeNavigationOperatorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

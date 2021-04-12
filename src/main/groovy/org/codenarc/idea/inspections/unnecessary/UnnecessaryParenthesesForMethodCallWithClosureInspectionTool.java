@@ -19,6 +19,7 @@ public class UnnecessaryParenthesesForMethodCallWithClosureInspectionTool extend
 
     public UnnecessaryParenthesesForMethodCallWithClosureInspectionTool() {
         super(new UnnecessaryParenthesesForMethodCallWithClosureRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

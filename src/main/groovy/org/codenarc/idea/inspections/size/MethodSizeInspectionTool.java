@@ -19,6 +19,7 @@ public class MethodSizeInspectionTool extends CodeNarcInspectionTool<MethodSizeR
 
     public MethodSizeInspectionTool() {
         super(new MethodSizeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

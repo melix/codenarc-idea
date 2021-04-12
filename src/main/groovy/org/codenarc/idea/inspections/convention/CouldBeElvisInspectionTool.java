@@ -19,6 +19,7 @@ public class CouldBeElvisInspectionTool extends CodeNarcInspectionTool<CouldBeEl
 
     public CouldBeElvisInspectionTool() {
         super(new CouldBeElvisRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

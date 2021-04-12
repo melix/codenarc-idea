@@ -19,6 +19,7 @@ public class ExplicitCallToMultiplyMethodInspectionTool extends CodeNarcInspecti
 
     public ExplicitCallToMultiplyMethodInspectionTool() {
         super(new ExplicitCallToMultiplyMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -21,6 +21,7 @@ public class UnnecessaryReturnKeywordInspectionTool extends CodeNarcInspectionTo
 
     public UnnecessaryReturnKeywordInspectionTool() {
         super(new UnnecessaryReturnKeywordRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

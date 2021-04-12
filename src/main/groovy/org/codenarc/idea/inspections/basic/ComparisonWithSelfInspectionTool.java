@@ -19,6 +19,7 @@ public class ComparisonWithSelfInspectionTool extends CodeNarcInspectionTool<Com
 
     public ComparisonWithSelfInspectionTool() {
         super(new ComparisonWithSelfRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

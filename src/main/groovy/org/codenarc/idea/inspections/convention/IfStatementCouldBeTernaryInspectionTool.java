@@ -19,6 +19,7 @@ public class IfStatementCouldBeTernaryInspectionTool extends CodeNarcInspectionT
 
     public IfStatementCouldBeTernaryInspectionTool() {
         super(new IfStatementCouldBeTernaryRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

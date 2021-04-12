@@ -19,6 +19,7 @@ public class ImplementationAsTypeInspectionTool extends CodeNarcInspectionTool<I
 
     public ImplementationAsTypeInspectionTool() {
         super(new ImplementationAsTypeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class GrailsDomainWithServiceReferenceInspectionTool extends CodeNarcInsp
 
     public GrailsDomainWithServiceReferenceInspectionTool() {
         super(new GrailsDomainWithServiceReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

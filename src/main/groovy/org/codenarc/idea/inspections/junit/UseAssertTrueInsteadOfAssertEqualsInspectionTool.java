@@ -19,6 +19,7 @@ public class UseAssertTrueInsteadOfAssertEqualsInspectionTool extends CodeNarcIn
 
     public UseAssertTrueInsteadOfAssertEqualsInspectionTool() {
         super(new UseAssertTrueInsteadOfAssertEqualsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

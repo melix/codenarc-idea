@@ -19,6 +19,7 @@ public class IllegalPackageReferenceInspectionTool extends CodeNarcInspectionToo
 
     public IllegalPackageReferenceInspectionTool() {
         super(new IllegalPackageReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

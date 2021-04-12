@@ -19,6 +19,7 @@ public class GrailsDuplicateConstraintInspectionTool extends CodeNarcInspectionT
 
     public GrailsDuplicateConstraintInspectionTool() {
         super(new GrailsDuplicateConstraintRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

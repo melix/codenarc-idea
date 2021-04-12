@@ -19,6 +19,7 @@ public class BigDecimalInstantiationInspectionTool extends CodeNarcInspectionToo
 
     public BigDecimalInstantiationInspectionTool() {
         super(new BigDecimalInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

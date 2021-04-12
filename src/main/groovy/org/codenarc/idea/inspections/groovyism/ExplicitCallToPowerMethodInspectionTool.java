@@ -19,6 +19,7 @@ public class ExplicitCallToPowerMethodInspectionTool extends CodeNarcInspectionT
 
     public ExplicitCallToPowerMethodInspectionTool() {
         super(new ExplicitCallToPowerMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class GrailsDomainReservedSqlKeywordNameInspectionTool extends CodeNarcIn
 
     public GrailsDomainReservedSqlKeywordNameInspectionTool() {
         super(new GrailsDomainReservedSqlKeywordNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

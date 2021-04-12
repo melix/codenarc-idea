@@ -19,6 +19,7 @@ public class ConsecutiveStringConcatenationInspectionTool extends CodeNarcInspec
 
     public ConsecutiveStringConcatenationInspectionTool() {
         super(new ConsecutiveStringConcatenationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

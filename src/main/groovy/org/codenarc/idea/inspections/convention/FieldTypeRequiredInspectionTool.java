@@ -19,6 +19,7 @@ public class FieldTypeRequiredInspectionTool extends CodeNarcInspectionTool<Fiel
 
     public FieldTypeRequiredInspectionTool() {
         super(new FieldTypeRequiredRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

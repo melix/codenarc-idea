@@ -21,6 +21,7 @@ public class AssignCollectionSortInspectionTool extends CodeNarcInspectionTool<A
 
     public AssignCollectionSortInspectionTool() {
         super(new AssignCollectionSortRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class UnnecessaryBooleanExpressionInspectionTool extends CodeNarcInspecti
 
     public UnnecessaryBooleanExpressionInspectionTool() {
         super(new UnnecessaryBooleanExpressionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

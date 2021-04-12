@@ -19,6 +19,7 @@ public class UnnecessarySemicolonInspectionTool extends CodeNarcInspectionTool<U
 
     public UnnecessarySemicolonInspectionTool() {
         super(new UnnecessarySemicolonRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

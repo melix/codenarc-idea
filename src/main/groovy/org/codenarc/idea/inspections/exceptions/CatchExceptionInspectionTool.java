@@ -19,6 +19,7 @@ public class CatchExceptionInspectionTool extends CodeNarcInspectionTool<CatchEx
 
     public CatchExceptionInspectionTool() {
         super(new CatchExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

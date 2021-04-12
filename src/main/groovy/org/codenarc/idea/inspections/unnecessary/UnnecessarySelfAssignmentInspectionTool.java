@@ -19,6 +19,7 @@ public class UnnecessarySelfAssignmentInspectionTool extends CodeNarcInspectionT
 
     public UnnecessarySelfAssignmentInspectionTool() {
         super(new UnnecessarySelfAssignmentRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

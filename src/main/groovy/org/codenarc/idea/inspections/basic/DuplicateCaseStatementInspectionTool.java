@@ -19,6 +19,7 @@ public class DuplicateCaseStatementInspectionTool extends CodeNarcInspectionTool
 
     public DuplicateCaseStatementInspectionTool() {
         super(new DuplicateCaseStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class GrailsDomainStringPropertyMaxSizeInspectionTool extends CodeNarcIns
 
     public GrailsDomainStringPropertyMaxSizeInspectionTool() {
         super(new GrailsDomainStringPropertyMaxSizeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

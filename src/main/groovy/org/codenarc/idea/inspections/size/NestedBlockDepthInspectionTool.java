@@ -19,6 +19,7 @@ public class NestedBlockDepthInspectionTool extends CodeNarcInspectionTool<Neste
 
     public NestedBlockDepthInspectionTool() {
         super(new NestedBlockDepthRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

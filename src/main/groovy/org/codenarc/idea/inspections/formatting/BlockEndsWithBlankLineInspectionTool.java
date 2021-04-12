@@ -20,6 +20,7 @@ public class BlockEndsWithBlankLineInspectionTool extends CodeNarcInspectionTool
 
     public BlockEndsWithBlankLineInspectionTool() {
         super(new BlockEndsWithBlankLineRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

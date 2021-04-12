@@ -19,6 +19,7 @@ public class SystemExitInspectionTool extends CodeNarcInspectionTool<SystemExitR
 
     public SystemExitInspectionTool() {
         super(new SystemExitRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

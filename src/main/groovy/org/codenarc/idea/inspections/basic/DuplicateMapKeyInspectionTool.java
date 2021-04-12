@@ -19,6 +19,7 @@ public class DuplicateMapKeyInspectionTool extends CodeNarcInspectionTool<Duplic
 
     public DuplicateMapKeyInspectionTool() {
         super(new DuplicateMapKeyRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ForStatementBracesInspectionTool extends CodeNarcInspectionTool<For
 
     public ForStatementBracesInspectionTool() {
         super(new ForStatementBracesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

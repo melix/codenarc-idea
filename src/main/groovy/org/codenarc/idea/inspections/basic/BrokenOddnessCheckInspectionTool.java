@@ -19,6 +19,7 @@ public class BrokenOddnessCheckInspectionTool extends CodeNarcInspectionTool<Bro
 
     public BrokenOddnessCheckInspectionTool() {
         super(new BrokenOddnessCheckRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class IllegalSubclassInspectionTool extends CodeNarcInspectionTool<Illega
 
     public IllegalSubclassInspectionTool() {
         super(new IllegalSubclassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

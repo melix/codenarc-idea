@@ -19,6 +19,7 @@ public class OptionalMethodParameterInspectionTool extends CodeNarcInspectionToo
 
     public OptionalMethodParameterInspectionTool() {
         super(new OptionalMethodParameterRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

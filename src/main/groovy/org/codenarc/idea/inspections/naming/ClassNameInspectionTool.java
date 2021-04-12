@@ -20,6 +20,7 @@ public class ClassNameInspectionTool extends CodeNarcInspectionTool<ClassNameRul
 
     public ClassNameInspectionTool() {
         super(new ClassNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class EqualsAndHashCodeInspectionTool extends CodeNarcInspectionTool<Equa
 
     public EqualsAndHashCodeInspectionTool() {
         super(new EqualsAndHashCodeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

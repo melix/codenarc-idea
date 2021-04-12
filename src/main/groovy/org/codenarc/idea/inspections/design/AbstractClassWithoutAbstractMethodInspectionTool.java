@@ -27,6 +27,7 @@ public class AbstractClassWithoutAbstractMethodInspectionTool extends CodeNarcIn
 
     public AbstractClassWithoutAbstractMethodInspectionTool() {
         super(new AbstractClassWithoutAbstractMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

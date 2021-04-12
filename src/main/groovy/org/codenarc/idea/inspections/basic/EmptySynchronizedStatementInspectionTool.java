@@ -19,6 +19,7 @@ public class EmptySynchronizedStatementInspectionTool extends CodeNarcInspection
 
     public EmptySynchronizedStatementInspectionTool() {
         super(new EmptySynchronizedStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

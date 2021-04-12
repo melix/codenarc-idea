@@ -19,6 +19,7 @@ public class DoubleNegativeInspectionTool extends CodeNarcInspectionTool<DoubleN
 
     public DoubleNegativeInspectionTool() {
         super(new DoubleNegativeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

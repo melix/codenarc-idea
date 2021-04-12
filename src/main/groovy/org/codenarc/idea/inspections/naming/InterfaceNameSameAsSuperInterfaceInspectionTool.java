@@ -19,6 +19,7 @@ public class InterfaceNameSameAsSuperInterfaceInspectionTool extends CodeNarcIns
 
     public InterfaceNameSameAsSuperInterfaceInspectionTool() {
         super(new InterfaceNameSameAsSuperInterfaceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

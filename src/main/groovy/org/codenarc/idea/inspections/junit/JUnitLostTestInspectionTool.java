@@ -19,6 +19,7 @@ public class JUnitLostTestInspectionTool extends CodeNarcInspectionTool<JUnitLos
 
     public JUnitLostTestInspectionTool() {
         super(new JUnitLostTestRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

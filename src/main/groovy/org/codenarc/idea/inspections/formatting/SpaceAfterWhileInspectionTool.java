@@ -19,6 +19,7 @@ public class SpaceAfterWhileInspectionTool extends CodeNarcInspectionTool<SpaceA
 
     public SpaceAfterWhileInspectionTool() {
         super(new SpaceAfterWhileRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class JavadocEmptyThrowsTagInspectionTool extends CodeNarcInspectionTool<
 
     public JavadocEmptyThrowsTagInspectionTool() {
         super(new JavadocEmptyThrowsTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

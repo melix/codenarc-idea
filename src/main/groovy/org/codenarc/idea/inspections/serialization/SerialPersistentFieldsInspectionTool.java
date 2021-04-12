@@ -19,6 +19,7 @@ public class SerialPersistentFieldsInspectionTool extends CodeNarcInspectionTool
 
     public SerialPersistentFieldsInspectionTool() {
         super(new SerialPersistentFieldsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class SpockIgnoreRestUsedInspectionTool extends CodeNarcInspectionTool<Sp
 
     public SpockIgnoreRestUsedInspectionTool() {
         super(new SpockIgnoreRestUsedRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

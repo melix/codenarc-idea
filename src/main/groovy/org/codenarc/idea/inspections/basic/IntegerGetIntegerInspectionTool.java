@@ -19,6 +19,7 @@ public class IntegerGetIntegerInspectionTool extends CodeNarcInspectionTool<Inte
 
     public IntegerGetIntegerInspectionTool() {
         super(new IntegerGetIntegerRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

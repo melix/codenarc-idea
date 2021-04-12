@@ -19,6 +19,7 @@ public class MissingNewInThrowStatementInspectionTool extends CodeNarcInspection
 
     public MissingNewInThrowStatementInspectionTool() {
         super(new MissingNewInThrowStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

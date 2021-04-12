@@ -19,6 +19,7 @@ public class VolatileArrayFieldInspectionTool extends CodeNarcInspectionTool<Vol
 
     public VolatileArrayFieldInspectionTool() {
         super(new VolatileArrayFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

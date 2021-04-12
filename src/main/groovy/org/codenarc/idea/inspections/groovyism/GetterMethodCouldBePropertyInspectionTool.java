@@ -19,6 +19,7 @@ public class GetterMethodCouldBePropertyInspectionTool extends CodeNarcInspectio
 
     public GetterMethodCouldBePropertyInspectionTool() {
         super(new GetterMethodCouldBePropertyRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ForLoopShouldBeWhileLoopInspectionTool extends CodeNarcInspectionTo
 
     public ForLoopShouldBeWhileLoopInspectionTool() {
         super(new ForLoopShouldBeWhileLoopRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

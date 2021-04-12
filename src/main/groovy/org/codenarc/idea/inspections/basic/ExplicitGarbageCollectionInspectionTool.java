@@ -19,6 +19,7 @@ public class ExplicitGarbageCollectionInspectionTool extends CodeNarcInspectionT
 
     public ExplicitGarbageCollectionInspectionTool() {
         super(new ExplicitGarbageCollectionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class MethodNameInspectionTool extends CodeNarcInspectionTool<MethodNameR
 
     public MethodNameInspectionTool() {
         super(new MethodNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -66,7 +67,7 @@ public class MethodNameInspectionTool extends CodeNarcInspectionTool<MethodNameR
 
     @Override
     protected void applyDefaultConfiguration(MethodNameRule rule) {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
     }
 
     @Override

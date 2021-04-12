@@ -19,6 +19,7 @@ public class SpaceBeforeClosingBraceInspectionTool extends CodeNarcInspectionToo
 
     public SpaceBeforeClosingBraceInspectionTool() {
         super(new SpaceBeforeClosingBraceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

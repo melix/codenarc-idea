@@ -19,6 +19,7 @@ public class PublicFinalizeMethodInspectionTool extends CodeNarcInspectionTool<P
 
     public PublicFinalizeMethodInspectionTool() {
         super(new PublicFinalizeMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

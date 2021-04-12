@@ -19,6 +19,7 @@ public class BooleanMethodReturnsNullInspectionTool extends CodeNarcInspectionTo
 
     public BooleanMethodReturnsNullInspectionTool() {
         super(new BooleanMethodReturnsNullRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

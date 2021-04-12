@@ -19,6 +19,7 @@ public class DuplicateMapLiteralInspectionTool extends CodeNarcInspectionTool<Du
 
     public DuplicateMapLiteralInspectionTool() {
         super(new DuplicateMapLiteralRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class DuplicateMapLiteralInspectionTool extends CodeNarcInspectionTool<Du
 
     @Override
     protected void applyDefaultConfiguration(DuplicateMapLiteralRule rule) {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
     }
 
     @Override

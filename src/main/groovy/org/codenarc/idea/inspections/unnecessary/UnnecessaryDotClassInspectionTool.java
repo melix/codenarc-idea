@@ -21,6 +21,7 @@ public class UnnecessaryDotClassInspectionTool extends CodeNarcInspectionTool<Un
 
     public UnnecessaryDotClassInspectionTool() {
         super(new UnnecessaryDotClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

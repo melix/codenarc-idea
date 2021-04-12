@@ -19,6 +19,7 @@ public class StaticFieldsBeforeInstanceFieldsInspectionTool extends CodeNarcInsp
 
     public StaticFieldsBeforeInstanceFieldsInspectionTool() {
         super(new StaticFieldsBeforeInstanceFieldsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

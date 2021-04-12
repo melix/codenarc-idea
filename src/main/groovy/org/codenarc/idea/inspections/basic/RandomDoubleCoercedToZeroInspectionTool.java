@@ -19,6 +19,7 @@ public class RandomDoubleCoercedToZeroInspectionTool extends CodeNarcInspectionT
 
     public RandomDoubleCoercedToZeroInspectionTool() {
         super(new RandomDoubleCoercedToZeroRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

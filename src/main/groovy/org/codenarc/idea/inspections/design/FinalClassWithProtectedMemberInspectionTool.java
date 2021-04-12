@@ -19,6 +19,7 @@ public class FinalClassWithProtectedMemberInspectionTool extends CodeNarcInspect
 
     public FinalClassWithProtectedMemberInspectionTool() {
         super(new FinalClassWithProtectedMemberRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

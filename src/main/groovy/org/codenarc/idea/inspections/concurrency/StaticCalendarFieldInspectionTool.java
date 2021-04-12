@@ -19,6 +19,7 @@ public class StaticCalendarFieldInspectionTool extends CodeNarcInspectionTool<St
 
     public StaticCalendarFieldInspectionTool() {
         super(new StaticCalendarFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

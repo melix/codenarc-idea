@@ -19,6 +19,7 @@ public class ThrowExceptionFromFinallyBlockInspectionTool extends CodeNarcInspec
 
     public ThrowExceptionFromFinallyBlockInspectionTool() {
         super(new ThrowExceptionFromFinallyBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

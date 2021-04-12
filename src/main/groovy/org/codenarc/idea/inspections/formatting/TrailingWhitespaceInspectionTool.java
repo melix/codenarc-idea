@@ -19,6 +19,7 @@ public class TrailingWhitespaceInspectionTool extends CodeNarcInspectionTool<Tra
 
     public TrailingWhitespaceInspectionTool() {
         super(new TrailingWhitespaceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

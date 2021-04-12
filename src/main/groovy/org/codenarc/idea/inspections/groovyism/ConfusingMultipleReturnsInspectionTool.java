@@ -19,6 +19,7 @@ public class ConfusingMultipleReturnsInspectionTool extends CodeNarcInspectionTo
 
     public ConfusingMultipleReturnsInspectionTool() {
         super(new ConfusingMultipleReturnsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

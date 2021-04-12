@@ -19,6 +19,7 @@ public class MissingBlankLineAfterImportsInspectionTool extends CodeNarcInspecti
 
     public MissingBlankLineAfterImportsInspectionTool() {
         super(new MissingBlankLineAfterImportsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

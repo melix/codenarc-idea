@@ -19,6 +19,7 @@ public class UnnecessaryOverridingMethodInspectionTool extends CodeNarcInspectio
 
     public UnnecessaryOverridingMethodInspectionTool() {
         super(new UnnecessaryOverridingMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

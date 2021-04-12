@@ -19,6 +19,7 @@ public class UnnecessaryCollectCallInspectionTool extends CodeNarcInspectionTool
 
     public UnnecessaryCollectCallInspectionTool() {
         super(new UnnecessaryCollectCallRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

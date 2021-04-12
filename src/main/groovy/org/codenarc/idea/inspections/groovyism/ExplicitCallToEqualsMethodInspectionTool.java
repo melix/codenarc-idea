@@ -19,6 +19,7 @@ public class ExplicitCallToEqualsMethodInspectionTool extends CodeNarcInspection
 
     public ExplicitCallToEqualsMethodInspectionTool() {
         super(new ExplicitCallToEqualsMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

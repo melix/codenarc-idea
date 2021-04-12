@@ -19,6 +19,7 @@ public class ConsecutiveLiteralAppendsInspectionTool extends CodeNarcInspectionT
 
     public ConsecutiveLiteralAppendsInspectionTool() {
         super(new ConsecutiveLiteralAppendsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

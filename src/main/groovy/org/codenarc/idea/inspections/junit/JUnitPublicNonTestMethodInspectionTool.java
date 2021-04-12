@@ -19,6 +19,7 @@ public class JUnitPublicNonTestMethodInspectionTool extends CodeNarcInspectionTo
 
     public JUnitPublicNonTestMethodInspectionTool() {
         super(new JUnitPublicNonTestMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class JUnitPublicNonTestMethodInspectionTool extends CodeNarcInspectionTo
 
     @Override
     protected void applyDefaultConfiguration(JUnitPublicNonTestMethodRule rule) {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
     }
 
     @Override

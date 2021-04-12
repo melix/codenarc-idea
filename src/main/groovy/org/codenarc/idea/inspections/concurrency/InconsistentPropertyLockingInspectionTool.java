@@ -19,6 +19,7 @@ public class InconsistentPropertyLockingInspectionTool extends CodeNarcInspectio
 
     public InconsistentPropertyLockingInspectionTool() {
         super(new InconsistentPropertyLockingRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class CoupledTestCaseInspectionTool extends CodeNarcInspectionTool<Couple
 
     public CoupledTestCaseInspectionTool() {
         super(new CoupledTestCaseRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

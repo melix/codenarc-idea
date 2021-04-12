@@ -19,6 +19,7 @@ public class NestedForLoopInspectionTool extends CodeNarcInspectionTool<NestedFo
 
     public NestedForLoopInspectionTool() {
         super(new NestedForLoopRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

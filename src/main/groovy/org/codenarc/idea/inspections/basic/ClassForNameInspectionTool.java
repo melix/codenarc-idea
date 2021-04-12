@@ -19,6 +19,7 @@ public class ClassForNameInspectionTool extends CodeNarcInspectionTool<ClassForN
 
     public ClassForNameInspectionTool() {
         super(new ClassForNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

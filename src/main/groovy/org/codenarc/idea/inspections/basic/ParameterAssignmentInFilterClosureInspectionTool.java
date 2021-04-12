@@ -19,6 +19,7 @@ public class ParameterAssignmentInFilterClosureInspectionTool extends CodeNarcIn
 
     public ParameterAssignmentInFilterClosureInspectionTool() {
         super(new ParameterAssignmentInFilterClosureRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

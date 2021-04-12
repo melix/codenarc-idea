@@ -19,6 +19,7 @@ public class FileCreateTempFileInspectionTool extends CodeNarcInspectionTool<Fil
 
     public FileCreateTempFileInspectionTool() {
         super(new FileCreateTempFileRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

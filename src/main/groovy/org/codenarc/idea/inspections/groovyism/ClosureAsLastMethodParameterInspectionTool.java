@@ -19,6 +19,7 @@ public class ClosureAsLastMethodParameterInspectionTool extends CodeNarcInspecti
 
     public ClosureAsLastMethodParameterInspectionTool() {
         super(new ClosureAsLastMethodParameterRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

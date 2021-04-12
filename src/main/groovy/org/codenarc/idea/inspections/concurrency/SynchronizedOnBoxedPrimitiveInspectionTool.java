@@ -19,6 +19,7 @@ public class SynchronizedOnBoxedPrimitiveInspectionTool extends CodeNarcInspecti
 
     public SynchronizedOnBoxedPrimitiveInspectionTool() {
         super(new SynchronizedOnBoxedPrimitiveRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

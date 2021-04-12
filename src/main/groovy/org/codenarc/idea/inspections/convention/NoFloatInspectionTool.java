@@ -19,6 +19,7 @@ public class NoFloatInspectionTool extends CodeNarcInspectionTool<NoFloatRule> {
 
     public NoFloatInspectionTool() {
         super(new NoFloatRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

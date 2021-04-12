@@ -19,6 +19,7 @@ public class FieldNameInspectionTool extends CodeNarcInspectionTool<FieldNameRul
 
     public FieldNameInspectionTool() {
         super(new FieldNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

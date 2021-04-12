@@ -19,6 +19,7 @@ public class ExplicitStackInstantiationInspectionTool extends CodeNarcInspection
 
     public ExplicitStackInstantiationInspectionTool() {
         super(new ExplicitStackInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

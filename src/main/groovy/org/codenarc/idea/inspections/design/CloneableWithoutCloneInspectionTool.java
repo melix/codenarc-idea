@@ -19,6 +19,7 @@ public class CloneableWithoutCloneInspectionTool extends CodeNarcInspectionTool<
 
     public CloneableWithoutCloneInspectionTool() {
         super(new CloneableWithoutCloneRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

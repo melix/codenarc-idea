@@ -19,6 +19,7 @@ public class SpaceInsideParenthesesInspectionTool extends CodeNarcInspectionTool
 
     public SpaceInsideParenthesesInspectionTool() {
         super(new SpaceInsideParenthesesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

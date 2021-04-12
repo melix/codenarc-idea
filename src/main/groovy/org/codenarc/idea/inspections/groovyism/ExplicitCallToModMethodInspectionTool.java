@@ -19,6 +19,7 @@ public class ExplicitCallToModMethodInspectionTool extends CodeNarcInspectionToo
 
     public ExplicitCallToModMethodInspectionTool() {
         super(new ExplicitCallToModMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class JavadocEmptyLastLineInspectionTool extends CodeNarcInspectionTool<J
 
     public JavadocEmptyLastLineInspectionTool() {
         super(new JavadocEmptyLastLineRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

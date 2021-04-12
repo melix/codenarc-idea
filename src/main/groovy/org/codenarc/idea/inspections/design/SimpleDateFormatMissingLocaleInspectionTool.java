@@ -19,6 +19,7 @@ public class SimpleDateFormatMissingLocaleInspectionTool extends CodeNarcInspect
 
     public SimpleDateFormatMissingLocaleInspectionTool() {
         super(new SimpleDateFormatMissingLocaleRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

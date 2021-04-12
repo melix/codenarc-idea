@@ -19,6 +19,7 @@ public class GrailsStatelessServiceInspectionTool extends CodeNarcInspectionTool
 
     public GrailsStatelessServiceInspectionTool() {
         super(new GrailsStatelessServiceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
