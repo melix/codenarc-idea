@@ -1,0 +1,14 @@
+package rules
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class UnnecessaryDotClassInspectionToolSpecSnippet {
+
+    void doSomething() {
+        <warning descr="String.class can be rewritten as String">def one = String.class</warning>
+        <warning descr="String.class can be rewritten as String">def two = String.class</warning>
+    }
+
+}

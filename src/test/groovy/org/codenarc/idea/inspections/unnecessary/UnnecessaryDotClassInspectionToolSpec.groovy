@@ -5,11 +5,17 @@ import groovy.transform.CompileDynamic
 import org.codenarc.idea.testing.InspectionSpec
 
 @CompileDynamic
-class UnnecessaryGStringInspectionToolSpec extends InspectionSpec {
+class UnnecessaryDotClassInspectionToolSpec extends InspectionSpec {
 
     @Override
     protected LocalInspectionTool createInspection() {
-        return new UnnecessaryGStringInspectionTool()
+        return new UnnecessaryDotClassInspectionTool()
     }
 
+    @Override
+    protected Iterable<String> getClassesToInclude() {
+        return [
+                JAVA_LANG_STRING
+        ]
+    }
 }
