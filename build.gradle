@@ -42,7 +42,7 @@ dependencies {
         }
         because 'there are version conflicts when building'
     }
-    implementation('org.codenarc:CodeNarc:2.0.0') {
+    implementation("org.codenarc:CodeNarc:$codenarcVersion") {
         exclude group: 'org.codehaus.groovy'
     }
 
