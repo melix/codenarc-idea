@@ -56,7 +56,13 @@ public class JUnitPublicPropertyInspectionTool extends CodeNarcInspectionTool<JU
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
+    protected void applyDefaultConfiguration(JUnitPublicPropertyRule rule) {
+        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+    }
+
+    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+        // TODO: make private
         return Collections.emptyList();
     }
 

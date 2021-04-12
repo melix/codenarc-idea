@@ -27,6 +27,15 @@ public class UnusedPrivateFieldInspectionTool extends CodeNarcInspectionTool<Unu
     }
 
 
+    public void setAllowConstructorOnlyUsages(boolean value) {
+        getRule().setAllowConstructorOnlyUsages(value);
+    }
+
+    public boolean getAllowConstructorOnlyUsages() {
+        return getRule().getAllowConstructorOnlyUsages();
+    }
+
+
     public void setApplyToClassNames(String value) {
         getRule().setApplyToClassNames(value);
     }

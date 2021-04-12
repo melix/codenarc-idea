@@ -1,4 +1,4 @@
-package org.codenarc.idea.inspections.dry;
+package org.codenarc.idea.inspections.formatting;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
@@ -7,18 +7,18 @@ import java.util.Collections;
 import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
-import org.codenarc.rule.dry.DuplicateListLiteralRule;
+import org.codenarc.rule.formatting.MissingBlankLineBeforeAnnotatedFieldRule;
 import org.jetbrains.annotations.NotNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-public class DuplicateListLiteralInspectionTool extends CodeNarcInspectionTool<DuplicateListLiteralRule> {
+public class MissingBlankLineBeforeAnnotatedFieldInspectionTool extends CodeNarcInspectionTool<MissingBlankLineBeforeAnnotatedFieldRule> {
 
-    // this code has been generated from org.codenarc.rule.dry.DuplicateListLiteralRule
+    // this code has been generated from org.codenarc.rule.formatting.MissingBlankLineBeforeAnnotatedFieldRule
 
-    public static final String GROUP = "Dry";
+    public static final String GROUP = "Formatting";
 
-    public DuplicateListLiteralInspectionTool() {
-        super(new DuplicateListLiteralRule());
+    public MissingBlankLineBeforeAnnotatedFieldInspectionTool() {
+        super(new MissingBlankLineBeforeAnnotatedFieldRule());
     }
 
     @Override
@@ -45,11 +45,6 @@ public class DuplicateListLiteralInspectionTool extends CodeNarcInspectionTool<D
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration
-
-    @Override
-    protected void applyDefaultConfiguration(DuplicateListLiteralRule rule) {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
-    }
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {

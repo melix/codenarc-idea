@@ -80,6 +80,12 @@ public class DuplicateStringLiteralInspectionTool extends CodeNarcInspectionTool
 
     // custom code can be written after this line and it will be preserved during the regeneration
 
+
+    @Override
+    protected void applyDefaultConfiguration(DuplicateStringLiteralRule rule) {
+        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+    }
+
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
         return Collections.singleton(RefactoringQuickFix.from(GroovyBundle.message("introduce.constant.title"), ctx -> new GrIntroduceConstantHandler() {
