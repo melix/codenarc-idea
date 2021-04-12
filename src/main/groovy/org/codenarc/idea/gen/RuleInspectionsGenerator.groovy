@@ -194,7 +194,8 @@ class RuleInspectionsGenerator {
                     groupPath: generatedClass.groupPath,
                     groupKey: generatedClass.groupKey,
                     level: generatedClass.level,
-                    enabledByDefault: generatedClass.enabledByDefault
+                    enabledByDefault: generatedClass.enabledByDefault,
+                    hasStaticDescription: true
             )
             ideaPlugin.extensions[0].append(inspectionNode)
         }
