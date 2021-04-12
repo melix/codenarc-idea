@@ -8,9 +8,23 @@ import org.codenarc.CodeNarc
 import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
+import org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule
+import org.codenarc.rule.grails.GrailsDomainHasEqualsRule
+import org.codenarc.rule.grails.GrailsDomainHasToStringRule
+import org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule
+import org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule
+import org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule
+import org.codenarc.rule.security.JavaIoPackageAccessRule
 import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule
 import org.codenarc.rule.unnecessary.UnnecessarySemicolonRule
 import org.codenarc.rule.unnecessary.UnnecessarySubstringRule
+import org.codenarc.rule.unused.UnusedArrayRule
+import org.codenarc.rule.unused.UnusedMethodParameterRule
+import org.codenarc.rule.unused.UnusedObjectRule
+import org.codenarc.rule.unused.UnusedPrivateFieldRule
+import org.codenarc.rule.unused.UnusedPrivateMethodParameterRule
+import org.codenarc.rule.unused.UnusedPrivateMethodRule
+import org.codenarc.rule.unused.UnusedVariableRule
 import org.jetbrains.annotations.Nullable
 
 import java.util.jar.JarEntry
@@ -57,36 +71,51 @@ class RuleInspectionsGenerator {
     }
 
     private static final Set<Class<?>> DISABLED_BY_DEFAULT_RULES = new HashSet<>([
-            UnnecessarySubstringRule,       // deprecated
-            UnnecessaryReturnKeywordRule,   // clashes with ImplicitReturnStatementRule
-            UnnecessarySemicolonRule,       // unreliable
+            ClosureStatementOnOpeningLineOfMultipleLineClosureRule, // unreliable
+            ExplicitCallToAndMethodRule,                            // often disabled
+            ExplicitCallToOrMethodRule,                             // often disabled
+            ExplicitCallToCompareToMethodRule,                      // often disabled
+            GrailsDomainHasEqualsRule,                              // quite difficult to implement
+            GrailsDomainHasToStringRule,                            // not always a good thing, may trigger db calls
+            JavaIoPackageAccessRule,                                // often disabled
+            // ImplicitClosureParameterRule,                        // we might consider disabling this by default as well
+            UnnecessarySubstringRule,                               // deprecated
+            UnnecessaryReturnKeywordRule,                           // clashes with ImplicitReturnStatementRule
+            UnnecessarySemicolonRule,                               // unreliable
+            UnusedArrayRule,                                        // handled by IntelliJ
+            UnusedMethodParameterRule,                              // handled by IntelliJ
+            UnusedObjectRule,                                       // handled by IntelliJ
+            UnusedPrivateFieldRule,                                 // handled by IntelliJ
+            UnusedPrivateMethodRule,                                // handled by IntelliJ
+            UnusedPrivateMethodParameterRule,                       // handled by IntelliJ
+            UnusedVariableRule,                                     // handled by IntelliJ
     ])
 
     private static final String RULESETS_PATH = 'rulesets/'
 
-    private static final String[] rulesets = [
-            'basic',
-            'braces',
-            'comments',
-            'concurrency',
-            'convention',
-            'design',
-            'dry',
-            'exceptions',
-            'formatting',
-            'generic',
-            'grails',
-            'groovyism',
-            'imports',
-            'jdbc',
-            'junit',
-            'logging',
-            'naming',
-            'security',
-            'serialization',
-            'size',
-            'unnecessary',
-            'unused'
+    private static final String[] RULESETS = [
+            'basic',                        // common
+            'braces',                       // common
+            'comments',                     // only 6 usages in public configs
+            'concurrency',                  // common
+            'convention',                   // common
+            'design',                       // common
+            'dry',                          // common, often disabled in specs
+            'exceptions',                   // common
+            'formatting',                   // common, more graceful line length, fixed regex for map literals
+            'generic',                      // common
+            'grails',                       // not that common
+            'groovyism',                    // common, come explicit call checks disabled
+            'imports',                      // common, wildcard imports often allowed but not here
+            'jdbc',                         // common
+            'junit',                        // common
+            'logging',                      // common
+            'naming',                       // common
+            'security',                     // common
+            'serialization',                // common
+            'size',                         // common
+            'unnecessary',                  // common
+            'unused',                       // common
     ]
 
     private final static Pattern RULE_CLASS_PATTERN = Pattern.compile(".*class='(.*?)'.*")
@@ -179,7 +208,7 @@ class RuleInspectionsGenerator {
         try {
             return getResourceListing()
         } catch (URISyntaxException | IOException ignored) {
-            return rulesets // fallback
+            return RULESETS // fallback
         }
     }
 
@@ -397,7 +426,7 @@ class RuleInspectionsGenerator {
         if (newSourceFile.exists()) {
             String existingFileText = newSourceFile.text
 
-            descriptor.hasQuickFix = !existingFileText.replaceAll(/\s+/, ' ').contains(emptyListQuickFixImplementation.replaceAll(/\s+/, ' '))
+            descriptor.hasQuickFix = !existingFileText.replaceAll(/\s+/, ' ').contains(emptyListQuickFixImplementation.replaceAll(/\s+/, ' ')) && !existingFileText.contains('TODO')
 
             List<String> pathsToTestClass = [
                     projectRoot,

@@ -65,7 +65,13 @@ public class MethodNameInspectionTool extends CodeNarcInspectionTool<MethodNameR
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
+    protected void applyDefaultConfiguration(MethodNameRule rule) {
+        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+    }
+
+    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+        // TODO: rename
         return Collections.emptyList();
     }
 

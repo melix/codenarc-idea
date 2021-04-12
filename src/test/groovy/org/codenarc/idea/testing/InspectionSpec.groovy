@@ -11,11 +11,13 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
+import groovy.transform.CompileDynamic
 import org.jetbrains.annotations.NotNull
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
+@CompileDynamic
 abstract class InspectionSpec extends Specification {
 
     public static final String JAVA_UTIL_LIST = '''
