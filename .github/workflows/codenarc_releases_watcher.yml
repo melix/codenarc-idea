@@ -7,10 +7,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Fetch CodeNarc Maven descriptor
+        run: curl https://repo1.maven.org/maven2/org/codenarc/CodeNarc/maven-metadata.xml -o /tmp/codenarc-maven-descriptor.xml
+      - name: Extract the latest version
+        uses: QwerMike/xpath-action@v1
+        id: xpath
+        with:
+          filename: '/tmp/codenarc-maven-descriptor.xml'
+          expression: '/metadata/versioning/latest/text()'
       - name: Upgrade CodenarcVersion Number
         run: |
-          export CODENARC_VERSION=$(curl https://repo1.maven.org/maven2/org/codenarc/CodeNarc/maven-metadata.xml | xpath '/metadata/versioning/latest/text()')
-          sed -i "s/codenarcVersion.*/codenarcVersion=$CODENARC_VERSION/' gradle.properties
+          sed -i 's/codenarcVersion.*/codenarcVersion=${{ steps.xpath.outputs.result }}/' gradle.properties
       - name: Set up JDK 11
         uses: actions/setup-java@v1
         with:
