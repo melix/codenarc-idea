@@ -53,6 +53,9 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
 
     public static final String BASE_MESSAGES_BUNDLE = "codenarc-base-messages";
     public static final String GROUP_DISPLAY_NAME = "CodeNarc";
+
+    protected static final String SPECIFICATION_FILENAMES = "*Spec.groovy,*Specification.groovy";
+
     private static final Logger LOG = Logger.getInstance(CodeNarcInspectionTool.class);
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create("CODENARC_SOURCE_AS_STRING");
     private static final Key<CachedValue<Boolean>> HAS_SYNTAX_ERRORS_CACHE_KEY = Key.create("CODENARC_HAS_SYNTAX_ERRORS");
@@ -153,6 +156,8 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         try {
             if (node.getChild("option") != null) {
                 XmlSerializer.deserializeInto(node, this.rule);
+            } else {
+                applyDefaultConfiguration(this.rule);
             }
 
         } catch (XmlSerializationException e) {
@@ -277,6 +282,10 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     protected abstract @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement);
+
+    protected void applyDefaultConfiguration(R rule) {
+        // allows override the defaults in the subclasses
+    }
 
     @NotNull
     protected TextRange convertViolationRangeToRelative(PsiElement violatingElement, TextRange violatingRange) {

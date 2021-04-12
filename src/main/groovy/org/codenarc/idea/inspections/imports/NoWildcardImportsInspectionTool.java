@@ -47,7 +47,14 @@ public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWi
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
+    protected void applyDefaultConfiguration(NoWildcardImportsRule rule) {
+        // useful for DSLs
+        rule.setIgnoreStaticImports(true);
+    }
+
+    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+        // TODO: replace with non-wild-card imports
         return Collections.emptyList();
     }
 

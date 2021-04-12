@@ -47,7 +47,13 @@ public class JUnitPublicNonTestMethodInspectionTool extends CodeNarcInspectionTo
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
+    protected void applyDefaultConfiguration(JUnitPublicNonTestMethodRule rule) {
+        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+    }
+
+    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+        // TODO: make private
         return Collections.emptyList();
     }
 

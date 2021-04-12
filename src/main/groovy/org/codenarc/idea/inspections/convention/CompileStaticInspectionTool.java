@@ -53,6 +53,11 @@ public class CompileStaticInspectionTool extends CodeNarcInspectionTool<CompileS
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
+    protected void applyDefaultConfiguration(CompileStaticRule rule) {
+        rule.setDoNotApplyToFilesMatching("*Specification.groovy,*Spec.groovy,*Function.groovy");
+    }
+
+    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
         if (violatingElement instanceof PsiModifierListOwner) {
             return Arrays.asList(

@@ -83,7 +83,13 @@ public class LineLengthInspectionTool extends CodeNarcInspectionTool<LineLengthR
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
+    protected void applyDefaultConfiguration(LineLengthRule rule) {
+        rule.setLength(160);
+    }
+
+    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+        // no automated fix
         return Collections.emptyList();
     }
 
