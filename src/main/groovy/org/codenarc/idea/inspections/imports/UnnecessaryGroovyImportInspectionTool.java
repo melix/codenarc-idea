@@ -19,6 +19,7 @@ public class UnnecessaryGroovyImportInspectionTool extends CodeNarcInspectionToo
 
     public UnnecessaryGroovyImportInspectionTool() {
         super(new UnnecessaryGroovyImportRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

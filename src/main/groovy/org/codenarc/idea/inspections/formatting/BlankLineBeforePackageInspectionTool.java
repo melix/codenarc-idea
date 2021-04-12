@@ -20,6 +20,7 @@ public class BlankLineBeforePackageInspectionTool extends CodeNarcInspectionTool
 
     public BlankLineBeforePackageInspectionTool() {
         super(new BlankLineBeforePackageRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

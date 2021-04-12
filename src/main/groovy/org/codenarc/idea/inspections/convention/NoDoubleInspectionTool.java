@@ -19,6 +19,7 @@ public class NoDoubleInspectionTool extends CodeNarcInspectionTool<NoDoubleRule>
 
     public NoDoubleInspectionTool() {
         super(new NoDoubleRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

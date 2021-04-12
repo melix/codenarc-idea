@@ -19,6 +19,7 @@ public class JavadocEmptySeeTagInspectionTool extends CodeNarcInspectionTool<Jav
 
     public JavadocEmptySeeTagInspectionTool() {
         super(new JavadocEmptySeeTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

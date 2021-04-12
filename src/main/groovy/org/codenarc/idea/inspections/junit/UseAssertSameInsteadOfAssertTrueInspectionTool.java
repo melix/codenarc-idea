@@ -19,6 +19,7 @@ public class UseAssertSameInsteadOfAssertTrueInspectionTool extends CodeNarcInsp
 
     public UseAssertSameInsteadOfAssertTrueInspectionTool() {
         super(new UseAssertSameInsteadOfAssertTrueRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

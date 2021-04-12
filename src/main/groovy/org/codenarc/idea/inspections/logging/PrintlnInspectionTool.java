@@ -20,6 +20,7 @@ public class PrintlnInspectionTool extends CodeNarcInspectionTool<PrintlnRule> {
 
     public PrintlnInspectionTool() {
         super(new PrintlnRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

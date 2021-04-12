@@ -19,6 +19,7 @@ public class GrailsMassAssignmentInspectionTool extends CodeNarcInspectionTool<G
 
     public GrailsMassAssignmentInspectionTool() {
         super(new GrailsMassAssignmentRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

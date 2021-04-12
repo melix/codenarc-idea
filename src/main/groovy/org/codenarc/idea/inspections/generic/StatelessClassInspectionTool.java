@@ -19,6 +19,7 @@ public class StatelessClassInspectionTool extends CodeNarcInspectionTool<Statele
 
     public StatelessClassInspectionTool() {
         super(new StatelessClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

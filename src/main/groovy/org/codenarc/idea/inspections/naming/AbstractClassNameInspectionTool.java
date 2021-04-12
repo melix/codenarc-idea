@@ -24,6 +24,7 @@ public class AbstractClassNameInspectionTool extends CodeNarcInspectionTool<Abst
 
     public AbstractClassNameInspectionTool() {
         super(new AbstractClassNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

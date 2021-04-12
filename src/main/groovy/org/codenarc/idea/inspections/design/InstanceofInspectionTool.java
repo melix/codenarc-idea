@@ -19,6 +19,7 @@ public class InstanceofInspectionTool extends CodeNarcInspectionTool<InstanceofR
 
     public InstanceofInspectionTool() {
         super(new InstanceofRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

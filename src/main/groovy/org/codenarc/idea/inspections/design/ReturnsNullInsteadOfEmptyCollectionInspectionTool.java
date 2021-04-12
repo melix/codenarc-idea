@@ -19,6 +19,7 @@ public class ReturnsNullInsteadOfEmptyCollectionInspectionTool extends CodeNarcI
 
     public ReturnsNullInsteadOfEmptyCollectionInspectionTool() {
         super(new ReturnsNullInsteadOfEmptyCollectionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class SpaceAfterCommaInspectionTool extends CodeNarcInspectionTool<SpaceA
 
     public SpaceAfterCommaInspectionTool() {
         super(new SpaceAfterCommaRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

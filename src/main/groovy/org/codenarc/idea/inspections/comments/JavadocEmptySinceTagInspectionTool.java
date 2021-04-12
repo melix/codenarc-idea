@@ -19,6 +19,7 @@ public class JavadocEmptySinceTagInspectionTool extends CodeNarcInspectionTool<J
 
     public JavadocEmptySinceTagInspectionTool() {
         super(new JavadocEmptySinceTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class EmptyIfStatementInspectionTool extends CodeNarcInspectionTool<Empty
 
     public EmptyIfStatementInspectionTool() {
         super(new EmptyIfStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

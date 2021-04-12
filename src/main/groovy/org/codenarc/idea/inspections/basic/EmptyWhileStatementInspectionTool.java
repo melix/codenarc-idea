@@ -19,6 +19,7 @@ public class EmptyWhileStatementInspectionTool extends CodeNarcInspectionTool<Em
 
     public EmptyWhileStatementInspectionTool() {
         super(new EmptyWhileStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

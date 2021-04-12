@@ -19,6 +19,7 @@ public class JUnitStyleAssertionsInspectionTool extends CodeNarcInspectionTool<J
 
     public JUnitStyleAssertionsInspectionTool() {
         super(new JUnitStyleAssertionsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

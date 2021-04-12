@@ -19,6 +19,7 @@ public class ConstantTernaryExpressionInspectionTool extends CodeNarcInspectionT
 
     public ConstantTernaryExpressionInspectionTool() {
         super(new ConstantTernaryExpressionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

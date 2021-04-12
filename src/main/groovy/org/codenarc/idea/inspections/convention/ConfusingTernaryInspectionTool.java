@@ -19,6 +19,7 @@ public class ConfusingTernaryInspectionTool extends CodeNarcInspectionTool<Confu
 
     public ConfusingTernaryInspectionTool() {
         super(new ConfusingTernaryRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

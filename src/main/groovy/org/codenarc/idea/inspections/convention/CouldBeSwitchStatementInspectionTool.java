@@ -19,6 +19,7 @@ public class CouldBeSwitchStatementInspectionTool extends CodeNarcInspectionTool
 
     public CouldBeSwitchStatementInspectionTool() {
         super(new CouldBeSwitchStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

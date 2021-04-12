@@ -19,6 +19,7 @@ public class SystemRunFinalizersOnExitInspectionTool extends CodeNarcInspectionT
 
     public SystemRunFinalizersOnExitInspectionTool() {
         super(new SystemRunFinalizersOnExitRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class SpaceAfterCatchInspectionTool extends CodeNarcInspectionTool<SpaceA
 
     public SpaceAfterCatchInspectionTool() {
         super(new SpaceAfterCatchRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ReturnFromFinallyBlockInspectionTool extends CodeNarcInspectionTool
 
     public ReturnFromFinallyBlockInspectionTool() {
         super(new ReturnFromFinallyBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

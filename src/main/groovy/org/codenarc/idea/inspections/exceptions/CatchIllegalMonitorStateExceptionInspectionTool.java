@@ -19,6 +19,7 @@ public class CatchIllegalMonitorStateExceptionInspectionTool extends CodeNarcIns
 
     public CatchIllegalMonitorStateExceptionInspectionTool() {
         super(new CatchIllegalMonitorStateExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

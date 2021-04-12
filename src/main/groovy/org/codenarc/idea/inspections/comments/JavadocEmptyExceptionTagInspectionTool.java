@@ -19,6 +19,7 @@ public class JavadocEmptyExceptionTagInspectionTool extends CodeNarcInspectionTo
 
     public JavadocEmptyExceptionTagInspectionTool() {
         super(new JavadocEmptyExceptionTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

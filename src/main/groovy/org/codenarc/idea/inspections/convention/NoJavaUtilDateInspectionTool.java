@@ -19,6 +19,7 @@ public class NoJavaUtilDateInspectionTool extends CodeNarcInspectionTool<NoJavaU
 
     public NoJavaUtilDateInspectionTool() {
         super(new NoJavaUtilDateRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

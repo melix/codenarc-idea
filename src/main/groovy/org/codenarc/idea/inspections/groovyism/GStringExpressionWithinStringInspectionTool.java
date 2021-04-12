@@ -19,6 +19,7 @@ public class GStringExpressionWithinStringInspectionTool extends CodeNarcInspect
 
     public GStringExpressionWithinStringInspectionTool() {
         super(new GStringExpressionWithinStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

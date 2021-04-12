@@ -19,6 +19,7 @@ public class SynchronizedOnGetClassInspectionTool extends CodeNarcInspectionTool
 
     public SynchronizedOnGetClassInspectionTool() {
         super(new SynchronizedOnGetClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

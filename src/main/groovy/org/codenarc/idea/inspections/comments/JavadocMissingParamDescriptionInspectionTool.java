@@ -19,6 +19,7 @@ public class JavadocMissingParamDescriptionInspectionTool extends CodeNarcInspec
 
     public JavadocMissingParamDescriptionInspectionTool() {
         super(new JavadocMissingParamDescriptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

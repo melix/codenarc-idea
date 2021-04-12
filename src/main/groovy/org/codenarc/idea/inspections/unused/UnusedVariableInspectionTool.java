@@ -20,6 +20,7 @@ public class UnusedVariableInspectionTool extends CodeNarcInspectionTool<UnusedV
 
     public UnusedVariableInspectionTool() {
         super(new UnusedVariableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

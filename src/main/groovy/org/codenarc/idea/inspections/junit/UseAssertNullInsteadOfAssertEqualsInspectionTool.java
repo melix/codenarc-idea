@@ -19,6 +19,7 @@ public class UseAssertNullInsteadOfAssertEqualsInspectionTool extends CodeNarcIn
 
     public UseAssertNullInsteadOfAssertEqualsInspectionTool() {
         super(new UseAssertNullInsteadOfAssertEqualsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

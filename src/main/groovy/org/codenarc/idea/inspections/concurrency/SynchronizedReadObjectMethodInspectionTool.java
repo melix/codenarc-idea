@@ -19,6 +19,7 @@ public class SynchronizedReadObjectMethodInspectionTool extends CodeNarcInspecti
 
     public SynchronizedReadObjectMethodInspectionTool() {
         super(new SynchronizedReadObjectMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

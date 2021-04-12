@@ -19,6 +19,7 @@ public class ElseBlockBracesInspectionTool extends CodeNarcInspectionTool<ElseBl
 
     public ElseBlockBracesInspectionTool() {
         super(new ElseBlockBracesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

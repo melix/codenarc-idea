@@ -19,6 +19,7 @@ public class ReturnsNullInsteadOfEmptyArrayInspectionTool extends CodeNarcInspec
 
     public ReturnsNullInsteadOfEmptyArrayInspectionTool() {
         super(new ReturnsNullInsteadOfEmptyArrayRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

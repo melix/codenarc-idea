@@ -19,6 +19,7 @@ public class TernaryCouldBeElvisInspectionTool extends CodeNarcInspectionTool<Te
 
     public TernaryCouldBeElvisInspectionTool() {
         super(new TernaryCouldBeElvisRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

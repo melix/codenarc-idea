@@ -19,6 +19,7 @@ public class SpaceAfterSwitchInspectionTool extends CodeNarcInspectionTool<Space
 
     public SpaceAfterSwitchInspectionTool() {
         super(new SpaceAfterSwitchRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

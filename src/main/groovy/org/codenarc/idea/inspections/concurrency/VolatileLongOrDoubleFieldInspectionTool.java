@@ -19,6 +19,7 @@ public class VolatileLongOrDoubleFieldInspectionTool extends CodeNarcInspectionT
 
     public VolatileLongOrDoubleFieldInspectionTool() {
         super(new VolatileLongOrDoubleFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

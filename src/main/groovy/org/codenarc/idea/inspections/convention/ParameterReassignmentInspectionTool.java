@@ -19,6 +19,7 @@ public class ParameterReassignmentInspectionTool extends CodeNarcInspectionTool<
 
     public ParameterReassignmentInspectionTool() {
         super(new ParameterReassignmentRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

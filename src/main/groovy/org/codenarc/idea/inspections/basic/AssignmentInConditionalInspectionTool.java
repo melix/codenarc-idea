@@ -21,6 +21,7 @@ public class AssignmentInConditionalInspectionTool extends CodeNarcInspectionToo
 
     public AssignmentInConditionalInspectionTool() {
         super(new AssignmentInConditionalRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

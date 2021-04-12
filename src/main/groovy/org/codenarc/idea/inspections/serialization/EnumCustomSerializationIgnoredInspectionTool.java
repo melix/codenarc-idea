@@ -19,6 +19,7 @@ public class EnumCustomSerializationIgnoredInspectionTool extends CodeNarcInspec
 
     public EnumCustomSerializationIgnoredInspectionTool() {
         super(new EnumCustomSerializationIgnoredRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

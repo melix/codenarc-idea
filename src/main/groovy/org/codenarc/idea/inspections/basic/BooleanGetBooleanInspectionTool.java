@@ -19,6 +19,7 @@ public class BooleanGetBooleanInspectionTool extends CodeNarcInspectionTool<Bool
 
     public BooleanGetBooleanInspectionTool() {
         super(new BooleanGetBooleanRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

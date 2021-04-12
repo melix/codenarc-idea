@@ -19,6 +19,7 @@ public class JavadocMissingExceptionDescriptionInspectionTool extends CodeNarcIn
 
     public JavadocMissingExceptionDescriptionInspectionTool() {
         super(new JavadocMissingExceptionDescriptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

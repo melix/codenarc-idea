@@ -19,6 +19,7 @@ public class ExplicitTreeSetInstantiationInspectionTool extends CodeNarcInspecti
 
     public ExplicitTreeSetInstantiationInspectionTool() {
         super(new ExplicitTreeSetInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

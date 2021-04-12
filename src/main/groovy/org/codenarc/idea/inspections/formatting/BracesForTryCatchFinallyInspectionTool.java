@@ -19,6 +19,7 @@ public class BracesForTryCatchFinallyInspectionTool extends CodeNarcInspectionTo
 
     public BracesForTryCatchFinallyInspectionTool() {
         super(new BracesForTryCatchFinallyRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

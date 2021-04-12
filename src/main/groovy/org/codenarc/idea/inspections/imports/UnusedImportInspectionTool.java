@@ -19,6 +19,7 @@ public class UnusedImportInspectionTool extends CodeNarcInspectionTool<UnusedImp
 
     public UnusedImportInspectionTool() {
         super(new UnusedImportRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

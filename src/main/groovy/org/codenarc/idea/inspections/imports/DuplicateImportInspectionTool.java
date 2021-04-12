@@ -19,6 +19,7 @@ public class DuplicateImportInspectionTool extends CodeNarcInspectionTool<Duplic
 
     public DuplicateImportInspectionTool() {
         super(new DuplicateImportRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

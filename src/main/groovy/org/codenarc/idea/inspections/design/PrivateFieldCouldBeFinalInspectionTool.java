@@ -19,6 +19,7 @@ public class PrivateFieldCouldBeFinalInspectionTool extends CodeNarcInspectionTo
 
     public PrivateFieldCouldBeFinalInspectionTool() {
         super(new PrivateFieldCouldBeFinalRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class InvertedConditionInspectionTool extends CodeNarcInspectionTool<Inve
 
     public InvertedConditionInspectionTool() {
         super(new InvertedConditionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

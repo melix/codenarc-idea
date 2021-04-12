@@ -21,6 +21,7 @@ public class AbstractClassWithPublicConstructorInspectionTool extends CodeNarcIn
 
     public AbstractClassWithPublicConstructorInspectionTool() {
         super(new AbstractClassWithPublicConstructorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

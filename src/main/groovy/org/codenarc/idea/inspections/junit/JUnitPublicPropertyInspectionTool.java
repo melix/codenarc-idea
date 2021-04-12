@@ -19,6 +19,7 @@ public class JUnitPublicPropertyInspectionTool extends CodeNarcInspectionTool<JU
 
     public JUnitPublicPropertyInspectionTool() {
         super(new JUnitPublicPropertyRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class JUnitPublicPropertyInspectionTool extends CodeNarcInspectionTool<JU
 
     @Override
     protected void applyDefaultConfiguration(JUnitPublicPropertyRule rule) {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
     }
 
     @Override

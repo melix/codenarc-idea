@@ -19,6 +19,7 @@ public class ExceptionNotThrownInspectionTool extends CodeNarcInspectionTool<Exc
 
     public ExceptionNotThrownInspectionTool() {
         super(new ExceptionNotThrownRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

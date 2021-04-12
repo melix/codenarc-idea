@@ -19,6 +19,7 @@ public class MethodCountInspectionTool extends CodeNarcInspectionTool<MethodCoun
 
     public MethodCountInspectionTool() {
         super(new MethodCountRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

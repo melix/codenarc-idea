@@ -19,6 +19,7 @@ public class InsecureRandomInspectionTool extends CodeNarcInspectionTool<Insecur
 
     public InsecureRandomInspectionTool() {
         super(new InsecureRandomRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

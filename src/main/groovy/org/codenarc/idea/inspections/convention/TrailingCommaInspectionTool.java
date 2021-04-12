@@ -19,6 +19,7 @@ public class TrailingCommaInspectionTool extends CodeNarcInspectionTool<Trailing
 
     public TrailingCommaInspectionTool() {
         super(new TrailingCommaRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

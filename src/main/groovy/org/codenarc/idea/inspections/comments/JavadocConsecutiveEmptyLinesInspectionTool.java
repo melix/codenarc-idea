@@ -19,6 +19,7 @@ public class JavadocConsecutiveEmptyLinesInspectionTool extends CodeNarcInspecti
 
     public JavadocConsecutiveEmptyLinesInspectionTool() {
         super(new JavadocConsecutiveEmptyLinesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

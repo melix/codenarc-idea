@@ -19,6 +19,7 @@ public class ExplicitCallToPutAtMethodInspectionTool extends CodeNarcInspectionT
 
     public ExplicitCallToPutAtMethodInspectionTool() {
         super(new ExplicitCallToPutAtMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

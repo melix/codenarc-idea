@@ -19,6 +19,7 @@ public class DirectConnectionManagementInspectionTool extends CodeNarcInspection
 
     public DirectConnectionManagementInspectionTool() {
         super(new DirectConnectionManagementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

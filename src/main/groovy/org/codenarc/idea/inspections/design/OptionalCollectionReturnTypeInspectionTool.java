@@ -19,6 +19,7 @@ public class OptionalCollectionReturnTypeInspectionTool extends CodeNarcInspecti
 
     public OptionalCollectionReturnTypeInspectionTool() {
         super(new OptionalCollectionReturnTypeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

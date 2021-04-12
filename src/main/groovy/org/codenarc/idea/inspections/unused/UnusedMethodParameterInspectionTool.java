@@ -19,6 +19,7 @@ public class UnusedMethodParameterInspectionTool extends CodeNarcInspectionTool<
 
     public UnusedMethodParameterInspectionTool() {
         super(new UnusedMethodParameterRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

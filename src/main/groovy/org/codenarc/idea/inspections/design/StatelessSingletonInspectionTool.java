@@ -19,6 +19,7 @@ public class StatelessSingletonInspectionTool extends CodeNarcInspectionTool<Sta
 
     public StatelessSingletonInspectionTool() {
         super(new StatelessSingletonRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

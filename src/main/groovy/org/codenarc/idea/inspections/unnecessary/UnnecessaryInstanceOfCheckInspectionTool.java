@@ -19,6 +19,7 @@ public class UnnecessaryInstanceOfCheckInspectionTool extends CodeNarcInspection
 
     public UnnecessaryInstanceOfCheckInspectionTool() {
         super(new UnnecessaryInstanceOfCheckRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

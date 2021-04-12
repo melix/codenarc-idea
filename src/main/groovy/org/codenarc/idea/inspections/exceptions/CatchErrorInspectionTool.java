@@ -19,6 +19,7 @@ public class CatchErrorInspectionTool extends CodeNarcInspectionTool<CatchErrorR
 
     public CatchErrorInspectionTool() {
         super(new CatchErrorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

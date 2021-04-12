@@ -19,6 +19,7 @@ public class FactoryMethodNameInspectionTool extends CodeNarcInspectionTool<Fact
 
     public FactoryMethodNameInspectionTool() {
         super(new FactoryMethodNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

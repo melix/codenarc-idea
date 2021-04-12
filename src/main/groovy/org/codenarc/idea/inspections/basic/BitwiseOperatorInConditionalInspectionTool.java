@@ -19,6 +19,7 @@ public class BitwiseOperatorInConditionalInspectionTool extends CodeNarcInspecti
 
     public BitwiseOperatorInConditionalInspectionTool() {
         super(new BitwiseOperatorInConditionalRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

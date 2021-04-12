@@ -19,6 +19,7 @@ public class VariableNameInspectionTool extends CodeNarcInspectionTool<VariableN
 
     public VariableNameInspectionTool() {
         super(new VariableNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

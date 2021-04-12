@@ -19,6 +19,7 @@ public class ClassJavadocInspectionTool extends CodeNarcInspectionTool<ClassJava
 
     public ClassJavadocInspectionTool() {
         super(new ClassJavadocRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

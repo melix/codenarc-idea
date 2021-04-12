@@ -19,6 +19,7 @@ public class MultipleUnaryOperatorsInspectionTool extends CodeNarcInspectionTool
 
     public MultipleUnaryOperatorsInspectionTool() {
         super(new MultipleUnaryOperatorsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

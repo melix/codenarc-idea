@@ -19,6 +19,7 @@ public class GroovyLangImmutableInspectionTool extends CodeNarcInspectionTool<Gr
 
     public GroovyLangImmutableInspectionTool() {
         super(new GroovyLangImmutableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -21,6 +21,7 @@ public class AssignCollectionUniqueInspectionTool extends CodeNarcInspectionTool
 
     public AssignCollectionUniqueInspectionTool() {
         super(new AssignCollectionUniqueRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

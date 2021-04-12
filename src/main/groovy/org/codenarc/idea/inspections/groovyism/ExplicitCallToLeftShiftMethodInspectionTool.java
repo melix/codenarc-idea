@@ -19,6 +19,7 @@ public class ExplicitCallToLeftShiftMethodInspectionTool extends CodeNarcInspect
 
     public ExplicitCallToLeftShiftMethodInspectionTool() {
         super(new ExplicitCallToLeftShiftMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

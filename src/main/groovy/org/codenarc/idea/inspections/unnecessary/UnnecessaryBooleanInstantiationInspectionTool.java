@@ -19,6 +19,7 @@ public class UnnecessaryBooleanInstantiationInspectionTool extends CodeNarcInspe
 
     public UnnecessaryBooleanInstantiationInspectionTool() {
         super(new UnnecessaryBooleanInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

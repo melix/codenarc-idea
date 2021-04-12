@@ -19,6 +19,7 @@ public class UnnecessaryBigDecimalInstantiationInspectionTool extends CodeNarcIn
 
     public UnnecessaryBigDecimalInstantiationInspectionTool() {
         super(new UnnecessaryBigDecimalInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

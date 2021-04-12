@@ -19,6 +19,7 @@ public class SpaceAfterMethodCallNameInspectionTool extends CodeNarcInspectionTo
 
     public SpaceAfterMethodCallNameInspectionTool() {
         super(new SpaceAfterMethodCallNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

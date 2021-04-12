@@ -19,6 +19,7 @@ public class NestedSynchronizationInspectionTool extends CodeNarcInspectionTool<
 
     public NestedSynchronizationInspectionTool() {
         super(new NestedSynchronizationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

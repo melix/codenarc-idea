@@ -19,6 +19,7 @@ public class PackageNameInspectionTool extends CodeNarcInspectionTool<PackageNam
 
     public PackageNameInspectionTool() {
         super(new PackageNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

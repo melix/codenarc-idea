@@ -19,6 +19,7 @@ public class MultipleLoggersInspectionTool extends CodeNarcInspectionTool<Multip
 
     public MultipleLoggersInspectionTool() {
         super(new MultipleLoggersRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

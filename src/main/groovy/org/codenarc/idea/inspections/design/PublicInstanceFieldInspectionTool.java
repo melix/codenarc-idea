@@ -19,6 +19,7 @@ public class PublicInstanceFieldInspectionTool extends CodeNarcInspectionTool<Pu
 
     public PublicInstanceFieldInspectionTool() {
         super(new PublicInstanceFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

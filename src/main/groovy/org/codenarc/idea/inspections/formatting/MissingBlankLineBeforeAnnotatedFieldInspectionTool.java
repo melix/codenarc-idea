@@ -19,6 +19,7 @@ public class MissingBlankLineBeforeAnnotatedFieldInspectionTool extends CodeNarc
 
     public MissingBlankLineBeforeAnnotatedFieldInspectionTool() {
         super(new MissingBlankLineBeforeAnnotatedFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class JavadocEmptyFirstLineInspectionTool extends CodeNarcInspectionTool<
 
     public JavadocEmptyFirstLineInspectionTool() {
         super(new JavadocEmptyFirstLineRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

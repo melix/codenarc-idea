@@ -19,6 +19,7 @@ public class PropertyNameInspectionTool extends CodeNarcInspectionTool<PropertyN
 
     public PropertyNameInspectionTool() {
         super(new PropertyNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

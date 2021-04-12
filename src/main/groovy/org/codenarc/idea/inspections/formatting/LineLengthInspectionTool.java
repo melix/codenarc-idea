@@ -19,6 +19,7 @@ public class LineLengthInspectionTool extends CodeNarcInspectionTool<LineLengthR
 
     public LineLengthInspectionTool() {
         super(new LineLengthRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class NonFinalPublicFieldInspectionTool extends CodeNarcInspectionTool<No
 
     public NonFinalPublicFieldInspectionTool() {
         super(new NonFinalPublicFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

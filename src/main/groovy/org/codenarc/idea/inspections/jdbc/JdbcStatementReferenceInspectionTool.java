@@ -19,6 +19,7 @@ public class JdbcStatementReferenceInspectionTool extends CodeNarcInspectionTool
 
     public JdbcStatementReferenceInspectionTool() {
         super(new JdbcStatementReferenceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

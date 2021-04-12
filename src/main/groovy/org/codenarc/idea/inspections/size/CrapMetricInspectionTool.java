@@ -19,6 +19,7 @@ public class CrapMetricInspectionTool extends CodeNarcInspectionTool<CrapMetricR
 
     public CrapMetricInspectionTool() {
         super(new CrapMetricRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

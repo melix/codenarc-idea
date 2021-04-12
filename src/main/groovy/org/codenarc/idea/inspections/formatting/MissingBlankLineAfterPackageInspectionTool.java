@@ -19,6 +19,7 @@ public class MissingBlankLineAfterPackageInspectionTool extends CodeNarcInspecti
 
     public MissingBlankLineAfterPackageInspectionTool() {
         super(new MissingBlankLineAfterPackageRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class StaticConnectionInspectionTool extends CodeNarcInspectionTool<Stati
 
     public StaticConnectionInspectionTool() {
         super(new StaticConnectionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

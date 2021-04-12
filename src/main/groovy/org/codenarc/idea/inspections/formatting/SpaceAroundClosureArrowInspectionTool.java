@@ -19,6 +19,7 @@ public class SpaceAroundClosureArrowInspectionTool extends CodeNarcInspectionToo
 
     public SpaceAroundClosureArrowInspectionTool() {
         super(new SpaceAroundClosureArrowRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

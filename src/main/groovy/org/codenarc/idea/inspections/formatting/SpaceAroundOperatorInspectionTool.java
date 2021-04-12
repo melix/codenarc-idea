@@ -19,6 +19,7 @@ public class SpaceAroundOperatorInspectionTool extends CodeNarcInspectionTool<Sp
 
     public SpaceAroundOperatorInspectionTool() {
         super(new SpaceAroundOperatorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

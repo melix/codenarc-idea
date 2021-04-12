@@ -19,6 +19,7 @@ public class DuplicateSetValueInspectionTool extends CodeNarcInspectionTool<Dupl
 
     public DuplicateSetValueInspectionTool() {
         super(new DuplicateSetValueRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

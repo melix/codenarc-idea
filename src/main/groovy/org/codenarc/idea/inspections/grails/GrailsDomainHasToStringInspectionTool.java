@@ -19,6 +19,7 @@ public class GrailsDomainHasToStringInspectionTool extends CodeNarcInspectionToo
 
     public GrailsDomainHasToStringInspectionTool() {
         super(new GrailsDomainHasToStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

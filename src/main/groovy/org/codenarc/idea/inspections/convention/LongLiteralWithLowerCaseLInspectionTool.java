@@ -19,6 +19,7 @@ public class LongLiteralWithLowerCaseLInspectionTool extends CodeNarcInspectionT
 
     public LongLiteralWithLowerCaseLInspectionTool() {
         super(new LongLiteralWithLowerCaseLRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class AssertWithinFinallyBlockInspectionTool extends CodeNarcInspectionTo
 
     public AssertWithinFinallyBlockInspectionTool() {
         super(new AssertWithinFinallyBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

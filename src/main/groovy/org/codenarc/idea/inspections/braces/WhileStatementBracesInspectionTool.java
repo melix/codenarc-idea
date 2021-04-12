@@ -19,6 +19,7 @@ public class WhileStatementBracesInspectionTool extends CodeNarcInspectionTool<W
 
     public WhileStatementBracesInspectionTool() {
         super(new WhileStatementBracesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

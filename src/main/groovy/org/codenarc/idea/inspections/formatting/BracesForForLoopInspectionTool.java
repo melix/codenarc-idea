@@ -19,6 +19,7 @@ public class BracesForForLoopInspectionTool extends CodeNarcInspectionTool<Brace
 
     public BracesForForLoopInspectionTool() {
         super(new BracesForForLoopRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

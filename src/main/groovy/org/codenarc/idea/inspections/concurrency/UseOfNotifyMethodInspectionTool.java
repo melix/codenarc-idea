@@ -19,6 +19,7 @@ public class UseOfNotifyMethodInspectionTool extends CodeNarcInspectionTool<UseO
 
     public UseOfNotifyMethodInspectionTool() {
         super(new UseOfNotifyMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

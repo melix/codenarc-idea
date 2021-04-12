@@ -19,6 +19,7 @@ public class UnnecessaryDefInFieldDeclarationInspectionTool extends CodeNarcInsp
 
     public UnnecessaryDefInFieldDeclarationInspectionTool() {
         super(new UnnecessaryDefInFieldDeclarationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

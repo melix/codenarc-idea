@@ -19,6 +19,7 @@ public class ExplicitCallToCompareToMethodInspectionTool extends CodeNarcInspect
 
     public ExplicitCallToCompareToMethodInspectionTool() {
         super(new ExplicitCallToCompareToMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

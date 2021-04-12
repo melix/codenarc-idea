@@ -19,6 +19,7 @@ public class StaticMethodsBeforeInstanceMethodsInspectionTool extends CodeNarcIn
 
     public StaticMethodsBeforeInstanceMethodsInspectionTool() {
         super(new StaticMethodsBeforeInstanceMethodsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

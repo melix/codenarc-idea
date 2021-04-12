@@ -19,6 +19,7 @@ public class EmptyFinallyBlockInspectionTool extends CodeNarcInspectionTool<Empt
 
     public EmptyFinallyBlockInspectionTool() {
         super(new EmptyFinallyBlockRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

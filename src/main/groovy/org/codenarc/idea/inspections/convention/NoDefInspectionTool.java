@@ -19,6 +19,7 @@ public class NoDefInspectionTool extends CodeNarcInspectionTool<NoDefRule> {
 
     public NoDefInspectionTool() {
         super(new NoDefRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -48,7 +49,7 @@ public class NoDefInspectionTool extends CodeNarcInspectionTool<NoDefRule> {
 
     @Override
     protected void applyDefaultConfiguration(NoDefRule rule) {
-        rule.setDoNotApplyToFilesMatching("*Controller.groovy");
+        rule.setDoNotApplyToFilesMatching(".*Controller\\.groovy");
     }
 
     @Override

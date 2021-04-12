@@ -54,7 +54,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     public static final String BASE_MESSAGES_BUNDLE = "codenarc-base-messages";
     public static final String GROUP_DISPLAY_NAME = "CodeNarc";
 
-    protected static final String SPECIFICATION_FILENAMES = "*Spec.groovy,*Specification.groovy";
+    protected static final String SPECIFICATION_CLASSES = "*Spec,*Specification";
 
     private static final Logger LOG = Logger.getInstance(CodeNarcInspectionTool.class);
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create("CODENARC_SOURCE_AS_STRING");

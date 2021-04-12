@@ -19,6 +19,7 @@ public class LoggerForDifferentClassInspectionTool extends CodeNarcInspectionToo
 
     public LoggerForDifferentClassInspectionTool() {
         super(new LoggerForDifferentClassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

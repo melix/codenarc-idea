@@ -19,6 +19,7 @@ public class ExplicitHashSetInstantiationInspectionTool extends CodeNarcInspecti
 
     public ExplicitHashSetInstantiationInspectionTool() {
         super(new ExplicitHashSetInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

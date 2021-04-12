@@ -19,6 +19,7 @@ public class CatchArrayIndexOutOfBoundsExceptionInspectionTool extends CodeNarcI
 
     public CatchArrayIndexOutOfBoundsExceptionInspectionTool() {
         super(new CatchArrayIndexOutOfBoundsExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

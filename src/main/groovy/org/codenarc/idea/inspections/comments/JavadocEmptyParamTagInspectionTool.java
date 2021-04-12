@@ -19,6 +19,7 @@ public class JavadocEmptyParamTagInspectionTool extends CodeNarcInspectionTool<J
 
     public JavadocEmptyParamTagInspectionTool() {
         super(new JavadocEmptyParamTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

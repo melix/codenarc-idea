@@ -19,6 +19,7 @@ public class UnsafeArrayDeclarationInspectionTool extends CodeNarcInspectionTool
 
     public UnsafeArrayDeclarationInspectionTool() {
         super(new UnsafeArrayDeclarationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

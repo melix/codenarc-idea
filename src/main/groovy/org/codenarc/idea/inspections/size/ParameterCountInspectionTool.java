@@ -19,6 +19,7 @@ public class ParameterCountInspectionTool extends CodeNarcInspectionTool<Paramet
 
     public ParameterCountInspectionTool() {
         super(new ParameterCountRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class UnnecessaryCallForLastElementInspectionTool extends CodeNarcInspect
 
     public UnnecessaryCallForLastElementInspectionTool() {
         super(new UnnecessaryCallForLastElementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

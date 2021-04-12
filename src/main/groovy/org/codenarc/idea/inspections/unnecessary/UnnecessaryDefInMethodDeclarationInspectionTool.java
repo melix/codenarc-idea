@@ -19,6 +19,7 @@ public class UnnecessaryDefInMethodDeclarationInspectionTool extends CodeNarcIns
 
     public UnnecessaryDefInMethodDeclarationInspectionTool() {
         super(new UnnecessaryDefInMethodDeclarationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

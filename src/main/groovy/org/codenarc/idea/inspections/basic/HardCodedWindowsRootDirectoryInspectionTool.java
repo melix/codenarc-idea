@@ -19,6 +19,7 @@ public class HardCodedWindowsRootDirectoryInspectionTool extends CodeNarcInspect
 
     public HardCodedWindowsRootDirectoryInspectionTool() {
         super(new HardCodedWindowsRootDirectoryRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class UnnecessaryConstructorInspectionTool extends CodeNarcInspectionTool
 
     public UnnecessaryConstructorInspectionTool() {
         super(new UnnecessaryConstructorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

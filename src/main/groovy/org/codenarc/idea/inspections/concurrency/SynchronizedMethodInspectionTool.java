@@ -19,6 +19,7 @@ public class SynchronizedMethodInspectionTool extends CodeNarcInspectionTool<Syn
 
     public SynchronizedMethodInspectionTool() {
         super(new SynchronizedMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

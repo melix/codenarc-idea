@@ -19,6 +19,7 @@ public class DuplicateNumberLiteralInspectionTool extends CodeNarcInspectionTool
 
     public DuplicateNumberLiteralInspectionTool() {
         super(new DuplicateNumberLiteralRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -66,7 +67,7 @@ public class DuplicateNumberLiteralInspectionTool extends CodeNarcInspectionTool
 
     @Override
     protected void applyDefaultConfiguration(DuplicateNumberLiteralRule rule)  {
-        rule.setDoNotApplyToFilesMatching(SPECIFICATION_FILENAMES);
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
     }
 
     @Override

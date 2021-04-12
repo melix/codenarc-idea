@@ -19,6 +19,7 @@ public class JavaIoPackageAccessInspectionTool extends CodeNarcInspectionTool<Ja
 
     public JavaIoPackageAccessInspectionTool() {
         super(new JavaIoPackageAccessRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

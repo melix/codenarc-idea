@@ -19,6 +19,7 @@ public class SystemErrPrintInspectionTool extends CodeNarcInspectionTool<SystemE
 
     public SystemErrPrintInspectionTool() {
         super(new SystemErrPrintRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

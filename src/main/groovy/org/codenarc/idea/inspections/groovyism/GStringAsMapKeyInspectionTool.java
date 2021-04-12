@@ -19,6 +19,7 @@ public class GStringAsMapKeyInspectionTool extends CodeNarcInspectionTool<GStrin
 
     public GStringAsMapKeyInspectionTool() {
         super(new GStringAsMapKeyRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

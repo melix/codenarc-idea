@@ -19,6 +19,7 @@ public class UseAssertTrueInsteadOfNegationInspectionTool extends CodeNarcInspec
 
     public UseAssertTrueInsteadOfNegationInspectionTool() {
         super(new UseAssertTrueInsteadOfNegationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

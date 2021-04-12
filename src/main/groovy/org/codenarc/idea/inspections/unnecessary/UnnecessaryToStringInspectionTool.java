@@ -19,6 +19,7 @@ public class UnnecessaryToStringInspectionTool extends CodeNarcInspectionTool<Un
 
     public UnnecessaryToStringInspectionTool() {
         super(new UnnecessaryToStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

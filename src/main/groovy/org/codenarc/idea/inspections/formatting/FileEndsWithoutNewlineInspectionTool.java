@@ -19,6 +19,7 @@ public class FileEndsWithoutNewlineInspectionTool extends CodeNarcInspectionTool
 
     public FileEndsWithoutNewlineInspectionTool() {
         super(new FileEndsWithoutNewlineRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

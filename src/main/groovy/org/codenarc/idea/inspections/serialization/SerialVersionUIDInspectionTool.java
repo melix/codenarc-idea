@@ -19,6 +19,7 @@ public class SerialVersionUIDInspectionTool extends CodeNarcInspectionTool<Seria
 
     public SerialVersionUIDInspectionTool() {
         super(new SerialVersionUIDRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

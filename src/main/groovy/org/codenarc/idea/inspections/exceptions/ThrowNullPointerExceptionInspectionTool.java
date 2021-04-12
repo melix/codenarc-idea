@@ -19,6 +19,7 @@ public class ThrowNullPointerExceptionInspectionTool extends CodeNarcInspectionT
 
     public ThrowNullPointerExceptionInspectionTool() {
         super(new ThrowNullPointerExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

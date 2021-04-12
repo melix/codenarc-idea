@@ -1,5 +1,9 @@
 # CodeNarc IntelliJ Plugin
 
+## Development
+
+To run the plugin locally run `./gradlew runIde`
+
 ## Beta Channel
 Feel free to join the beta channel here: https://plugins.jetbrains.com/plugins/beta/5925
 

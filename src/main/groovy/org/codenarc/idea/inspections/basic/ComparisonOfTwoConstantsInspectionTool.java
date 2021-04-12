@@ -19,6 +19,7 @@ public class ComparisonOfTwoConstantsInspectionTool extends CodeNarcInspectionTo
 
     public ComparisonOfTwoConstantsInspectionTool() {
         super(new ComparisonOfTwoConstantsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

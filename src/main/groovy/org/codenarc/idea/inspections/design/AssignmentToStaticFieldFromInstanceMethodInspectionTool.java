@@ -19,6 +19,7 @@ public class AssignmentToStaticFieldFromInstanceMethodInspectionTool extends Cod
 
     public AssignmentToStaticFieldFromInstanceMethodInspectionTool() {
         super(new AssignmentToStaticFieldFromInstanceMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

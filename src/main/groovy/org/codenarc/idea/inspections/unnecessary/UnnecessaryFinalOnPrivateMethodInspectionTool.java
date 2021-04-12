@@ -19,6 +19,7 @@ public class UnnecessaryFinalOnPrivateMethodInspectionTool extends CodeNarcInspe
 
     public UnnecessaryFinalOnPrivateMethodInspectionTool() {
         super(new UnnecessaryFinalOnPrivateMethodRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

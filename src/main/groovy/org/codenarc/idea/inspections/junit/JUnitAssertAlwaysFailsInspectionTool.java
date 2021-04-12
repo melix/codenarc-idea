@@ -19,6 +19,7 @@ public class JUnitAssertAlwaysFailsInspectionTool extends CodeNarcInspectionTool
 
     public JUnitAssertAlwaysFailsInspectionTool() {
         super(new JUnitAssertAlwaysFailsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

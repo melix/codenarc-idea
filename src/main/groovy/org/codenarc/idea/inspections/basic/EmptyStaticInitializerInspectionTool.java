@@ -19,6 +19,7 @@ public class EmptyStaticInitializerInspectionTool extends CodeNarcInspectionTool
 
     public EmptyStaticInitializerInspectionTool() {
         super(new EmptyStaticInitializerRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

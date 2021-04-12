@@ -19,6 +19,7 @@ public class ExplicitArrayListInstantiationInspectionTool extends CodeNarcInspec
 
     public ExplicitArrayListInstantiationInspectionTool() {
         super(new ExplicitArrayListInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

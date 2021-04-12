@@ -21,6 +21,7 @@ public class UnnecessaryGStringInspectionTool extends CodeNarcInspectionTool<Unn
 
     public UnnecessaryGStringInspectionTool() {
         super(new UnnecessaryGStringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -20,6 +20,7 @@ public class UnnecessarySetterInspectionTool extends CodeNarcInspectionTool<Unne
 
     public UnnecessarySetterInspectionTool() {
         super(new UnnecessarySetterRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

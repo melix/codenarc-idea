@@ -19,6 +19,7 @@ public class NonFinalSubclassOfSensitiveInterfaceInspectionTool extends CodeNarc
 
     public NonFinalSubclassOfSensitiveInterfaceInspectionTool() {
         super(new NonFinalSubclassOfSensitiveInterfaceRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

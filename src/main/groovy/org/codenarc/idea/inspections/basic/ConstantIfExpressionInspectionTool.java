@@ -19,6 +19,7 @@ public class ConstantIfExpressionInspectionTool extends CodeNarcInspectionTool<C
 
     public ConstantIfExpressionInspectionTool() {
         super(new ConstantIfExpressionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class ImportFromSunPackagesInspectionTool extends CodeNarcInspectionTool<
 
     public ImportFromSunPackagesInspectionTool() {
         super(new ImportFromSunPackagesRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class UnnecessaryFloatInstantiationInspectionTool extends CodeNarcInspect
 
     public UnnecessaryFloatInstantiationInspectionTool() {
         super(new UnnecessaryFloatInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

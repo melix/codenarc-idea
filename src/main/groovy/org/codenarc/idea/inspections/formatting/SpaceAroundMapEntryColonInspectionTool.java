@@ -19,6 +19,7 @@ public class SpaceAroundMapEntryColonInspectionTool extends CodeNarcInspectionTo
 
     public SpaceAroundMapEntryColonInspectionTool() {
         super(new SpaceAroundMapEntryColonRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

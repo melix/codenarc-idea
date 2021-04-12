@@ -19,6 +19,7 @@ public class JUnitTearDownCallsSuperInspectionTool extends CodeNarcInspectionToo
 
     public JUnitTearDownCallsSuperInspectionTool() {
         super(new JUnitTearDownCallsSuperRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

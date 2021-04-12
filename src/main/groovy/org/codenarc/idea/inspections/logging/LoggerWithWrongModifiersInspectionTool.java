@@ -19,6 +19,7 @@ public class LoggerWithWrongModifiersInspectionTool extends CodeNarcInspectionTo
 
     public LoggerWithWrongModifiersInspectionTool() {
         super(new LoggerWithWrongModifiersRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

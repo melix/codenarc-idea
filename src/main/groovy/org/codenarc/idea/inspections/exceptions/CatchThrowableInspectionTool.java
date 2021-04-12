@@ -19,6 +19,7 @@ public class CatchThrowableInspectionTool extends CodeNarcInspectionTool<CatchTh
 
     public CatchThrowableInspectionTool() {
         super(new CatchThrowableRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

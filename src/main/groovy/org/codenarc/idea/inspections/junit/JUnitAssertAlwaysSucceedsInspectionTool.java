@@ -19,6 +19,7 @@ public class JUnitAssertAlwaysSucceedsInspectionTool extends CodeNarcInspectionT
 
     public JUnitAssertAlwaysSucceedsInspectionTool() {
         super(new JUnitAssertAlwaysSucceedsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

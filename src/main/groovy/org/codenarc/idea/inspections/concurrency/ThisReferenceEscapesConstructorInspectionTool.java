@@ -19,6 +19,7 @@ public class ThisReferenceEscapesConstructorInspectionTool extends CodeNarcInspe
 
     public ThisReferenceEscapesConstructorInspectionTool() {
         super(new ThisReferenceEscapesConstructorRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

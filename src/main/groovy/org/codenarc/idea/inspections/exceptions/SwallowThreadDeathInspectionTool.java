@@ -19,6 +19,7 @@ public class SwallowThreadDeathInspectionTool extends CodeNarcInspectionTool<Swa
 
     public SwallowThreadDeathInspectionTool() {
         super(new SwallowThreadDeathRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

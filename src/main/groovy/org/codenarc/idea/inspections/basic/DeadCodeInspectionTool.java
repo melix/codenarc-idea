@@ -20,6 +20,7 @@ public class DeadCodeInspectionTool extends CodeNarcInspectionTool<DeadCodeRule>
 
     public DeadCodeInspectionTool() {
         super(new DeadCodeRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class EmptySwitchStatementInspectionTool extends CodeNarcInspectionTool<E
 
     public EmptySwitchStatementInspectionTool() {
         super(new EmptySwitchStatementRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

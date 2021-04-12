@@ -19,6 +19,7 @@ public class SerializableClassMustDefineSerialVersionUIDInspectionTool extends C
 
     public SerializableClassMustDefineSerialVersionUIDInspectionTool() {
         super(new SerializableClassMustDefineSerialVersionUIDRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

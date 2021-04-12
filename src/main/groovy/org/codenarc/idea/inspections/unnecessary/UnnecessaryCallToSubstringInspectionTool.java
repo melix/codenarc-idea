@@ -19,6 +19,7 @@ public class UnnecessaryCallToSubstringInspectionTool extends CodeNarcInspection
 
     public UnnecessaryCallToSubstringInspectionTool() {
         super(new UnnecessaryCallToSubstringRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

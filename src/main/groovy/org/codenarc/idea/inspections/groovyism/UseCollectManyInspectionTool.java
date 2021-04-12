@@ -19,6 +19,7 @@ public class UseCollectManyInspectionTool extends CodeNarcInspectionTool<UseColl
 
     public UseCollectManyInspectionTool() {
         super(new UseCollectManyRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

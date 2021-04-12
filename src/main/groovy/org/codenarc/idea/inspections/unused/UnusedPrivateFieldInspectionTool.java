@@ -19,6 +19,7 @@ public class UnusedPrivateFieldInspectionTool extends CodeNarcInspectionTool<Unu
 
     public UnusedPrivateFieldInspectionTool() {
         super(new UnusedPrivateFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

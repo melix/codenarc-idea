@@ -19,6 +19,7 @@ public class UnnecessaryModOneInspectionTool extends CodeNarcInspectionTool<Unne
 
     public UnnecessaryModOneInspectionTool() {
         super(new UnnecessaryModOneRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

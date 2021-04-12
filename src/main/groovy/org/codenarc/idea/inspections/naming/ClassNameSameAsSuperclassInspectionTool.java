@@ -19,6 +19,7 @@ public class ClassNameSameAsSuperclassInspectionTool extends CodeNarcInspectionT
 
     public ClassNameSameAsSuperclassInspectionTool() {
         super(new ClassNameSameAsSuperclassRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWi
 
     public NoWildcardImportsInspectionTool() {
         super(new NoWildcardImportsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

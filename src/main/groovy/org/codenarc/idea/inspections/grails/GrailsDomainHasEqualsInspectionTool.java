@@ -19,6 +19,7 @@ public class GrailsDomainHasEqualsInspectionTool extends CodeNarcInspectionTool<
 
     public GrailsDomainHasEqualsInspectionTool() {
         super(new GrailsDomainHasEqualsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

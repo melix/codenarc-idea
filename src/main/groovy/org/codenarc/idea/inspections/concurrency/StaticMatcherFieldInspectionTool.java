@@ -19,6 +19,7 @@ public class StaticMatcherFieldInspectionTool extends CodeNarcInspectionTool<Sta
 
     public StaticMatcherFieldInspectionTool() {
         super(new StaticMatcherFieldRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

@@ -19,6 +19,7 @@ public class CatchNullPointerExceptionInspectionTool extends CodeNarcInspectionT
 
     public CatchNullPointerExceptionInspectionTool() {
         super(new CatchNullPointerExceptionRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

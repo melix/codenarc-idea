@@ -19,6 +19,7 @@ public class JUnitUnnecessaryTearDownInspectionTool extends CodeNarcInspectionTo
 
     public JUnitUnnecessaryTearDownInspectionTool() {
         super(new JUnitUnnecessaryTearDownRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

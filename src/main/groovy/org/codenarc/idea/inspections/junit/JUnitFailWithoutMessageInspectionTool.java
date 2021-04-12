@@ -19,6 +19,7 @@ public class JUnitFailWithoutMessageInspectionTool extends CodeNarcInspectionToo
 
     public JUnitFailWithoutMessageInspectionTool() {
         super(new JUnitFailWithoutMessageRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

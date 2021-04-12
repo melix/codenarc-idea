@@ -19,6 +19,7 @@ public class UnnecessaryCastInspectionTool extends CodeNarcInspectionTool<Unnece
 
     public UnnecessaryCastInspectionTool() {
         super(new UnnecessaryCastRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

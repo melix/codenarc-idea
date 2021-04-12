@@ -19,6 +19,7 @@ public class IndentationInspectionTool extends CodeNarcInspectionTool<Indentatio
 
     public IndentationInspectionTool() {
         super(new IndentationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
@@ -54,6 +55,11 @@ public class IndentationInspectionTool extends CodeNarcInspectionTool<Indentatio
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration
+
+    @Override
+    protected void applyDefaultConfiguration(IndentationRule rule) {
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
+    }
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {

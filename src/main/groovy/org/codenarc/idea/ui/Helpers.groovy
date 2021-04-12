@@ -1,15 +1,17 @@
 package org.codenarc.idea.ui
 
 import com.intellij.ui.HyperlinkLabel
+import groovy.transform.CompileStatic
 import org.codenarc.idea.CodeNarcInspectionTool
 
 import javax.swing.*
 import java.awt.*
 import java.util.List
 
+@CompileStatic
 class Helpers {
 
-    private static final List<String> excludedFieldNames = Collections.unmodifiableList(
+    private static final List<String> EXCLUDED_STATIC_FIELDS = Collections.unmodifiableList(
         [
             'name',
             'description',
@@ -19,11 +21,12 @@ class Helpers {
             'violationMessage',
             'compilerPhase',
             'class',
-            'enabled'
+            'enabled',
         ]
     )
-    private static final List<String> excludedFromAutoproxyingFieldNames = Collections.unmodifiableList(
-        excludedFieldNames +
+
+    private static final List<String> EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES = Collections.unmodifiableList(
+        EXCLUDED_STATIC_FIELDS +
         [
             'applyToFilesMatching',
             'doNotApplyToFilesMatching',
@@ -32,6 +35,7 @@ class Helpers {
         ]
     )
 
+    @SuppressWarnings('CodeNarc.FactoryMethodName')
     static JPanel createOptionsPanel(CodeNarcInspectionTool instance) {
         assert instance
 
@@ -59,13 +63,13 @@ class Helpers {
 
             JPanel subPanel = null
             String sentence = camelCaseToSentence(prop.name)
-            if (Boolean.class ==  prop.type || boolean.class == prop.type) {
+            if (Boolean ==  prop.type || boolean.class == prop.type) {
                 subPanel = new SingleCheckboxOptionsPanel(sentence, instance.rule, prop.name)
             }
-            else if (Integer.class == prop.type || int.class == prop.type) {
+            else if (Integer == prop.type || int.class == prop.type) {
                 subPanel = new SingleIntegerFieldOptionsPanel(sentence, instance.rule, prop.name)
             }
-            else if (String.class == prop.type) {
+            else if (String == prop.type) {
                 subPanel = new SingleTextFieldOptionsPanel(sentence, instance.rule, prop.name)
             }
 
@@ -77,8 +81,12 @@ class Helpers {
         }
 
         HyperlinkLabel linkLabel = new HyperlinkLabel()
-        linkLabel.setHyperlinkTarget("https://codenarc.org/codenarc-rules-${instance.getRuleset().toLowerCase()}.html#${instance.rule.class.simpleName.toLowerCase().replace('rule', '-rule')}")
-        linkLabel.setHyperlinkText('An explanation of the rule at the CodeNarc website')
+
+        String fragment = instance.rule.class.simpleName.toLowerCase().replace('rule', '-rule')
+
+        linkLabel.hyperlinkTarget = "https://codenarc.org/codenarc-rules-${instance.ruleset.toLowerCase()}.html#$fragment"
+        linkLabel.hyperlinkText = 'An explanation of the rule at the CodeNarc website'
+
         panel.add(linkLabel, constraints)
 
         if (found) {
@@ -94,11 +102,11 @@ class Helpers {
             return camelCased
         }
         buf.setCharAt(0, Character.toUpperCase(buf.charAt(0)))
-        for (int i=1; i < buf.length()-1; i++) {
+        for (int i = 1; i < buf.length() - 1; i++) {
             if (
-            Character.isLowerCase( buf.charAt(i-1) ) &&
+            Character.isLowerCase( buf.charAt(i - 1) ) &&
                 Character.isUpperCase( buf.charAt(i) ) &&
-                Character.isLowerCase( buf.charAt(i+1) )
+                Character.isLowerCase( buf.charAt(i + 1) )
             ) {
                 buf.insert(i++, ' ')
                 buf.setCharAt(i, Character.toLowerCase(buf.charAt(i)))
@@ -108,11 +116,12 @@ class Helpers {
         return buf.toString()
     }
 
+    @SuppressWarnings('CodeNarc.Instanceof')
     static List<MetaProperty> proxyableProps(Class clazz) {
-        clazz.metaClass.properties
+        return clazz.metaClass.properties
             .findAll { MetaProperty prop ->
                 prop &&
-                !excludedFromAutoproxyingFieldNames.contains(prop.name) &&
+                !EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES.contains(prop.name) &&
                 ((prop instanceof MetaBeanProperty && ((MetaBeanProperty)prop).setter && ((MetaBeanProperty)prop).getter)) }
             .sort { prop -> prop.name }
     }
@@ -121,13 +130,13 @@ class Helpers {
         clazz.metaClass.properties
             .findAll { MetaProperty prop ->
                 prop &&
-                !excludedFieldNames.contains(prop.name)  &&
+                !EXCLUDED_STATIC_FIELDS.contains(prop.name)  &&
                 ((prop instanceof MetaBeanProperty && ((MetaBeanProperty)prop).setter && ((MetaBeanProperty)prop).getter)) }
             .sort { prop -> prop.name }
     }
 
     static Class<?> getRuleClassInstance(String ruleClass) throws Throwable {
-        ClassLoader classLoader = CodeNarcInspectionTool.class.getClassLoader()
+        ClassLoader classLoader = CodeNarcInspectionTool.getClassLoader()
         return Class.forName(ruleClass, true, classLoader)
     }
 

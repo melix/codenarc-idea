@@ -19,6 +19,7 @@ public class UnnecessaryTransientModifierInspectionTool extends CodeNarcInspecti
 
     public UnnecessaryTransientModifierInspectionTool() {
         super(new UnnecessaryTransientModifierRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

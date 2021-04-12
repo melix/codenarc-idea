@@ -19,6 +19,7 @@ public class ChainedTestInspectionTool extends CodeNarcInspectionTool<ChainedTes
 
     public ChainedTestInspectionTool() {
         super(new ChainedTestRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

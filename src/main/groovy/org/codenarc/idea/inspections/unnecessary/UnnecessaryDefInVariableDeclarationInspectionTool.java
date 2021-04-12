@@ -19,6 +19,7 @@ public class UnnecessaryDefInVariableDeclarationInspectionTool extends CodeNarcI
 
     public UnnecessaryDefInVariableDeclarationInspectionTool() {
         super(new UnnecessaryDefInVariableDeclarationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

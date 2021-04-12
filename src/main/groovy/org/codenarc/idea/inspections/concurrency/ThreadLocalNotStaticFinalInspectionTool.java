@@ -19,6 +19,7 @@ public class ThreadLocalNotStaticFinalInspectionTool extends CodeNarcInspectionT
 
     public ThreadLocalNotStaticFinalInspectionTool() {
         super(new ThreadLocalNotStaticFinalRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

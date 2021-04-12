@@ -19,6 +19,7 @@ public class PublicMethodsBeforeNonPublicMethodsInspectionTool extends CodeNarcI
 
     public PublicMethodsBeforeNonPublicMethodsInspectionTool() {
         super(new PublicMethodsBeforeNonPublicMethodsRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

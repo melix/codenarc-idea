@@ -59,7 +59,7 @@ class RuleInspectionsGenerator {
 
     static void main(String[] args) {
         if (args.length != 1) {
-            println 'Waiting exactly one argument - path to the project root'
+            println 'Expecting exactly one argument - path to the project root'
         }
 
         String projectRoot = args[0]
@@ -194,7 +194,8 @@ class RuleInspectionsGenerator {
                     groupPath: generatedClass.groupPath,
                     groupKey: generatedClass.groupKey,
                     level: generatedClass.level,
-                    enabledByDefault: generatedClass.enabledByDefault
+                    enabledByDefault: generatedClass.enabledByDefault,
+                    hasStaticDescription: true
             )
             ideaPlugin.extensions[0].append(inspectionNode)
         }
@@ -363,6 +364,7 @@ class RuleInspectionsGenerator {
         
             public $newClassName() {
                 super(new $ruleClassInstance.simpleName());
+                applyDefaultConfiguration(getRule());
             }
             
             @Override

@@ -19,6 +19,7 @@ public class UnnecessaryStringInstantiationInspectionTool extends CodeNarcInspec
 
     public UnnecessaryStringInstantiationInspectionTool() {
         super(new UnnecessaryStringInstantiationRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

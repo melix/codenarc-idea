@@ -19,6 +19,7 @@ public class ObjectOverrideMisspelledMethodNameInspectionTool extends CodeNarcIn
 
     public ObjectOverrideMisspelledMethodNameInspectionTool() {
         super(new ObjectOverrideMisspelledMethodNameRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

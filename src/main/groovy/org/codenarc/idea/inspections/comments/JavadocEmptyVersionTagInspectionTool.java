@@ -19,6 +19,7 @@ public class JavadocEmptyVersionTagInspectionTool extends CodeNarcInspectionTool
 
     public JavadocEmptyVersionTagInspectionTool() {
         super(new JavadocEmptyVersionTagRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override

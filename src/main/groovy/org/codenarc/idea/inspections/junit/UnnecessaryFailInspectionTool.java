@@ -19,6 +19,7 @@ public class UnnecessaryFailInspectionTool extends CodeNarcInspectionTool<Unnece
 
     public UnnecessaryFailInspectionTool() {
         super(new UnnecessaryFailRule());
+        applyDefaultConfiguration(getRule());
     }
 
     @Override
