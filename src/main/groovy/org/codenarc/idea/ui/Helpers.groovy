@@ -77,7 +77,7 @@ class Helpers {
         }
 
         HyperlinkLabel linkLabel = new HyperlinkLabel()
-        linkLabel.setHyperlinkTarget("https://codenarc.org/codenarc-rules-${instance.getRuleset().toLowerCase()}.html#${instance.rule.class.simpleName.toLowerCase().replace('rule', '_rule')}")
+        linkLabel.setHyperlinkTarget("https://codenarc.org/codenarc-rules-${instance.getRuleset().toLowerCase()}.html#${instance.rule.class.simpleName.toLowerCase().replace('rule', '-rule')}")
         linkLabel.setHyperlinkText('An explanation of the rule at the CodeNarc website')
         panel.add(linkLabel, constraints)
 
