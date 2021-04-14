@@ -1,11 +1,15 @@
 package org.codenarc.idea;
 
+import com.intellij.codeInspection.InjectionAwareSuppressQuickFix;
 import com.intellij.codeInspection.InspectionManager;
+import com.intellij.codeInspection.InspectionSuppressor;
 import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
+import com.intellij.codeInspection.SuppressQuickFix;
 import com.intellij.configurationStore.XmlSerializer;
+import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.ControlFlowException;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
@@ -17,13 +21,17 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.util.CachedValue;
 import com.intellij.psi.util.CachedValueProvider;
 import com.intellij.psi.util.CachedValuesManager;
 import com.intellij.psi.util.ParameterizedCachedValue;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.util.PsiUtil;
+import com.intellij.util.ThreeState;
 import com.intellij.util.xmlb.XmlSerializationException;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import org.codenarc.idea.ui.Helpers;
 import org.codenarc.rule.AbstractRule;
 import org.codenarc.rule.Violation;
@@ -43,6 +51,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -142,6 +151,11 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     public abstract String getRuleset();
 
     @Override
+    public @NonNls @Nullable String getAlternativeID() {
+        return (rule.getName() != null ? rule.getName() : rule.getClass().getSimpleName());
+    }
+
+    @Override
     public JPanel createOptionsPanel() {
         return Helpers.createOptionsPanel(this);
     }
@@ -230,55 +244,56 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return cachedViolations.getValue(rule);
     }
 
-    @Nullable
-    private ProblemDescriptor[] doCheckFile(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly, SourceCode code, R r) throws Throwable {
-        if (code == null) {
-            return null;
+    // this method is nearly the same as the on in superclass but it uses altarnative ID (without CodeNarc) prefix
+    // to be aligned with CodeNarc behaviour
+    public SuppressQuickFix @NotNull [] getBatchSuppressActions(@Nullable PsiElement element) {
+        if (element == null) {
+            return SuppressQuickFix.EMPTY_ARRAY;
+        }
+        Set<SuppressQuickFix> fixes = new ObjectOpenCustomHashSet<>(new Hash.Strategy<>() {
+            @Override
+            public int hashCode(@Nullable SuppressQuickFix object) {
+                if (object == null) {
+                    return 0;
+                }
+                int result = object instanceof InjectionAwareSuppressQuickFix
+                        ? ((InjectionAwareSuppressQuickFix)object).isShouldBeAppliedToInjectionHost().hashCode()
+                        : 0;
+                return 31 * result + object.getName().hashCode();
+            }
+
+            @Override
+            public boolean equals(SuppressQuickFix o1, SuppressQuickFix o2) {
+                if (o1 == o2) {
+                    return true;
+                }
+                if (o1 == null || o2 == null) {
+                    return false;
+                }
+
+                if (o1 instanceof InjectionAwareSuppressQuickFix && o2 instanceof InjectionAwareSuppressQuickFix) {
+                    if (((InjectionAwareSuppressQuickFix)o1).isShouldBeAppliedToInjectionHost() !=
+                            ((InjectionAwareSuppressQuickFix)o2).isShouldBeAppliedToInjectionHost()) {
+                        return false;
+                    }
+                }
+                return o1.getName().equals(o2.getName());
+            }
+        });
+
+        Set<InspectionSuppressor> suppressors = getSuppressors(element);
+        final PsiLanguageInjectionHost injectionHost = InjectedLanguageManager.getInstance(element.getProject()).getInjectionHost(element);
+        if (injectionHost != null) {
+            Set<InspectionSuppressor> injectionHostSuppressors = getSuppressors(injectionHost);
+            for (InspectionSuppressor suppressor : injectionHostSuppressors) {
+                addAllSuppressActions(fixes, injectionHost, suppressor, ThreeState.YES, getAlternativeID());
+            }
         }
 
-        final List<Violation> list = r.applyTo(code);
-
-        if (list == null || list.isEmpty()) {
-            return null;
+        for (InspectionSuppressor suppressor : suppressors) {
+            addAllSuppressActions(fixes, element, suppressor, injectionHost != null ? ThreeState.NO : ThreeState.UNSURE, getAlternativeID());
         }
-
-        final VirtualFile virtualFile = file.getVirtualFile();
-
-        if (virtualFile == null) {
-            return null;
-        }
-
-        final FileDocumentManager documentManager = FileDocumentManager.getInstance();
-        final Document document = documentManager.getDocument(virtualFile);
-
-        if (document == null) {
-            return null;
-        }
-
-        return list
-                .stream()
-                .map(violation -> convertViolationToProblemDescriptor(file, manager, isOnTheFly, r, document, violation))
-                .filter(Objects::nonNull)
-                .toArray(ProblemDescriptor[]::new);
-    }
-
-    @Nullable
-    private ProblemDescriptor convertViolationToProblemDescriptor(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly, R r, Document document, Violation violation) {
-        final TextRange violatingRange = extractViolatingRange(document, violation);
-        final PsiElement violatingElement = extractViolatingElement(file, violatingRange);
-
-        if (violatingElement == null || isSuppressedFor(violatingElement)) {
-            return null;
-        }
-
-        return manager.createProblemDescriptor(
-                violatingElement,
-                convertViolationRangeToRelative(violatingElement, violatingRange),
-                extractMessage(violation, r),
-                ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                isOnTheFly,
-                getQuickFixesFor(violation, violatingElement).toArray(new LocalQuickFix[0])
-        );
+        return fixes.toArray(SuppressQuickFix.EMPTY_ARRAY);
     }
 
     protected abstract @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement);
@@ -328,6 +343,72 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         }
 
         return lineNumber;
+    }
+
+
+    private static void addAllSuppressActions(@NotNull Collection<? super SuppressQuickFix> fixes,
+                                              @NotNull PsiElement element,
+                                              @NotNull InspectionSuppressor suppressor,
+                                              @NotNull ThreeState appliedToInjectionHost,
+                                              @NotNull String toolId) {
+        final SuppressQuickFix[] actions = suppressor.getSuppressActions(element, toolId);
+        for (SuppressQuickFix action : actions) {
+            if (action instanceof InjectionAwareSuppressQuickFix) {
+                ((InjectionAwareSuppressQuickFix)action).setShouldBeAppliedToInjectionHost(appliedToInjectionHost);
+            }
+            fixes.add(action);
+        }
+    }
+
+    @Nullable
+    private ProblemDescriptor[] doCheckFile(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly, SourceCode code, R r) throws Throwable {
+        if (code == null) {
+            return null;
+        }
+
+        final List<Violation> list = r.applyTo(code);
+
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+
+        final VirtualFile virtualFile = file.getVirtualFile();
+
+        if (virtualFile == null) {
+            return null;
+        }
+
+        final FileDocumentManager documentManager = FileDocumentManager.getInstance();
+        final Document document = documentManager.getDocument(virtualFile);
+
+        if (document == null) {
+            return null;
+        }
+
+        return list
+                .stream()
+                .map(violation -> convertViolationToProblemDescriptor(file, manager, isOnTheFly, r, document, violation))
+                .filter(Objects::nonNull)
+                .toArray(ProblemDescriptor[]::new);
+    }
+
+    @Nullable
+    private ProblemDescriptor convertViolationToProblemDescriptor(@NotNull PsiFile file, @NotNull InspectionManager manager, boolean isOnTheFly, R r, Document document, Violation violation) {
+        final TextRange violatingRange = extractViolatingRange(document, violation);
+        final PsiElement violatingElement = extractViolatingElement(file, violatingRange);
+
+        if (violatingElement == null || isSuppressedFor(violatingElement)) {
+            return null;
+        }
+
+        return manager.createProblemDescriptor(
+                violatingElement,
+                convertViolationRangeToRelative(violatingElement, violatingRange),
+                extractMessage(violation, r),
+                ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                isOnTheFly,
+                getQuickFixesFor(violation, violatingElement).toArray(new LocalQuickFix[0])
+        );
     }
 
     @NotNull

@@ -1,17 +1,19 @@
 package org.codenarc.idea.inspections.convention;
 
+import com.intellij.codeInspection.CleanupLocalInspectionTool;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
 import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
+import org.codenarc.idea.quickfix.AddExplicitReturnQuickFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.convention.ImplicitReturnStatementRule;
 import org.jetbrains.annotations.NotNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-public class ImplicitReturnStatementInspectionTool extends CodeNarcInspectionTool<ImplicitReturnStatementRule> {
+public class ImplicitReturnStatementInspectionTool extends CodeNarcInspectionTool<ImplicitReturnStatementRule> implements CleanupLocalInspectionTool {
 
     // this code has been generated from org.codenarc.rule.convention.ImplicitReturnStatementRule
 
@@ -49,7 +51,7 @@ public class ImplicitReturnStatementInspectionTool extends CodeNarcInspectionToo
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.emptyList();
+        return Collections.singleton(new AddExplicitReturnQuickFix());
     }
 
 }

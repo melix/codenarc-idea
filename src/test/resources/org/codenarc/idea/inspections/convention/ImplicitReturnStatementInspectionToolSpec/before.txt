@@ -1,0 +1,17 @@
+package rules
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class ImplicitReturnStatementInspectionToolSpecSnippet {
+
+    <warning descr="The method doSomething in class rules.ImplicitReturnStatementInspectionToolSpecSnippet is missing an explicit return">String doSomething() {
+        'something'
+    }</warning>
+
+    <warning descr="The method doStuff in class rules.ImplicitReturnStatementInspectionToolSpecSnippet is missing an explicit return">String doStuff() {
+        'stuff'
+    }</warning>
+
+}

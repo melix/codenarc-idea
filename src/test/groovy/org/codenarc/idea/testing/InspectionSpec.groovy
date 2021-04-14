@@ -2,6 +2,7 @@ package org.codenarc.idea.testing
 
 import com.agorapulse.testing.fixt.Fixt
 import com.intellij.codeInsight.daemon.impl.HighlightInfo
+import com.intellij.codeInsight.intention.EmptyIntentionAction
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.actions.CleanupInspectionIntention
@@ -9,7 +10,6 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Pair
 import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import groovy.transform.CompileDynamic
 import org.jetbrains.annotations.NotNull
@@ -58,7 +58,7 @@ abstract class InspectionSpec extends Specification {
         when:
             List<IntentionAction> fixes = helper.fixture.getAllQuickFixes(FILE_NAME)
         then:
-            fixes.size() == 2
+        fixes.findAll {!(it instanceof EmptyIntentionAction) }.size() == 2
 
         when:
             helper.fixture.launchAction fixes.first()
@@ -73,7 +73,7 @@ abstract class InspectionSpec extends Specification {
         when:
             List<IntentionAction> fixes = helper.fixture.getAllQuickFixes(FILE_NAME)
         then:
-            fixes.size() == 2
+            fixes.findAll {!(it instanceof EmptyIntentionAction) }.size() == 2
 
         when:
             triggerFirstFixAll()
