@@ -9,6 +9,7 @@ import org.codenarc.idea.CodeNarcInspectionTool
 import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
 import org.codenarc.rule.comments.JavadocEmptyFirstLineRule
+import org.codenarc.rule.convention.ImplicitReturnStatementRule
 import org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule
 import org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule
 import org.codenarc.rule.grails.GrailsDomainHasEqualsRule
@@ -99,6 +100,7 @@ class RuleInspectionsGenerator {
     ])
 
     private static final Set<Class<?>> CLEANUP_AVAILABLE = new HashSet<>([
+            ImplicitReturnStatementRule,
             UnnecessaryDotClassRule,
             UnnecessaryGStringRule,
     ])
