@@ -5,6 +5,7 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.codeInsight.intention.EmptyIntentionAction
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInspection.LocalInspectionTool
+import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.actions.CleanupInspectionIntention
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Pair
@@ -35,30 +36,32 @@ abstract class InspectionSpec extends Specification {
         public class String { }
     '''
 
-    private static final String FILE_NAME = 'Snippet.groovy'
-
     @Shared
     Fixt fixt = Fixt.create(getClass())
 
     LocalInspectionTool inspection = createInspection()
 
-    @AutoCleanup FixtureHelper helper = FixtureHelper.groovy25().start {
+    String fileName =  "${UUID.randomUUID()}.groovy"
+
+    @AutoCleanup FixtureHelper helper = FixtureHelper.groovy25().start { JavaCodeInsightTestFixture fixture ->
         enableInspections(inspection)
+
+        configure(fixture)
 
         for (String classToInclude in classesToInclude) {
             addClass(classToInclude)
         }
 
-        configureByText(FILE_NAME, readBeforeFile(it))
+        configureByText(fileName, readBeforeFile(fixture))
     }
 
     void 'check highlighting and then apply fix one by one'() {
         expect:
             helper.fixture.checkHighlighting()
         when:
-            List<IntentionAction> fixes = helper.fixture.getAllQuickFixes(FILE_NAME)
+            List<IntentionAction> fixes = relevantFixes
         then:
-        fixes.findAll {!(it instanceof EmptyIntentionAction) }.size() == 2
+        fixes.size() == 2
 
         when:
             helper.fixture.launchAction fixes.first()
@@ -71,9 +74,9 @@ abstract class InspectionSpec extends Specification {
         expect:
             helper.fixture.checkHighlighting()
         when:
-            List<IntentionAction> fixes = helper.fixture.getAllQuickFixes(FILE_NAME)
+            List<IntentionAction> fixes = relevantFixes
         then:
-            fixes.findAll {!(it instanceof EmptyIntentionAction) }.size() == 2
+            fixes.size() == 2
 
         when:
             triggerFirstFixAll()
@@ -81,10 +84,21 @@ abstract class InspectionSpec extends Specification {
             helper.fixture.checkResult readAfterFile()
     }
 
+    @SuppressWarnings('FactoryMethodName')
     protected abstract LocalInspectionTool createInspection()
 
     protected Iterable<String> getClassesToInclude() {
         return Collections.emptyList()
+    }
+
+    @SuppressWarnings(['ImplicitClosureParameter', 'Instanceof'])
+    protected List<IntentionAction> getRelevantFixes() {
+        return helper.fixture.getAllQuickFixes(fileName).findAll { !(it instanceof EmptyIntentionAction) }
+    }
+
+    @SuppressWarnings('EmptyMethodInAbstractClass')
+    protected void configure(JavaCodeInsightTestFixture fixture) {
+        // implemented in subclasses
     }
 
     protected String readFile(String file) {

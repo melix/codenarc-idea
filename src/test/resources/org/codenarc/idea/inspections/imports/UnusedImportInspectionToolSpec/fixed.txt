@@ -1,0 +1,12 @@
+package rules
+
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class UnusedImportInspectionToolSpecSnippet {
+
+    void doSomething() { }
+
+}
