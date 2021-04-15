@@ -17,6 +17,7 @@ import org.codenarc.rule.grails.GrailsDomainHasToStringRule
 import org.codenarc.rule.groovyism.ExplicitCallToAndMethodRule
 import org.codenarc.rule.groovyism.ExplicitCallToCompareToMethodRule
 import org.codenarc.rule.groovyism.ExplicitCallToOrMethodRule
+import org.codenarc.rule.imports.UnusedImportRule
 import org.codenarc.rule.security.JavaIoPackageAccessRule
 import org.codenarc.rule.unnecessary.UnnecessaryDotClassRule
 import org.codenarc.rule.unnecessary.UnnecessaryGStringRule
@@ -103,6 +104,7 @@ class RuleInspectionsGenerator {
             ImplicitReturnStatementRule,
             UnnecessaryDotClassRule,
             UnnecessaryGStringRule,
+            UnusedImportRule,
     ])
 
     private static final String RULESETS_PATH = 'rulesets/'

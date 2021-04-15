@@ -1,0 +1,14 @@
+package rules
+
+<warning descr="The [java.lang.String] import is never referenced"><warning descr="Unused import">import java.lang.String</warning></warning>
+<warning descr="The [java.util.List] import is never referenced"><warning descr="Unused import">import java.util.List</warning></warning>
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class UnusedImportInspectionToolSpecSnippet {
+
+    void doSomething() { }
+
+}
