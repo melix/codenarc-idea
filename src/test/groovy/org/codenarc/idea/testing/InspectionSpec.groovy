@@ -55,12 +55,11 @@ abstract class InspectionSpec extends Specification {
         configureByText(fileName, readBeforeFile(fixture))
     }
 
-    @SuppressWarnings(['Instanceof', 'ImplicitClosureParameter'])
     void 'check highlighting and then apply fix one by one'() {
         expect:
             helper.fixture.checkHighlighting()
         when:
-            List<IntentionAction> fixes = helper.fixture.getAllQuickFixes(fileName).findAll { it instanceof LocalQuickFix }
+            List<IntentionAction> fixes = relevantFixes
         then:
         fixes.size() == 2
 
@@ -71,12 +70,11 @@ abstract class InspectionSpec extends Specification {
             helper.fixture.checkResult readAfterFile()
     }
 
-    @SuppressWarnings(['ImplicitClosureParameter', 'Instanceof'])
     void 'check highlighting and then apply fix all'() {
         expect:
             helper.fixture.checkHighlighting()
         when:
-            List<IntentionAction> fixes = helper.fixture.getAllQuickFixes(fileName).findAll { it instanceof LocalQuickFix }
+            List<IntentionAction> fixes = relevantFixes
         then:
             fixes.size() == 2
 
@@ -86,10 +84,16 @@ abstract class InspectionSpec extends Specification {
             helper.fixture.checkResult readAfterFile()
     }
 
+    @SuppressWarnings('FactoryMethodName')
     protected abstract LocalInspectionTool createInspection()
 
     protected Iterable<String> getClassesToInclude() {
         return Collections.emptyList()
+    }
+
+    @SuppressWarnings(['ImplicitClosureParameter', 'Instanceof'])
+    protected List<IntentionAction> getRelevantFixes() {
+        return helper.fixture.getAllQuickFixes(fileName).findAll { !(it instanceof EmptyIntentionAction) }
     }
 
     @SuppressWarnings('EmptyMethodInAbstractClass')
