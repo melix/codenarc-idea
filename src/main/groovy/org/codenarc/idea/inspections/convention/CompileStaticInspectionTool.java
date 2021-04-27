@@ -55,7 +55,8 @@ public class CompileStaticInspectionTool extends CodeNarcInspectionTool<CompileS
 
     @Override
     protected void applyDefaultConfiguration(CompileStaticRule rule) {
-        rule.setDoNotApplyToFilesMatching(".*[Specification|Spec|Function]\\.groovy");
+        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
+        rule.setDoNotApplyToFileNames(GRADLE_FILES);
     }
 
     @Override
