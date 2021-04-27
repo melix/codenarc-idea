@@ -11,6 +11,7 @@ import org.codenarc.rule.AbstractRule
 import org.codenarc.rule.comments.JavadocEmptyFirstLineRule
 import org.codenarc.rule.convention.ImplicitReturnStatementRule
 import org.codenarc.rule.formatting.ClosureStatementOnOpeningLineOfMultipleLineClosureRule
+import org.codenarc.rule.formatting.SpaceAfterMethodCallNameRule
 import org.codenarc.rule.formatting.SpaceAroundMapEntryColonRule
 import org.codenarc.rule.grails.GrailsDomainHasEqualsRule
 import org.codenarc.rule.grails.GrailsDomainHasToStringRule
@@ -88,6 +89,7 @@ class RuleInspectionsGenerator {
             JavadocEmptyFirstLineRule,                              // unreliable
             // ImplicitClosureParameterRule,                        // we might consider disabling this by default as well
             SpaceAroundMapEntryColonRule,                           // sometimes we want to align the colons in a column
+            SpaceAfterMethodCallNameRule,                           // failing
             UnnecessarySubstringRule,                               // deprecated
             UnnecessaryReturnKeywordRule,                           // clashes with ImplicitReturnStatementRule
             UnnecessarySemicolonRule,                               // unreliable
