@@ -64,6 +64,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     public static final String GROUP_DISPLAY_NAME = "CodeNarc";
 
     protected static final String SPECIFICATION_CLASSES = "*Spec,*Specification";
+    protected static final String GRADLE_FILES = "*.gradle";
 
     private static final Logger LOG = Logger.getInstance(CodeNarcInspectionTool.class);
     private static final Key<CachedValue<SourceString>> SOURCE_AS_STRING_CACHE_KEY = Key.create("CODENARC_SOURCE_AS_STRING");
