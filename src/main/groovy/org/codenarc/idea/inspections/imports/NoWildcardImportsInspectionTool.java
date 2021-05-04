@@ -10,6 +10,7 @@ import org.codenarc.idea.quickfix.ReplaceOnDemandImportFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.imports.NoWildcardImportsRule;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.plugins.groovy.lang.psi.api.toplevel.imports.GrImportStatement;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class
@@ -57,7 +58,13 @@ NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWildcardImports
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(new ReplaceOnDemandImportFix());
+        if (violatingElement instanceof GrImportStatement) {
+            GrImportStatement importStatement = (GrImportStatement) violatingElement;
+            if (!importStatement.isStatic()) {
+                return Collections.singleton(new ReplaceOnDemandImportFix());
+            }
+        }
+        return Collections.emptyList();
     }
 
 }

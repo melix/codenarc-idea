@@ -17,19 +17,13 @@ package org.codenarc.idea.quickfix;
 
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaRecursiveElementWalkingVisitor;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiJavaCodeReferenceElement;
-import com.intellij.psi.PsiMember;
-import com.intellij.psi.PsiReference;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.util.ClassUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.siyeh.IntentionPowerPackBundle;
-import com.siyeh.ig.psiutils.CommentTracker;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.plugins.groovy.codeInspection.GroovyFix;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement;
@@ -39,12 +33,9 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefini
 import org.jetbrains.plugins.groovy.lang.psi.api.toplevel.imports.GrImportStatement;
 import org.jetbrains.plugins.groovy.lang.psi.api.types.GrCodeReferenceElement;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 
@@ -80,26 +71,6 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
                     importedClasses,
                     clazz -> factory.createImportStatement(clazz.getQualifiedName(), false, false, null, null)
             );
-        } else {
-            PsiClass targetClass = importStatement.resolveTargetClass();
-            if (targetClass != null) {
-                String[] members = collectReferencesThrough(
-                        groovyFile,
-                        importStatement.getImportReference(),
-                        importStatement
-                )
-                        .stream()
-                        .map(PsiReference::resolve)
-                        .filter(resolve -> resolve instanceof PsiMember)
-                        .map(member -> ((PsiMember) member).getName())
-                        .distinct()
-                        .filter(Objects::nonNull)
-                        .toArray(String[]::new);
-
-                createImportStatements(importStatement,
-                        members,
-                        member -> factory.createImportStatement(member, true, false, null, null));
-            }
         }
     }
 
@@ -112,28 +83,13 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
         for (T importedMember : importedMembers) {
             groovyFile.addImport(function.apply(importedMember));
         }
-        new CommentTracker().deleteAndRestoreComments(importStatement);
-    }
-
-    private static List<PsiJavaCodeReferenceElement> collectReferencesThrough(
-            PsiFile file,
-            @Nullable final GrCodeReferenceElement refExpr,
-            final GrImportStatement staticImport
-    ) {
-        final List<PsiJavaCodeReferenceElement> expressionToExpand = new ArrayList<>();
-        file.accept(new JavaRecursiveElementWalkingVisitor() {
-            @Override
-            public void visitReferenceElement(PsiJavaCodeReferenceElement expression) {
-                if (refExpr == null || refExpr != expression) {
-                    final PsiElement resolveScope = expression.advancedResolve(true).getCurrentFileResolveScope();
-                    if (resolveScope == staticImport) {
-                        expressionToExpand.add(expression);
-                    }
-                }
-                super.visitElement(expression);
+        if (importStatement.getPrevSibling() instanceof LeafPsiElement) {
+            LeafPsiElement leaf = (LeafPsiElement) importStatement.getPrevSibling();
+            if ("new line".equals(leaf.getElementType().getDebugName())) {
+                leaf.delete();
             }
-        });
-        return expressionToExpand;
+        }
+        importStatement.delete();
     }
 
     private static class ClassCollector extends GroovyRecursiveElementVisitor {
@@ -146,7 +102,7 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
         }
 
         @Override
-        public void visitElement(GroovyPsiElement element) {
+        public void visitElement(@NotNull GroovyPsiElement element) {
             super.visitElement(element);
             if (element instanceof GrCodeReferenceElement) {
                 GrCodeReferenceElement ref = (GrCodeReferenceElement) element;
