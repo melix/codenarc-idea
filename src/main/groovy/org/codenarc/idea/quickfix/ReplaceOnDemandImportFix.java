@@ -19,7 +19,6 @@ import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.util.ClassUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.siyeh.IntentionPowerPackBundle;
@@ -83,11 +82,9 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
         for (T importedMember : importedMembers) {
             groovyFile.addImport(function.apply(importedMember));
         }
-        if (importStatement.getPrevSibling() instanceof LeafPsiElement) {
-            LeafPsiElement leaf = (LeafPsiElement) importStatement.getPrevSibling();
-            if ("new line".equals(leaf.getElementType().getDebugName())) {
-                leaf.delete();
-            }
+        PsiElement maybeNewLine = importStatement.getPrevSibling();
+        if (maybeNewLine != null && maybeNewLine.toString().contains("new line")) {
+            maybeNewLine.delete();
         }
         importStatement.delete();
     }
