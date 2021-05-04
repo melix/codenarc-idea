@@ -5,7 +5,6 @@ import com.intellij.codeInsight.daemon.impl.HighlightInfo
 import com.intellij.codeInsight.intention.EmptyIntentionAction
 import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInspection.LocalInspectionTool
-import com.intellij.codeInspection.LocalQuickFix
 import com.intellij.codeInspection.actions.CleanupInspectionIntention
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Pair
@@ -36,6 +35,26 @@ abstract class InspectionSpec extends Specification {
         public class String { }
     '''
 
+    public static final String COM_EXAMPLE_ONE = '''
+        package com.example;
+        public class One { }
+    '''
+
+    public static final String COM_EXAMPLE_TWO = '''
+        package com.example;
+        public class Two { }
+    '''
+
+    public static final String ORG_EXAMPLE_THREE = '''
+        package org.example;
+        public class Three { }
+    '''
+
+    public static final String ORG_EXAMPLE_FOUR = '''
+        package org.example;
+        public class Four { }
+    '''
+
     @Shared
     Fixt fixt = Fixt.create(getClass())
 
@@ -57,7 +76,7 @@ abstract class InspectionSpec extends Specification {
 
     void 'check highlighting and then apply fix one by one'() {
         expect:
-            helper.fixture.checkHighlighting()
+            checkHighlighting()
         when:
             List<IntentionAction> fixes = relevantFixes
         then:
@@ -67,12 +86,12 @@ abstract class InspectionSpec extends Specification {
             helper.fixture.launchAction fixes.first()
             helper.fixture.launchAction fixes.last()
         then:
-            helper.fixture.checkResult readAfterFile()
+            checkResult()
     }
 
     void 'check highlighting and then apply fix all'() {
         expect:
-            helper.fixture.checkHighlighting()
+            checkHighlighting()
         when:
             List<IntentionAction> fixes = relevantFixes
         then:
@@ -81,7 +100,27 @@ abstract class InspectionSpec extends Specification {
         when:
             triggerFirstFixAll()
         then:
+            checkResult()
+    }
+
+    protected boolean checkHighlighting() {
+        try {
+            helper.fixture.checkHighlighting()
+            return true
+        } catch (org.junit.ComparisonFailure comparisonFailure) {
+            assert comparisonFailure.actual == comparisonFailure.expected
+            return false
+        }
+    }
+
+    protected boolean checkResult() {
+        try {
             helper.fixture.checkResult readAfterFile()
+            return true
+        } catch (junit.framework.ComparisonFailure comparisonFailure) {
+            assert comparisonFailure.actual == comparisonFailure.expected
+            return false
+        }
     }
 
     @SuppressWarnings('FactoryMethodName')
