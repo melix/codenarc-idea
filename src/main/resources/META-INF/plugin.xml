@@ -4,6 +4,8 @@
   <depends>com.intellij.modules.java</depends>
   <depends>org.intellij.groovy</depends>
   <extensions defaultExtensionNs="com.intellij">
+    <errorHandler implementation="org.codenarc.idea.error.SentryErrorSubmitter"/>
+
     <localInspection language="Groovy" implementationClass="org.codenarc.idea.inspections.size.AbcMetricInspectionTool" shortName="CodeNarc.AbcMetric" displayName="Abc metric" groupPath="CodeNarc,Size" groupKey="Size" level="WARNING" enabledByDefault="true" hasStaticDescription="true" cleanupTool="false"/>
     <localInspection language="Groovy" implementationClass="org.codenarc.idea.inspections.size.ClassSizeInspectionTool" shortName="CodeNarc.ClassSize" displayName="Class size" groupPath="CodeNarc,Size" groupKey="Size" level="WEAK WARNING" enabledByDefault="true" hasStaticDescription="true" cleanupTool="false"/>
     <localInspection language="Groovy" implementationClass="org.codenarc.idea.inspections.size.CrapMetricInspectionTool" shortName="CodeNarc.CrapMetric" displayName="Crap metric" groupPath="CodeNarc,Size" groupKey="Size" level="WARNING" enabledByDefault="true" hasStaticDescription="true" cleanupTool="false"/>

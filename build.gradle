@@ -46,6 +46,8 @@ dependencies {
         exclude group: 'org.codehaus.groovy'
     }
 
+    implementation 'io.sentry:sentry:4.3.0'
+
     runtimeOnly('org.gmetrics:GMetrics:1.0') {
         exclude group: 'org.codehaus.groovy'
     }
