@@ -1,0 +1,23 @@
+package rules
+
+
+import com.example.One
+import com.example.Two
+
+import org.example.Four
+import org.example.Three
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class NoWildcardImportsInspectionToolSpecSnippet {
+
+    void doSomething() {
+        def one = new One()
+        def two = new Two()
+        def three = new Three()
+        def four = new Four()
+    }
+
+}

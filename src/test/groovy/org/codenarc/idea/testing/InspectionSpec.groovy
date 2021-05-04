@@ -36,6 +36,26 @@ abstract class InspectionSpec extends Specification {
         public class String { }
     '''
 
+    public static final String COM_EXAMPLE_ONE = '''
+        package com.example;
+        public class One { }
+    '''
+
+    public static final String COM_EXAMPLE_TWO = '''
+        package com.example;
+        public class Two { }
+    '''
+
+    public static final String ORG_EXAMPLE_THREE = '''
+        package org.example;
+        public class Three { }
+    '''
+
+    public static final String ORG_EXAMPLE_FOUR = '''
+        package org.example;
+        public class Four { }
+    '''
+
     @Shared
     Fixt fixt = Fixt.create(getClass())
 

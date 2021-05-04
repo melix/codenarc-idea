@@ -6,12 +6,14 @@ import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
+import org.codenarc.idea.quickfix.ReplaceOnDemandImportFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.imports.NoWildcardImportsRule;
 import org.jetbrains.annotations.NotNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWildcardImportsRule> {
+public class
+NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWildcardImportsRule> {
 
     // this code has been generated from org.codenarc.rule.imports.NoWildcardImportsRule
 
@@ -55,8 +57,7 @@ public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWi
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        // TODO: replace with non-wild-card imports
-        return Collections.emptyList();
+        return Collections.singleton(new ReplaceOnDemandImportFix());
     }
 
 }
