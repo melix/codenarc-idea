@@ -18,7 +18,7 @@ import io.sentry.SentryEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Component;
+import java.awt.*;
 
 public class SentryErrorSubmitter extends ErrorReportSubmitter {
 
@@ -40,18 +40,21 @@ public class SentryErrorSubmitter extends ErrorReportSubmitter {
 
     // API changes, do not use @Override
     public SubmittedReportInfo submit(IdeaLoggingEvent[] events, Component parent) {
-        submit(events, null, parent, submittedReportInfo -> {});
+        submit(events, null, parent, submittedReportInfo -> {
+        });
         return new SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
     }
 
     // API changes, do not use @Override
-    public boolean submit(IdeaLoggingEvent @NotNull [] events,
-                          @Nullable String additionalInfo,
-                          @NotNull Component parentComponent,
-                          @NotNull Consumer<? super SubmittedReportInfo> consumer) {
+    public boolean submit(
+            IdeaLoggingEvent @NotNull [] events,
+            @Nullable String additionalInfo,
+            @NotNull Component parentComponent,
+            @NotNull Consumer consumer
+    ) {
 
         Sentry.init(options -> {
-                options.setDsn("https://fd7d1b52354a4d5e91c09af65c80d9dc@o91700.ingest.sentry.io/5748879");
+            options.setDsn("https://fd7d1b52354a4d5e91c09af65c80d9dc@o91700.ingest.sentry.io/5748879");
             options.setAttachStacktrace(true);
             options.setAttachServerName(false);
 
@@ -74,24 +77,23 @@ public class SentryErrorSubmitter extends ErrorReportSubmitter {
         });
 
 
-
         for (IdeaLoggingEvent e : events) {
             Throwable error = null;
             if (e instanceof IdeaReportingEvent) {
-                error = ((IdeaReportingEvent)e).getData().getThrowable();
+                error = ((IdeaReportingEvent) e).getData().getThrowable();
             }
 
             var sentryEvent = new SentryEvent(error);
 
             sentryEvent.setExtra("User Comments", additionalInfo);
 
-            if(StringUtil.isNotEmpty(IdeaLogger.ourLastActionId)) {
+            if (StringUtil.isNotEmpty(IdeaLogger.ourLastActionId)) {
                 sentryEvent.setExtra("Last Action", IdeaLogger.ourLastActionId);
             }
 
             ApplicationManager
                     .getApplication()
-                    .invokeLater(() ->  Sentry.captureEvent(sentryEvent));
+                    .invokeLater(() -> Sentry.captureEvent(sentryEvent));
         }
 
         return true; // return true to indicate that a process has begun to send data async
