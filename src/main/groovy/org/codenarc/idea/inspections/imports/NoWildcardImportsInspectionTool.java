@@ -13,8 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.lang.psi.api.toplevel.imports.GrImportStatement;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
-public class
-NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWildcardImportsRule> {
+public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWildcardImportsRule> {
 
     // this code has been generated from org.codenarc.rule.imports.NoWildcardImportsRule
 
