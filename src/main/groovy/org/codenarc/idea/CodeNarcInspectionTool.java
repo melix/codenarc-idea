@@ -17,6 +17,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiErrorElement;
@@ -319,13 +320,20 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     protected TextRange extractViolatingRange(Document document, Violation violation) {
         final int lineNumber = extractLineNumber(violation);
         final int startOffset = Math.max(document.getLineStartOffset(lineNumber - 1), 0);
-        final String violatedLine = document.getText(new TextRange(startOffset, document.getLineEndOffset(lineNumber)));
+        TextRange defaultRange = new TextRange(startOffset, document.getLineEndOffset(lineNumber));
+        final String violatedLine = document.getText(defaultRange);
         final String sourceLine = violation.getSourceLine();
-        int violationPosition = violatedLine.indexOf(sourceLine);
 
-        int violationStart = Math.max(startOffset + violationPosition, 0);
-        int violationEnd = Math.min(startOffset + violationPosition + sourceLine.length(), document.getTextLength() - 1);
-        return new TextRange(violationStart, violationEnd);
+        if (StringUtil.isNotEmpty(sourceLine)) {
+            int violationPosition = violatedLine.indexOf(sourceLine);
+            int violationStart = Math.max(startOffset + violationPosition, 0);
+            int violationEnd = Math.min(startOffset + violationPosition + sourceLine.length(), document.getTextLength() - 1);
+            return new TextRange(violationStart, violationEnd);
+        }
+
+        LOG.warn("Missing source line for violation " + violation + " in the document " + document);
+
+        return defaultRange;
     }
 
     protected String extractMessage(Violation violation, R r) {
@@ -386,11 +394,17 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
             return null;
         }
 
-        return list
-                .stream()
-                .map(violation -> convertViolationToProblemDescriptor(file, manager, isOnTheFly, r, document, violation))
-                .filter(Objects::nonNull)
-                .toArray(ProblemDescriptor[]::new);
+        try {
+            return list
+                    .stream()
+                    .map(violation -> convertViolationToProblemDescriptor(file, manager, isOnTheFly, r, document, violation))
+                    .filter(Objects::nonNull)
+                    .toArray(ProblemDescriptor[]::new);
+        } catch (Throwable error) {
+            throw new IllegalStateException("Exception validating file " + file + " by rule " + r + " with code\n" + code, error);
+        }
+
+
     }
 
     @Nullable
