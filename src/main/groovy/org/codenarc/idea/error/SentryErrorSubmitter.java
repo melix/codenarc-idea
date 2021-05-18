@@ -13,6 +13,7 @@ import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
+import groovy.lang.GroovySystem;
 import io.sentry.Sentry;
 import io.sentry.SentryEvent;
 import org.jetbrains.annotations.NotNull;
@@ -61,6 +62,7 @@ public class SentryErrorSubmitter extends ErrorReportSubmitter {
             options.setTag("OS Name", SystemInfo.OS_NAME);
             options.setTag("Java version", SystemInfo.JAVA_VERSION);
             options.setTag("Java vendor", SystemInfo.JAVA_VENDOR);
+            options.setTag("Groovy version", GroovySystem.getVersion());
             options.setTag("IDE Name", ApplicationNamesInfo.getInstance().getProductName());
             options.setTag("IDE Full Name", ApplicationNamesInfo.getInstance().getFullProductNameWithEdition());
             options.setTag("IDE Version", ApplicationInfo.getInstance().getFullVersion());
