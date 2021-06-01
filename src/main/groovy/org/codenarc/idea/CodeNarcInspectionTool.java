@@ -14,6 +14,7 @@ import com.intellij.openapi.diagnostic.ControlFlowException;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.progress.ProcessCanceledException;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
@@ -320,7 +321,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     protected TextRange extractViolatingRange(Document document, Violation violation) {
         final int lineNumber = extractLineNumber(violation);
         final int startOffset = Math.max(document.getLineStartOffset(lineNumber - 1), 0);
-        TextRange defaultRange = new TextRange(startOffset, document.getLineEndOffset(lineNumber));
+        TextRange defaultRange = new TextRange(startOffset, document.getLineEndOffset(lineNumber - 1));
         final String violatedLine = document.getText(defaultRange);
         final String sourceLine = violation.getSourceLine();
 
@@ -401,6 +402,10 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
                     .filter(Objects::nonNull)
                     .toArray(ProblemDescriptor[]::new);
         } catch (Throwable error) {
+            if (error instanceof ProcessCanceledException) {
+                LOG.info("Process cancelled!", error);
+                return null;
+            }
             throw new IllegalStateException("Exception validating file " + file + " by rule " + r + " with code\n" + code, error);
         }
 
