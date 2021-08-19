@@ -73,13 +73,11 @@ String idePlatformVersion = "${ideVersion}"
 logger.lifecycle("Using IDE version $idePlatformVersion")
 
 intellij {
-    pluginName 'CodeNarc'
+    pluginName = 'CodeNarc'
 
-    // TODO: replace when Gradle is upgraded
-    // downloadSources !providers.environmentVariable('CI').forUseAtConfigurationTime().present
-    downloadSources System.getenv('CI') != 'true'
-    plugins 'Groovy', 'gradle', 'java'
-    version "${ideVersion}"
+    downloadSources = !providers.environmentVariable('CI').forUseAtConfigurationTime().present
+    plugins = ['Groovy', 'gradle', 'java']
+    version = "${ideVersion}"
 
 }
 
@@ -102,10 +100,10 @@ runPluginVerifier {
 
 patchPluginXml {
     version "${pluginVersion}"
-    sinceBuild '202.8194.7'
-    untilBuild null
-    changeNotes file('changelog.html').text
-    pluginDescription file('description.html').text
+    sinceBuild = '202.8194.7'
+    untilBuild = null
+    changeNotes = file('changelog.html').text
+    pluginDescription = file('description.html').text
 }
 
 application {
