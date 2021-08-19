@@ -77,8 +77,8 @@ intellij {
 
     downloadSources = !providers.environmentVariable('CI').forUseAtConfigurationTime().present
     plugins = ['Groovy', 'gradle', 'java']
-    version = "${ideVersion}"
-
+    version = idePlatformVersion
+    instrumentCode = false
 }
 
 publishPlugin {
