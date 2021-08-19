@@ -84,7 +84,7 @@ intellij {
 publishPlugin {
     token = publishPluginToken
     if (publishPluginChannels) {
-        channels = publishPluginChannels.split(',')
+        channels = Arrays.asList(publishPluginChannels.split(','))
     }
 }
 
