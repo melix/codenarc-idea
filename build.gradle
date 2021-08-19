@@ -54,11 +54,11 @@ dependencies {
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
-    testCompile 'org.spockframework:spock-core:1.3-groovy-2.4', {
+    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.4', {
         exclude group: 'org.codehaus.groovy'
     }
 
-    testCompile 'com.agorapulse.testing:fixt:0.2.1.1'
+    testImplementation 'com.agorapulse.testing:fixt:0.2.1.1'
 
     generator( 'org.codehaus.groovy:groovy-all') {
         version {
