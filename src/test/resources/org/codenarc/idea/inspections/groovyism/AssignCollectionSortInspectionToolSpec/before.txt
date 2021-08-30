@@ -8,8 +8,8 @@ class AssignCollectionSortInspectionToolSpecSnippet {
 
     void doSomething() {
         List one = ['foo', 'bar']
-        <warning descr="Violation in $currentClassName. sort() mutates the original list, but the return value is being assigned">List sorted1 = one.sort()</warning>
-        <warning descr="Violation in $currentClassName. sort() mutates the original list, but the return value is being assigned">List sorted2 = one.sort()</warning>
+        <warning descr="Violation in rules.AssignCollectionSortInspectionToolSpecSnippet. sort() mutates the original list, but the return value is being assigned">List sorted1 = one.sort()</warning>
+        <warning descr="Violation in rules.AssignCollectionSortInspectionToolSpecSnippet. sort() mutates the original list, but the return value is being assigned">List sorted2 = one.sort()</warning>
     }
 
 }
