@@ -28,6 +28,15 @@ public class BracesForMethodInspectionTool extends CodeNarcInspectionTool<Braces
     }
 
 
+    public void setAllowBraceOnNextLineForMultilineDeclarations(boolean value) {
+        getRule().setAllowBraceOnNextLineForMultilineDeclarations(value);
+    }
+
+    public boolean getAllowBraceOnNextLineForMultilineDeclarations() {
+        return getRule().getAllowBraceOnNextLineForMultilineDeclarations();
+    }
+
+
     public void setApplyToClassNames(String value) {
         getRule().setApplyToClassNames(value);
     }
