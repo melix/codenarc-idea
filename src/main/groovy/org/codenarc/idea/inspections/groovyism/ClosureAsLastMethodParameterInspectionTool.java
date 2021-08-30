@@ -45,6 +45,15 @@ public class ClosureAsLastMethodParameterInspectionTool extends CodeNarcInspecti
         return getRule().getDoNotApplyToClassNames();
     }
 
+
+    public void setIgnoreCallsToMethodNames(String value) {
+        getRule().setIgnoreCallsToMethodNames(value);
+    }
+
+    public String getIgnoreCallsToMethodNames() {
+        return getRule().getIgnoreCallsToMethodNames();
+    }
+
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
