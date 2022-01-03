@@ -48,13 +48,13 @@ dependencies {
 
     implementation 'io.sentry:sentry:5.1.0'
 
-    runtimeOnly('org.gmetrics:GMetrics:1.0') {
+    runtimeOnly('org.gmetrics:GMetrics:1.1') {
         exclude group: 'org.codehaus.groovy'
     }
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.4', {
+    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5', {
         exclude group: 'org.codehaus.groovy'
     }
 
