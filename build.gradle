@@ -36,7 +36,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly( 'org.codehaus.groovy:groovy-all') {
+    compileOnly( 'org.codehaus.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
@@ -60,7 +60,7 @@ dependencies {
 
     testImplementation 'com.agorapulse.testing:fixt:0.2.1.1'
 
-    generator( 'org.codehaus.groovy:groovy-all') {
+    generator( 'org.codehaus.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
