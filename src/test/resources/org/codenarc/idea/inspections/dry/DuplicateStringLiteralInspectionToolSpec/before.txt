@@ -1,0 +1,16 @@
+package rules
+
+/**
+ * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>
+ * are only generated when missing so you need to delete these files if you want to regenerated them.
+ */
+class DuplicateStringLiteralInspectionToolSpecSnippet {
+
+    void doSomething() {
+        String one = 'same'
+        <warning descr="Duplicate String Literal: same">String two = 'same'</warning>
+        String three = 'other'
+        <warning descr="Duplicate String Literal: other">String four = 'other'</warning>
+    }
+
+}
