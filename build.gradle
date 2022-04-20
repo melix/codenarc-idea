@@ -122,6 +122,8 @@ run {
     args project.rootDir.canonicalPath
 }
 
-test {
-    useJUnitPlatform()
+if (spockVersion.startsWith('2.')) {
+    test {
+        useJUnitPlatform()
+    }
 }
