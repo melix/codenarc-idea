@@ -12,15 +12,12 @@ jobs:
       fail-fast: false # we need to know which version is failing
       matrix:
         version:
-#          - IC-2019.2.4
-#          - IC-2019.3.5
-#          - IC-2020.1.4
-          - IC-2020.2.4
-          - IC-2020.3.4
-          - IC-2021.1.3
-          - IC-2021.2.4
-          - IC-2021.3.1
-          - IC-2022.1
+          - "-PideVersion=IC-2020.2.4 -PgroovyVersion=2.5.14 -PspockVersion=1.3-groovy-2.5"
+          - "-PideVersion=IC-2020.3.4 -PgroovyVersion=2.5.14 -PspockVersion=1.3-groovy-2.5"
+          - "-PideVersion=IC-2021.1.3 -PgroovyVersion=2.5.14 -PspockVersion=1.3-groovy-2.5"
+          - "-PideVersion=IC-2021.2.4 -PgroovyVersion=2.5.14 -PspockVersion=1.3-groovy-2.5"
+          - "-PideVersion=IC-2021.3.1 -PgroovyVersion=2.5.14 -PspockVersion=1.3-groovy-2.5"
+          - "-PideVersion=IC-2022.1 -PgroovyVersion=3.0.9 -PspockVersion=2.0-groovy-3.0"
     steps:
       - uses: actions/checkout@v1
 
@@ -30,7 +27,7 @@ jobs:
           java-version: 11
       - uses: eskatos/gradle-command-action@v1
         with:
-          arguments: test runPluginVerifier -PideVersion=${{ matrix.version }} --stacktrace
+          arguments: test runPluginVerifier ${{ matrix.version }} --stacktrace
       - name: Show Reports
         uses: actions/upload-artifact@v1
         if: failure()

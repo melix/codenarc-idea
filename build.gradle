@@ -54,7 +54,7 @@ dependencies {
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
-    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0', {
+    testImplementation "org.spockframework:spock-core:$spockVersion", {
         exclude group: 'org.codehaus.groovy'
     }
 
