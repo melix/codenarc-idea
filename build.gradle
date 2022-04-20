@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '1.3.0'
+    id 'org.jetbrains.intellij' version '1.5.3'
     id 'java'
     id 'idea'
     id 'groovy'
@@ -54,7 +54,7 @@ dependencies {
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
-    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5', {
+    testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0', {
         exclude group: 'org.codehaus.groovy'
     }
 
@@ -120,4 +120,8 @@ run {
     // generate classes
     classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath + configurations.generator
     args project.rootDir.canonicalPath
+}
+
+test {
+    useJUnitPlatform()
 }
