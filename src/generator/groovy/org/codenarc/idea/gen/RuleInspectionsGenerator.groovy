@@ -341,7 +341,7 @@ class RuleInspectionsGenerator {
                 projectRoot,
                 'src',
                 'main',
-                'groovy',
+                'java',
         ]
 
         paths.addAll(newClassPackage.split('\\.'))

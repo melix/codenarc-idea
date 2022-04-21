@@ -27,12 +27,20 @@ idea {
     }
 }
 
+sourceSets.create 'generator', {
+    compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+    runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    groovy {
+        srcDirs 'src/generator'
+    }
+}
+
 configurations {
     implementation  {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
-    generator.extendsFrom compile, implementation, runtimeOnly
+    generatorImplementation.extendsFrom compile, implementation, runtimeOnly
 }
 
 dependencies {
@@ -66,7 +74,7 @@ dependencies {
         because 'there are version conflicts when building'
     }
 
-    generator( 'org.codehaus.groovy:groovy') {
+    generatorImplementation( 'org.codehaus.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
@@ -118,7 +126,7 @@ application {
 
 run {
     // generate classes
-    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath + configurations.generator
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath + sourceSets.generator.compileClasspath + sourceSets.generator.runtimeClasspath
     args project.rootDir.canonicalPath
 }
 
