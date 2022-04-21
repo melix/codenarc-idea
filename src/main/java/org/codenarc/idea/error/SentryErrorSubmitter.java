@@ -39,14 +39,7 @@ public class SentryErrorSubmitter extends ErrorReportSubmitter {
         return "Please provide a brief description to explain how the error occurred. By submitting this bug report you are agreeing for the displayed stacktrace to be shared with the developers via <a href=\"https://sentry.io\">sentry.io</a>. Please also consider raising a bug directly on our <a href=\"https://github.com/melix/codenarc-idea\">Github</a>.";
     }
 
-    // API changes, do not use @Override
-    public SubmittedReportInfo submit(IdeaLoggingEvent[] events, Component parent) {
-        submit(events, null, parent, submittedReportInfo -> {
-        });
-        return new SubmittedReportInfo(SubmittedReportInfo.SubmissionStatus.NEW_ISSUE);
-    }
-
-    // API changes, do not use @Override
+    @Override
     public boolean submit(
             IdeaLoggingEvent @NotNull [] events,
             @Nullable String additionalInfo,
