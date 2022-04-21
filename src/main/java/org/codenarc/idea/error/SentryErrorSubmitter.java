@@ -87,7 +87,9 @@ public class SentryErrorSubmitter extends ErrorReportSubmitter {
 
             var sentryEvent = new SentryEvent(error);
 
-            sentryEvent.setExtra("User Comments", additionalInfo);
+            if (additionalInfo != null) {
+                sentryEvent.setExtra("User Comments", additionalInfo);
+            }
 
             if (StringUtil.isNotEmpty(IdeaLogger.ourLastActionId)) {
                 sentryEvent.setExtra("Last Action", IdeaLogger.ourLastActionId);
