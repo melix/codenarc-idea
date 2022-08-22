@@ -55,6 +55,15 @@ public class UnusedPrivateFieldInspectionTool extends CodeNarcInspectionTool<Unu
     }
 
 
+    public void setIgnoreClassesAnnotatedWithNames(String value) {
+        getRule().setIgnoreClassesAnnotatedWithNames(value);
+    }
+
+    public String getIgnoreClassesAnnotatedWithNames() {
+        return getRule().getIgnoreClassesAnnotatedWithNames();
+    }
+
+
     public void setIgnoreFieldNames(String value) {
         getRule().setIgnoreFieldNames(value);
     }
