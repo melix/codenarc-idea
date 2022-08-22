@@ -114,7 +114,7 @@ runPluginVerifier {
 
 patchPluginXml {
     version "${pluginVersion}"
-    sinceBuild = '202.8194.7'
+    sinceBuild = '221.6008.13'
     untilBuild = null
     changeNotes = file('changelog.html').text
     pluginDescription = file('description.html').text

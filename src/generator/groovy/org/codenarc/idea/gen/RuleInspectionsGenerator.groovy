@@ -24,7 +24,6 @@ import org.codenarc.rule.unnecessary.UnnecessaryDotClassRule
 import org.codenarc.rule.unnecessary.UnnecessaryGStringRule
 import org.codenarc.rule.unnecessary.UnnecessaryReturnKeywordRule
 import org.codenarc.rule.unnecessary.UnnecessarySemicolonRule
-import org.codenarc.rule.unnecessary.UnnecessarySubstringRule
 import org.codenarc.rule.unused.UnusedArrayRule
 import org.codenarc.rule.unused.UnusedMethodParameterRule
 import org.codenarc.rule.unused.UnusedObjectRule
@@ -90,7 +89,6 @@ class RuleInspectionsGenerator {
             // ImplicitClosureParameterRule,                        // we might consider disabling this by default as well
             SpaceAroundMapEntryColonRule,                           // sometimes we want to align the colons in a column
             SpaceAfterMethodCallNameRule,                           // failing
-            UnnecessarySubstringRule,                               // deprecated
             UnnecessaryReturnKeywordRule,                           // clashes with ImplicitReturnStatementRule
             UnnecessarySemicolonRule,                               // unreliable
             UnusedArrayRule,                                        // handled by IntelliJ
