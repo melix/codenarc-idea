@@ -13,6 +13,7 @@ jobs:
       matrix:
         version:
           - "-PideVersion=IC-2022.1 -PgroovyVersion=3.0.9 -PspockVersion=2.0-groovy-3.0"
+          - "-PideVersion=IC-2022.2 -PgroovyVersion=3.0.9 -PspockVersion=2.0-groovy-3.0"
     steps:
       - uses: actions/checkout@v1
 
