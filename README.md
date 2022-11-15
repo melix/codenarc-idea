@@ -11,6 +11,10 @@ Feel free to join the beta channel here: https://plugins.jetbrains.com/plugins/b
 
 ![add custom repository](static/images/add-repository-2.png)
 
+## Known Issues
+
+There is [a random issue with `StackOverflowError`](https://github.com/melix/codenarc-idea/issues/45) which should have no impact on the IDE. 
+
 ## History
 
 This is an update to this project:

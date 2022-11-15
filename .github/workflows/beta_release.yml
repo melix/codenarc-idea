@@ -20,4 +20,4 @@ jobs:
           java-version: 11
       - uses: eskatos/gradle-command-action@v1
         with:
-          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=IC-2022.2 -PgroovyVersion=3.0.9 -PspockVersion=2.0-groovy-3.0 -PpluginVersion=5.0.0-${{ env.SNAPSHOT_SUFFIX }}
+          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=IC-2022.1 -PgroovyVersion=3.0.9 -PspockVersion=2.0-groovy-3.0 -PpluginVersion=6.0.0-${{ env.SNAPSHOT_SUFFIX }}
