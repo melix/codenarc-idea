@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.intellij' version '1.5.3'
+    id 'org.jetbrains.intellij' version '1.9.0'
     id 'java'
     id 'idea'
     id 'groovy'
@@ -8,7 +8,7 @@ plugins {
 
 if (!project.hasProperty('publishPluginChannels')) ext.publishPluginChannels = ''
 if (!project.hasProperty('publishPluginToken')) ext.publishPluginToken = '**UNDEFINED**'
-if (!project.hasProperty('ideVersion')) ext.ideVersion = 'LATEST-EAP-SNAPSHOT'
+if (!project.hasProperty('ideVersion')) ext.ideVersion = 'IC-2022.2'
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
