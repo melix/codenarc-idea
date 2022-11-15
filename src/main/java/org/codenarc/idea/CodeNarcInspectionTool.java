@@ -231,7 +231,8 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
                 if (file.getText() == null || "".equals(file.getText())) {
                     return null;
                 }
-                return new SourceString(file.getText());
+                VirtualFile virtualFile = file.getVirtualFile();
+                return new SourceString(file.getText(), virtualFile == null ? null : virtualFile.getCanonicalPath(), file.getName());
             });
             try {
                 return CachedValueProvider.Result.create(doCheckFile(file, manager, isOnTheFly, code, (R) r), file);
