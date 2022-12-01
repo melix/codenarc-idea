@@ -8,7 +8,7 @@ plugins {
 
 if (!project.hasProperty('publishPluginChannels')) ext.publishPluginChannels = ''
 if (!project.hasProperty('publishPluginToken')) ext.publishPluginToken = '**UNDEFINED**'
-if (!project.hasProperty('ideVersion')) ext.ideVersion = 'IC-2022.2'
+if (!project.hasProperty('ideVersion')) ext.ideVersion = 'IC-2022.3'
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
