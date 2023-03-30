@@ -80,7 +80,7 @@ abstract class InspectionSpec extends Specification {
         when:
             List<IntentionAction> fixes = relevantFixes
         then:
-        fixes.size() == 2
+            fixes.size() == 2
 
         when:
             helper.fixture.launchAction fixes.first()
