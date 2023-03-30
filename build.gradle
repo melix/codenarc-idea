@@ -24,9 +24,16 @@ repositories {
     mavenCentral()
 }
 
+java {
+    withSourcesJar()
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 idea {
     project {
-        jdkName = '17'
+        jdkName = JavaLanguageVersion.of(17).toString()
     }
 }
 
@@ -41,13 +48,14 @@ sourceSets.create 'generator', {
 configurations {
     implementation  {
         exclude group: 'org.slf4j', module: 'slf4j-api'
+        exclude group: 'org.codehaus.groovy'
     }
 
     generatorImplementation.extendsFrom compile, implementation, runtimeOnly
 }
 
 dependencies {
-    compileOnly( 'org.codehaus.groovy:groovy') {
+    compileOnly( 'org.apache.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
@@ -55,29 +63,32 @@ dependencies {
     }
     implementation("org.codenarc:CodeNarc:$codenarcVersion") {
         exclude group: 'org.codehaus.groovy'
+        exclude group: 'org.apache.groovy'
     }
 
     implementation 'io.sentry:sentry:5.1.0'
 
     runtimeOnly('org.gmetrics:GMetrics:1.1') {
         exclude group: 'org.codehaus.groovy'
+        exclude group: 'org.apache.groovy'
     }
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
     testImplementation "org.spockframework:spock-core:$spockVersion", {
         exclude group: 'org.codehaus.groovy'
+        exclude group: 'org.apache.groovy'
     }
 
     testImplementation 'com.agorapulse.testing:fixt:0.2.1.1'
-    testImplementation( 'org.codehaus.groovy:groovy') {
+    testImplementation( 'org.apache.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
         because 'there are version conflicts when building'
     }
 
-    generatorImplementation( 'org.codehaus.groovy:groovy') {
+    generatorImplementation( 'org.apache.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
