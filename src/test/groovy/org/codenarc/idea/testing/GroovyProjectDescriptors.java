@@ -25,10 +25,17 @@ public interface GroovyProjectDescriptors {
   LightProjectDescriptor GROOVY_2_4 = new LibraryLightProjectDescriptor(LIB_GROOVY_2_4);
   LightProjectDescriptor GROOVY_2_5 = new LibraryLightProjectDescriptor(LIB_GROOVY_2_5);
   LightProjectDescriptor GROOVY_3_0 = new LibraryLightProjectDescriptor(LIB_GROOVY_3_0);
+  LightProjectDescriptor GROOVY_4_0 = new LibraryLightProjectDescriptor(LIB_GROOVY_4_0);
 
-  TestLibrary LIB_GROOVY_LATEST = LIB_GROOVY_2_4;
+  TestLibrary LIB_GROOVY_LATEST = LIB_GROOVY_4_0;
   LightProjectDescriptor GROOVY_LATEST = new LibraryLightProjectDescriptor(LIB_GROOVY_LATEST);
   LightProjectDescriptor GROOVY_LATEST_REAL_JDK = new LibraryLightProjectDescriptor(LIB_GROOVY_LATEST) {
+    @Override
+    public Sdk getSdk() {
+      return JavaSdk.getInstance().createJdk("TEST_JDK", IdeaTestUtil.requireRealJdkHome(), false);
+    }
+  };
+  LightProjectDescriptor GROOVY_4_0_REAL_JDK = new LibraryLightProjectDescriptor(LIB_GROOVY_4_0) {
     @Override
     public Sdk getSdk() {
       return JavaSdk.getInstance().createJdk("TEST_JDK", IdeaTestUtil.requireRealJdkHome(), false);
