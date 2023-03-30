@@ -12,7 +12,7 @@ jobs:
       fail-fast: false # we need to know which version is failing
       matrix:
         version:
-          - "-PideVersion=IC-2022.3 -PgroovyVersion=3.0.9 -PspockVersion=2.0-groovy-3.0"
+          - "-PideVersion=IC-2023.1 -PgroovyVersion=4.0.10 -PspockVersion=2.3-groovy-4.0"
     steps:
       - uses: actions/checkout@v1
 
