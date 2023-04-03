@@ -20,8 +20,8 @@ import org.junit.Ignore
 @Ignore // not a JUnit test
 class FixtureHelper extends LightJavaCodeInsightFixtureTestCase implements Closeable {
 
-    static FixtureHelper groovy25() {
-        return new FixtureHelper(GroovyProjectDescriptors.GROOVY_2_5, null)
+    static FixtureHelper groovy40() {
+        return new FixtureHelper(GroovyProjectDescriptors.GROOVY_4_0, null)
     }
 
     private final LightProjectDescriptor projectDescriptor;

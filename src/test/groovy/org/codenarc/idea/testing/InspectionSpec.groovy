@@ -62,7 +62,7 @@ abstract class InspectionSpec extends Specification {
 
     String fileName =  "${UUID.randomUUID()}.groovy"
 
-    @AutoCleanup FixtureHelper helper = FixtureHelper.groovy25().start { JavaCodeInsightTestFixture fixture ->
+    @AutoCleanup FixtureHelper helper = FixtureHelper.groovy40().start { JavaCodeInsightTestFixture fixture ->
         enableInspections(inspection)
 
         configure(fixture)

@@ -47,7 +47,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly( 'org.codehaus.groovy:groovy') {
+    compileOnly( 'org.apache.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
@@ -55,29 +55,32 @@ dependencies {
     }
     implementation("org.codenarc:CodeNarc:$codenarcVersion") {
         exclude group: 'org.codehaus.groovy'
+        exclude group: 'org.appache.groovy'
     }
 
     implementation 'io.sentry:sentry:5.1.0'
 
-    runtimeOnly('org.gmetrics:GMetrics:1.1') {
+    runtimeOnly('org.gmetrics:GMetrics-Groovy4:2.1.0') {
         exclude group: 'org.codehaus.groovy'
+        exclude group: 'org.appache.groovy'
     }
 
     compile 'org.apache.commons:commons-lang3:3.9'
 
     testImplementation "org.spockframework:spock-core:$spockVersion", {
         exclude group: 'org.codehaus.groovy'
+        exclude group: 'org.appache.groovy'
     }
 
     testImplementation 'com.agorapulse.testing:fixt:0.2.1.1'
-    testImplementation( 'org.codehaus.groovy:groovy') {
+    testImplementation( 'org.apache.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
         because 'there are version conflicts when building'
     }
 
-    generatorImplementation( 'org.codehaus.groovy:groovy') {
+    generatorImplementation( 'org.apache.groovy:groovy') {
         version {
             strictly "$groovyVersion"
         }
