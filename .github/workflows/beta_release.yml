@@ -21,4 +21,4 @@ jobs:
           distribution: zulu
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=IC-2023.1 -PpluginVersion=6.1.0-${{ env.SNAPSHOT_SUFFIX }}
+          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=IC-2023.2 -PpluginVersion=6.2.0-${{ env.SNAPSHOT_SUFFIX }}
