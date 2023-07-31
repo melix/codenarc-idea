@@ -70,7 +70,7 @@ public class AbstractClassWithoutAbstractMethodInspectionTool extends CodeNarcIn
         if (theClass == null) {
             return Collections.singletonList(new GrRemoveModifierFix(PsiModifier.ABSTRACT));
         }
-        return Arrays.asList(
+        return Arrays.<LocalQuickFix>asList(
                 new GrModifierFix(theClass, PsiModifier.ABSTRACT, true, false, GrModifierFix.MODIFIER_LIST_CHILD),
                 new AddDefaultConstructorFix(theClass, PsiModifier.PROTECTED)
         );
