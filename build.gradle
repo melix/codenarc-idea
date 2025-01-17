@@ -120,7 +120,7 @@ runPluginVerifier {
 
 patchPluginXml {
     version "${pluginVersion}"
-    sinceBuild = '223.7571.182'
+    sinceBuild = '243.21565.193'
     untilBuild = null
     changeNotes = file('changelog.html').text
     pluginDescription = file('description.html').text
