@@ -6,7 +6,7 @@ jobs:
     name: Updates Version and Opens PR
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Fetch CodeNarc Maven descriptor
         run: curl https://repo1.maven.org/maven2/org/codenarc/CodeNarc/maven-metadata.xml -o /tmp/codenarc-maven-descriptor.xml
       - name: Extract the latest version
