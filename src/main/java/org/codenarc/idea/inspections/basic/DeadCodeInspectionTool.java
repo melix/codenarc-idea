@@ -1,6 +1,5 @@
 package org.codenarc.idea.inspections.basic;
 
-import com.intellij.codeInsight.daemon.impl.quickfix.DeleteElementFix;
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
 import java.util.Collection;
@@ -50,7 +49,7 @@ public class DeadCodeInspectionTool extends CodeNarcInspectionTool<DeadCodeRule>
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(new DeleteElementFix(violatingElement));
+        return Collections.emptyList();
     }
 
 }

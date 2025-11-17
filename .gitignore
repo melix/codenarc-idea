@@ -11,3 +11,5 @@ atlassian-ide-plugin.xml
 
 build/
 bin/
+lib/
+\.intellijPlatform/

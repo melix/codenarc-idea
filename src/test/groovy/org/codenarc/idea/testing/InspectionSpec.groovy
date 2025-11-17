@@ -1,3 +1,4 @@
+// codenarc-disable
 package org.codenarc.idea.testing
 
 import com.agorapulse.testing.fixt.Fixt
@@ -7,8 +8,9 @@ import com.intellij.codeInsight.intention.IntentionAction
 import com.intellij.codeInspection.LocalInspectionTool
 import com.intellij.codeInspection.actions.CleanupInspectionIntention
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.util.Pair
-import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.application.WriteIntentReadAction
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import groovy.transform.CompileDynamic
@@ -83,8 +85,8 @@ abstract class InspectionSpec extends Specification {
         fixes.size() == 2
 
         when:
-            helper.fixture.launchAction fixes.first()
-            helper.fixture.launchAction fixes.last()
+            applyFix fixes.first()
+            applyFix fixes.last()
         then:
             checkResult()
     }
@@ -106,6 +108,7 @@ abstract class InspectionSpec extends Specification {
     protected boolean checkHighlighting() {
         try {
             helper.fixture.checkHighlighting()
+            commitAndSave()
             return true
         } catch (org.junit.ComparisonFailure comparisonFailure) {
             assert comparisonFailure.actual == comparisonFailure.expected
@@ -149,17 +152,29 @@ abstract class InspectionSpec extends Specification {
     }
 
     protected void triggerFirstFixAll() {
-        HighlightInfo info = helper.fixture.doHighlighting().find { it.quickFixActionRanges }
+        final highlightInfoList = helper.fixture.doHighlighting()
+        HighlightInfo info = highlightInfoList.find { it.findRegisteredQuickFix { descriptor, textRange ->
+          var toolId = descriptor.getToolId()
+          if (toolId != null && toolId.startsWith('CodeNarc.')) {
+            return descriptor;
+          } else {
+            return null;
+          }
+        }}
+
         assert info, 'There is a highlighted warning element'
 
         IntentionAction action = null
 
         ApplicationManager.application.runReadAction {
-            Pair<HighlightInfo.IntentionActionDescriptor, TextRange> marker = info.quickFixActionRanges[0]
+            HighlightInfo.IntentionActionDescriptor intentionActionDescriptor = info
+              .findRegisteredQuickFix { descriptor, textRange ->
+              return descriptor
+              }
             PsiElement someElement = helper.fixture.file.findElementAt(0)
 
             assert someElement, 'There is an element for the highlighted info'
-            List<IntentionAction> options = marker.first.getOptions(someElement, helper.fixture.editor)
+            List<IntentionAction> options = intentionActionDescriptor.getOptions(someElement, helper.fixture.editor)
 
             assert options, 'Options present for the highlighted info'
 
@@ -168,7 +183,21 @@ abstract class InspectionSpec extends Specification {
 
         assert action, 'Clean up action is present'
 
-        helper.fixture.launchAction action
+        applyFix action
+    }
+
+    void applyFix(IntentionAction action) {
+      helper.fixture.launchAction(action)
+      commitAndSave()
+    }
+
+    void commitAndSave() {
+      ApplicationManager.application.invokeAndWait {
+        WriteIntentReadAction.run {
+          PsiDocumentManager.getInstance(helper.fixture.project).commitAllDocuments()
+          FileDocumentManager.getInstance().saveAllDocuments()
+        }
+      }
     }
 
     @SuppressWarnings('TrailingWhitespace')

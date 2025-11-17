@@ -41,8 +41,8 @@ public class ClassEndsWithBlankLineInspectionTool extends CodeNarcInspectionTool
         getRule().setBlankLineRequired(value);
     }
 
-    public boolean getBlankLineRequired() {
-        return getRule().getBlankLineRequired();
+    public boolean isBlankLineRequired() {
+        return getRule().isBlankLineRequired();
     }
 
 
@@ -59,8 +59,8 @@ public class ClassEndsWithBlankLineInspectionTool extends CodeNarcInspectionTool
         getRule().setIgnoreInnerClasses(value);
     }
 
-    public boolean getIgnoreInnerClasses() {
-        return getRule().getIgnoreInnerClasses();
+    public boolean isIgnoreInnerClasses() {
+        return getRule().isIgnoreInnerClasses();
     }
 
 
@@ -68,8 +68,8 @@ public class ClassEndsWithBlankLineInspectionTool extends CodeNarcInspectionTool
         getRule().setIgnoreSingleLineClasses(value);
     }
 
-    public boolean getIgnoreSingleLineClasses() {
-        return getRule().getIgnoreSingleLineClasses();
+    public boolean isIgnoreSingleLineClasses() {
+        return getRule().isIgnoreSingleLineClasses();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

@@ -9,7 +9,6 @@ import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.exceptions.ConfusingClassNamedExceptionRule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.codeInspection.naming.RenameFix;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class ConfusingClassNamedExceptionInspectionTool extends CodeNarcInspectionTool<ConfusingClassNamedExceptionRule> {
@@ -50,7 +49,7 @@ public class ConfusingClassNamedExceptionInspectionTool extends CodeNarcInspecti
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(new RenameFix());
+        return Collections.emptyList();
     }
 
 }

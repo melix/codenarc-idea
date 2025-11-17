@@ -41,8 +41,8 @@ public class SpaceAfterClosingBraceInspectionTool extends CodeNarcInspectionTool
         getRule().setCheckClosureMapEntryValue(value);
     }
 
-    public boolean getCheckClosureMapEntryValue() {
-        return getRule().getCheckClosureMapEntryValue();
+    public boolean isCheckClosureMapEntryValue() {
+        return getRule().isCheckClosureMapEntryValue();
     }
 
 

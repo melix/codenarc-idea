@@ -32,8 +32,8 @@ public class MisorderedStaticImportsInspectionTool extends CodeNarcInspectionToo
         getRule().setComesBefore(value);
     }
 
-    public boolean getComesBefore() {
-        return getRule().getComesBefore();
+    public boolean isComesBefore() {
+        return getRule().isComesBefore();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

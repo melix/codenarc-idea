@@ -1,6 +1,6 @@
 package org.codenarc.idea.error;
 
-import com.intellij.diagnostic.IdeaReportingEvent;
+import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
 import com.intellij.ide.plugins.PluginManagerCore;
 import com.intellij.idea.IdeaLogger;
 import com.intellij.openapi.application.ApplicationInfo;
@@ -8,8 +8,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.ErrorReportSubmitter;
-import com.intellij.openapi.diagnostic.IdeaLoggingEvent;
-import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.Consumer;
@@ -74,8 +72,8 @@ public class SentryErrorSubmitter extends ErrorReportSubmitter {
 
         for (IdeaLoggingEvent e : events) {
             Throwable error = null;
-            if (e instanceof IdeaReportingEvent) {
-                error = ((IdeaReportingEvent) e).getData().getThrowable();
+            if (e instanceof IdeaLoggingEvent) {
+                error = e.getThrowable();
             }
 
             var sentryEvent = new SentryEvent(error);

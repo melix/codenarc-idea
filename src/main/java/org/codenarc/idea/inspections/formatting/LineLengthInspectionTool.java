@@ -50,8 +50,8 @@ public class LineLengthInspectionTool extends CodeNarcInspectionTool<LineLengthR
         getRule().setIgnoreImportStatements(value);
     }
 
-    public boolean getIgnoreImportStatements() {
-        return getRule().getIgnoreImportStatements();
+    public boolean isIgnoreImportStatements() {
+        return getRule().isIgnoreImportStatements();
     }
 
 
@@ -68,8 +68,8 @@ public class LineLengthInspectionTool extends CodeNarcInspectionTool<LineLengthR
         getRule().setIgnorePackageStatements(value);
     }
 
-    public boolean getIgnorePackageStatements() {
-        return getRule().getIgnorePackageStatements();
+    public boolean isIgnorePackageStatements() {
+        return getRule().isIgnorePackageStatements();
     }
 
 
@@ -84,13 +84,7 @@ public class LineLengthInspectionTool extends CodeNarcInspectionTool<LineLengthR
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected void applyDefaultConfiguration(LineLengthRule rule) {
-        rule.setLength(160);
-    }
-
-    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        // no automated fix
         return Collections.emptyList();
     }
 

@@ -41,8 +41,8 @@ public class ElseBlockBracesInspectionTool extends CodeNarcInspectionTool<ElseBl
         getRule().setBracesRequiredForElseIf(value);
     }
 
-    public boolean getBracesRequiredForElseIf() {
-        return getRule().getBracesRequiredForElseIf();
+    public boolean isBracesRequiredForElseIf() {
+        return getRule().isBracesRequiredForElseIf();
     }
 
 

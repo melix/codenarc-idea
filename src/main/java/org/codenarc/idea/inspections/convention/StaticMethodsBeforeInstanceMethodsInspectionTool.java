@@ -45,6 +45,15 @@ public class StaticMethodsBeforeInstanceMethodsInspectionTool extends CodeNarcIn
         return getRule().getDoNotApplyToClassNames();
     }
 
+
+    public void setIgnoreMethodNames(String value) {
+        getRule().setIgnoreMethodNames(value);
+    }
+
+    public String getIgnoreMethodNames() {
+        return getRule().getIgnoreMethodNames();
+    }
+
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override

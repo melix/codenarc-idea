@@ -1,7 +1,7 @@
 package rules
 
-<warning descr="The [java.lang.String] import is never referenced"><warning descr="Unused import">import java.lang.String</warning></warning>
-<warning descr="The [java.util.List] import is never referenced"><warning descr="Unused import">import java.util.List</warning></warning>
+<warning descr="Unused import"><weak_warning descr="The [java.lang.String] import is never referenced">import java.lang.String</weak_warning></warning>
+<warning descr="Unused import"><weak_warning descr="The [java.util.List] import is never referenced">import java.util.List</weak_warning></warning>
 
 /**
  * Class to demonstrate code violations. Files <code>before.txt</code> and <code>fixed.txt</code>

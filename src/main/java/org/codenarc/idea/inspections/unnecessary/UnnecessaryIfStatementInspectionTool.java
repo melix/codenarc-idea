@@ -41,8 +41,8 @@ public class UnnecessaryIfStatementInspectionTool extends CodeNarcInspectionTool
         getRule().setCheckLastStatementImplicitElse(value);
     }
 
-    public boolean getCheckLastStatementImplicitElse() {
-        return getRule().getCheckLastStatementImplicitElse();
+    public boolean isCheckLastStatementImplicitElse() {
+        return getRule().isCheckLastStatementImplicitElse();
     }
 
 

@@ -48,11 +48,6 @@ public class DuplicateListLiteralInspectionTool extends CodeNarcInspectionTool<D
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected void applyDefaultConfiguration(DuplicateListLiteralRule rule) {
-        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
-    }
-
-    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
         return Collections.emptyList();
     }

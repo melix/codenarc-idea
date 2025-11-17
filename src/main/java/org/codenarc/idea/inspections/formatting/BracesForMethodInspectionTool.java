@@ -32,8 +32,8 @@ public class BracesForMethodInspectionTool extends CodeNarcInspectionTool<Braces
         getRule().setAllowBraceOnNextLineForMultilineDeclarations(value);
     }
 
-    public boolean getAllowBraceOnNextLineForMultilineDeclarations() {
-        return getRule().getAllowBraceOnNextLineForMultilineDeclarations();
+    public boolean isAllowBraceOnNextLineForMultilineDeclarations() {
+        return getRule().isAllowBraceOnNextLineForMultilineDeclarations();
     }
 
 
@@ -59,8 +59,8 @@ public class BracesForMethodInspectionTool extends CodeNarcInspectionTool<Braces
         getRule().setSameLine(value);
     }
 
-    public boolean getSameLine() {
-        return getRule().getSameLine();
+    public boolean isSameLine() {
+        return getRule().isSameLine();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

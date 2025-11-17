@@ -50,8 +50,8 @@ public class PackageNameInspectionTool extends CodeNarcInspectionTool<PackageNam
         getRule().setPackageNameRequired(value);
     }
 
-    public boolean getPackageNameRequired() {
-        return getRule().getPackageNameRequired();
+    public boolean isPackageNameRequired() {
+        return getRule().isPackageNameRequired();
     }
 
 

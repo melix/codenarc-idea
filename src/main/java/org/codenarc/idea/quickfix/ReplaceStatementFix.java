@@ -10,7 +10,6 @@ import org.jetbrains.plugins.groovy.codeInspection.GroovyFix;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;
 
 public class ReplaceStatementFix extends GroovyFix {
-
     private final Class<? extends GrStatement> target;
     private final String original;
     private final String replacement;

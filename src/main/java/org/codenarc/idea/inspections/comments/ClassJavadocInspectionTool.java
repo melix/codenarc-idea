@@ -32,8 +32,8 @@ public class ClassJavadocInspectionTool extends CodeNarcInspectionTool<ClassJava
         getRule().setApplyToNonMainClasses(value);
     }
 
-    public boolean getApplyToNonMainClasses() {
-        return getRule().getApplyToNonMainClasses();
+    public boolean isApplyToNonMainClasses() {
+        return getRule().isApplyToNonMainClasses();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

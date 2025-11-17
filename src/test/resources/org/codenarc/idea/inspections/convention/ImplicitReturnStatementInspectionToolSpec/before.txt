@@ -6,12 +6,12 @@ package rules
  */
 class ImplicitReturnStatementInspectionToolSpecSnippet {
 
-    <warning descr="The method doSomething in class rules.ImplicitReturnStatementInspectionToolSpecSnippet is missing an explicit return">String doSomething() {
+    <weak_warning descr="The method doSomething in class rules.ImplicitReturnStatementInspectionToolSpecSnippet is missing an explicit return">String doSomething() {
         'something'
-    }</warning>
+    }</weak_warning>
 
-    <warning descr="The method doStuff in class rules.ImplicitReturnStatementInspectionToolSpecSnippet is missing an explicit return">String doStuff() {
+    <weak_warning descr="The method doStuff in class rules.ImplicitReturnStatementInspectionToolSpecSnippet is missing an explicit return">String doStuff() {
         'stuff'
-    }</warning>
+    }</weak_warning>
 
 }

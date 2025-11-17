@@ -32,8 +32,8 @@ public class ImplicitClosureParameterInspectionTool extends CodeNarcInspectionTo
         getRule().setAllowUsingItAsParameterName(value);
     }
 
-    public boolean getAllowUsingItAsParameterName() {
-        return getRule().getAllowUsingItAsParameterName();
+    public boolean isAllowUsingItAsParameterName() {
+        return getRule().isAllowUsingItAsParameterName();
     }
 
 

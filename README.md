@@ -1,19 +1,49 @@
 # CodeNarc IntelliJ Plugin
 
-## Development
+## Version 7.0.3
 
-To run the plugin locally run `./gradlew runIde`
+New features:
+- Compatible with IntelliJ IDEA 2025.2+ (based on IntelliJ Plugins v2):
+  - Quick Fixes for CodeNarc violations ported to the new API
+  - Automated tests reworked to use the new API
+- [CodeNarc 3.6.0](https://github.com/CodeNarc/CodeNarc/releases/tag/v3.6.0)
+  - Supports [Disabling rules from comments](https://codenarc.org/codenarc-configuring-rules.html#disabling-rules-from-comments)
+- Gradle 9.2.0
+- Groovy 4+
+- Default run configuration for debugging the plugin in IDEA
 
-## Beta Channel
-Feel free to join the beta channel here: https://plugins.jetbrains.com/plugins/beta/5925
+## Running tests
 
-![add custom repositories](static/images/add-repository-1.png)
+Run all tests:
+```bash
+./gradlew test --info --stacktrace
+```
 
-![add custom repository](static/images/add-repository-2.png)
+Run a single specific test:
+```bash
+./gradlew test --tests "*UnnecessaryDotClassInspectionToolSpec" --info --stacktrace
+```
 
-## Known Issues
+## Running local IDEA
 
-There is [a random issue with `StackOverflowError`](https://github.com/melix/codenarc-idea/issues/45) which should have no impact on the IDE. 
+To run the plugin locally in IDEA:
+```bash
+./gradlew runIde
+```
+
+## Build
+
+To build the plugin run `./gradlew buildPlugin`.
+Take the file from `build/distributions/codenarc-idea-7.0.1-SNAPSHOT.zip` and install it in IDEA.
+
+## Upgrading CodeNarc
+
+1. Change the CodeNarc version in `build.gradle`
+2. Regenerate the IDEA inspection classes from CodeNarc with `./gradlew run`
+   - existing inspection classes manual removal from `org.codenarc.idea.inspections` might be required
+3. Test `./gradlew test --info --stacktrace`
+4. Build `./gradlew buildPlugin`
+5. Take the file from `build/distributions/codenarc-idea-7.0.0-SNAPSHOT.zip` and install it in IDEA.
 
 ## History
 
@@ -29,6 +59,14 @@ which was a fork the original project.
 
 CodeNarc-Updated will be replaced with this plugin.
 
+## Known Issues
+
+There is [a random issue with `StackOverflowError`](https://github.com/melix/codenarc-idea/issues/45) which should have no impact on the IDE.
 
 
+## Beta Channel
+Feel free to join the beta channel here: https://plugins.jetbrains.com/plugins/beta/5925
 
+![add custom repositories](static/images/add-repository-1.png)
+
+![add custom repository](static/images/add-repository-2.png)

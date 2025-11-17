@@ -68,8 +68,8 @@ public class BracesForIfElseInspectionTool extends CodeNarcInspectionTool<Braces
         getRule().setSameLine(value);
     }
 
-    public boolean getSameLine() {
-        return getRule().getSameLine();
+    public boolean isSameLine() {
+        return getRule().isSameLine();
     }
 
 
@@ -77,8 +77,8 @@ public class BracesForIfElseInspectionTool extends CodeNarcInspectionTool<Braces
         getRule().setValidateElse(value);
     }
 
-    public boolean getValidateElse() {
-        return getRule().getValidateElse();
+    public boolean isValidateElse() {
+        return getRule().isValidateElse();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

@@ -66,13 +66,7 @@ public class DuplicateNumberLiteralInspectionTool extends CodeNarcInspectionTool
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected void applyDefaultConfiguration(DuplicateNumberLiteralRule rule)  {
-        rule.setDoNotApplyToClassNames(SPECIFICATION_CLASSES);
-    }
-
-    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        // TODO: extract constant
         return Collections.emptyList();
     }
 

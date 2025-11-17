@@ -1,3 +1,4 @@
+// codenarc-disable
 package org.codenarc.idea.testing
 
 import com.intellij.codeInspection.ex.EntryPointsManagerBase
@@ -26,6 +27,8 @@ class FixtureHelper extends LightJavaCodeInsightFixtureTestCase implements Close
 
     private final LightProjectDescriptor projectDescriptor;
     private final @NonNls String basePath;
+
+    FixtureHelper() { }
 
     FixtureHelper(LightProjectDescriptor projectDescriptor, String basePath) {
         this.projectDescriptor = projectDescriptor

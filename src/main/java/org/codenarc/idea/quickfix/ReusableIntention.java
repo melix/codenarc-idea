@@ -12,10 +12,11 @@ import org.jetbrains.plugins.groovy.intentions.base.PsiElementPredicate;
  * Exposes internal protected methods of {@link org.jetbrains.plugins.groovy.intentions.base.Intention} to allow using it as quick fix.
  */
 public interface ReusableIntention extends IntentionAction {
+  Class<?> getDelegateClass();
 
-    void processIntention(@NotNull PsiElement element, @NotNull Project project, Editor editor) throws IncorrectOperationException;
+  void processIntention(@NotNull PsiElement element, @NotNull Project project, Editor editor) throws IncorrectOperationException;
 
-    @NotNull
-    PsiElementPredicate getElementPredicate();
+  @NotNull
+  PsiElementPredicate getElementPredicate();
 
 }

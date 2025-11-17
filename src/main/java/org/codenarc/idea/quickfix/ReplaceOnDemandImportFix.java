@@ -66,17 +66,17 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
             final PsiClass[] importedClasses = visitor.getImportedClasses();
             Arrays.sort(importedClasses, new PsiClassComparator());
             createImportStatements(
-                    importStatement,
-                    importedClasses,
-                    clazz -> factory.createImportStatement(clazz.getQualifiedName(), false, false, null, null)
+                importStatement,
+                importedClasses,
+                clazz -> factory.createImportStatement(clazz.getQualifiedName(), false, false, null, null)
             );
         }
     }
 
     private static <T> void createImportStatements(
-            GrImportStatement importStatement,
-            T[] importedMembers,
-            Function<? super T, ? extends GrImportStatement> function
+        GrImportStatement importStatement,
+        T[] importedMembers,
+        Function<? super T, ? extends GrImportStatement> function
     ) {
         final GroovyFile groovyFile = (GroovyFile) importStatement.getParent();
         for (T importedMember : importedMembers) {
@@ -113,7 +113,7 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
                 final PsiClass aClass = (PsiClass) resolvedElement;
                 final String qualifiedName = aClass.getQualifiedName();
                 final String packageName =
-                        ClassUtil.extractPackageName(qualifiedName);
+                    ClassUtil.extractPackageName(qualifiedName);
                 if (!importedPackageName.equals(packageName)) {
                     return;
                 }
@@ -127,7 +127,7 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
     }
 
     private static final class PsiClassComparator
-            implements Comparator<PsiClass> {
+        implements Comparator<PsiClass> {
 
         @Override
         public int compare(PsiClass class1, PsiClass class2) {

@@ -50,8 +50,8 @@ public class ParameterCountInspectionTool extends CodeNarcInspectionTool<Paramet
         getRule().setIgnoreOverriddenMethods(value);
     }
 
-    public boolean getIgnoreOverriddenMethods() {
-        return getRule().getIgnoreOverriddenMethods();
+    public boolean isIgnoreOverriddenMethods() {
+        return getRule().isIgnoreOverriddenMethods();
     }
 
 

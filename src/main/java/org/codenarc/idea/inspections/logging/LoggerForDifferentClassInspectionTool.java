@@ -32,8 +32,8 @@ public class LoggerForDifferentClassInspectionTool extends CodeNarcInspectionToo
         getRule().setAllowDerivedClasses(value);
     }
 
-    public boolean getAllowDerivedClasses() {
-        return getRule().getAllowDerivedClasses();
+    public boolean isAllowDerivedClasses() {
+        return getRule().isAllowDerivedClasses();
     }
 
 

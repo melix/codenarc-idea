@@ -41,8 +41,8 @@ public class UseAssertTrueInsteadOfAssertEqualsInspectionTool extends CodeNarcIn
         getRule().setCheckAssertStatements(value);
     }
 
-    public boolean getCheckAssertStatements() {
-        return getRule().getCheckAssertStatements();
+    public boolean isCheckAssertStatements() {
+        return getRule().isCheckAssertStatements();
     }
 
 

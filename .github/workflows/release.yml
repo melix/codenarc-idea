@@ -8,7 +8,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     env:
-      GRADLE_OPTS: "-Xmx6g -Xms4g"
+      GRADLE_OPTS: "-Xmx6g -Xms4g -Dorg.gradle.daemon=false"
+      CI: true
     steps:
       - uses: actions/checkout@v3
       - name: Semantic Version
@@ -21,4 +22,4 @@ jobs:
           distribution: zulu
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: publishPlugin -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=IC-2023.2 -PpluginVersion=${{ steps.version.outputs.tag }}
+          arguments: publishPlugin -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=2025.2 -PpluginVersion=${{ steps.version.outputs.tag }}

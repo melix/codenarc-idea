@@ -50,8 +50,8 @@ public class SpaceAroundOperatorInspectionTool extends CodeNarcInspectionTool<Sp
         getRule().setIgnoreParameterDefaultValueAssignments(value);
     }
 
-    public boolean getIgnoreParameterDefaultValueAssignments() {
-        return getRule().getIgnoreParameterDefaultValueAssignments();
+    public boolean isIgnoreParameterDefaultValueAssignments() {
+        return getRule().isIgnoreParameterDefaultValueAssignments();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

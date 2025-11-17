@@ -7,8 +7,8 @@ package rules
 class UnnecessaryDotClassInspectionToolSpecSnippet {
 
     void doSomething() {
-        <warning descr="String.class can be rewritten as String">def one = String.class</warning>
-        <warning descr="String.class can be rewritten as String">def two = String.class</warning>
+        <weak_warning descr="String.class can be rewritten as String">def one = String.class</weak_warning>
+        <weak_warning descr="String.class can be rewritten as String">def two = String.class</weak_warning>
     }
 
 }

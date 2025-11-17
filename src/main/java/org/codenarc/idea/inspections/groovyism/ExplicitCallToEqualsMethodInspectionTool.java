@@ -50,8 +50,8 @@ public class ExplicitCallToEqualsMethodInspectionTool extends CodeNarcInspection
         getRule().setIgnoreThisReference(value);
     }
 
-    public boolean getIgnoreThisReference() {
-        return getRule().getIgnoreThisReference();
+    public boolean isIgnoreThisReference() {
+        return getRule().isIgnoreThisReference();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

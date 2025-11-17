@@ -86,8 +86,8 @@ public class BracesForTryCatchFinallyInspectionTool extends CodeNarcInspectionTo
         getRule().setSameLine(value);
     }
 
-    public boolean getSameLine() {
-        return getRule().getSameLine();
+    public boolean isSameLine() {
+        return getRule().isSameLine();
     }
 
 
@@ -95,8 +95,8 @@ public class BracesForTryCatchFinallyInspectionTool extends CodeNarcInspectionTo
         getRule().setValidateCatch(value);
     }
 
-    public boolean getValidateCatch() {
-        return getRule().getValidateCatch();
+    public boolean isValidateCatch() {
+        return getRule().isValidateCatch();
     }
 
 
@@ -104,8 +104,8 @@ public class BracesForTryCatchFinallyInspectionTool extends CodeNarcInspectionTo
         getRule().setValidateFinally(value);
     }
 
-    public boolean getValidateFinally() {
-        return getRule().getValidateFinally();
+    public boolean isValidateFinally() {
+        return getRule().isValidateFinally();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

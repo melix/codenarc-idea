@@ -57,11 +57,6 @@ public class MethodReturnTypeRequiredInspectionTool extends CodeNarcInspectionTo
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected void applyDefaultConfiguration(MethodReturnTypeRequiredRule rule) {
-        rule.setDoNotApplyToFilesMatching(".*Controller\\.groovy");
-    }
-
-    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
         return Collections.emptyList();
     }

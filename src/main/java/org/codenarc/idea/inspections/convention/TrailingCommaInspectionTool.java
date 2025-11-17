@@ -41,8 +41,8 @@ public class TrailingCommaInspectionTool extends CodeNarcInspectionTool<Trailing
         getRule().setCheckList(value);
     }
 
-    public boolean getCheckList() {
-        return getRule().getCheckList();
+    public boolean isCheckList() {
+        return getRule().isCheckList();
     }
 
 
@@ -50,8 +50,8 @@ public class TrailingCommaInspectionTool extends CodeNarcInspectionTool<Trailing
         getRule().setCheckMap(value);
     }
 
-    public boolean getCheckMap() {
-        return getRule().getCheckMap();
+    public boolean isCheckMap() {
+        return getRule().isCheckMap();
     }
 
 
@@ -68,8 +68,8 @@ public class TrailingCommaInspectionTool extends CodeNarcInspectionTool<Trailing
         getRule().setIgnoreSingleElementList(value);
     }
 
-    public boolean getIgnoreSingleElementList() {
-        return getRule().getIgnoreSingleElementList();
+    public boolean isIgnoreSingleElementList() {
+        return getRule().isIgnoreSingleElementList();
     }
 
 
@@ -77,8 +77,8 @@ public class TrailingCommaInspectionTool extends CodeNarcInspectionTool<Trailing
         getRule().setIgnoreSingleElementMap(value);
     }
 
-    public boolean getIgnoreSingleElementMap() {
-        return getRule().getIgnoreSingleElementMap();
+    public boolean isIgnoreSingleElementMap() {
+        return getRule().isIgnoreSingleElementMap();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

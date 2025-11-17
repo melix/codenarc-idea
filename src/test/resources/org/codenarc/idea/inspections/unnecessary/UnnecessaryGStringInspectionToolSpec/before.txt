@@ -3,8 +3,8 @@ package rules
 class UnnecessaryGString {
 
     void someMethod() {
-        <warning descr="The String 'Should be single quote' can be wrapped in single quotes instead of double quotes">def something = "Should be single quote"</warning>
-        <warning descr="The String 'Should be single quote as well' can be wrapped in single quotes instead of double quotes">def other = "Should be single quote as well"</warning>
+        <weak_warning descr="The String 'Should be single quote' can be wrapped in single quotes instead of double quotes">def something = "Should be single quote"</weak_warning>
+        <weak_warning descr="The String 'Should be single quote as well' can be wrapped in single quotes instead of double quotes">def other = "Should be single quote as well"</weak_warning>
     }
 
 }

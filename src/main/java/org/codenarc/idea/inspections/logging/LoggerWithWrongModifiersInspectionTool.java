@@ -32,8 +32,8 @@ public class LoggerWithWrongModifiersInspectionTool extends CodeNarcInspectionTo
         getRule().setAllowNonStaticLogger(value);
     }
 
-    public boolean getAllowNonStaticLogger() {
-        return getRule().getAllowNonStaticLogger();
+    public boolean isAllowNonStaticLogger() {
+        return getRule().isAllowNonStaticLogger();
     }
 
 
@@ -41,8 +41,8 @@ public class LoggerWithWrongModifiersInspectionTool extends CodeNarcInspectionTo
         getRule().setAllowProtectedLogger(value);
     }
 
-    public boolean getAllowProtectedLogger() {
-        return getRule().getAllowProtectedLogger();
+    public boolean isAllowProtectedLogger() {
+        return getRule().isAllowProtectedLogger();
     }
 
 

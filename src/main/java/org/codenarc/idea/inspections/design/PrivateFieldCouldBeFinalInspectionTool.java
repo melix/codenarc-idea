@@ -59,8 +59,8 @@ public class PrivateFieldCouldBeFinalInspectionTool extends CodeNarcInspectionTo
         getRule().setIgnoreJpaEntities(value);
     }
 
-    public boolean getIgnoreJpaEntities() {
-        return getRule().getIgnoreJpaEntities();
+    public boolean isIgnoreJpaEntities() {
+        return getRule().isIgnoreJpaEntities();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

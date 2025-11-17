@@ -9,7 +9,8 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     env:
-      GRADLE_OPTS: "-Xmx6g -Xms4g"
+      GRADLE_OPTS: "-Xmx6g -Xms4g -Dorg.gradle.daemon=false"
+      CI: true
     steps:
       - name: Set current date as env variable
         run: echo "SNAPSHOT_SUFFIX=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
@@ -21,4 +22,4 @@ jobs:
           distribution: zulu
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=IC-2023.2 -PpluginVersion=6.2.0-${{ env.SNAPSHOT_SUFFIX }}
+          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=2025.2 -PpluginVersion=7.0.1-${{ env.SNAPSHOT_SUFFIX }}

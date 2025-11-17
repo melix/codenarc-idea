@@ -48,13 +48,7 @@ public class NoDefInspectionTool extends CodeNarcInspectionTool<NoDefRule> {
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected void applyDefaultConfiguration(NoDefRule rule) {
-        rule.setDoNotApplyToFilesMatching(".*Controller\\.groovy");
-    }
-
-    @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        // TODO: implement set explicit type
         return Collections.emptyList();
     }
 

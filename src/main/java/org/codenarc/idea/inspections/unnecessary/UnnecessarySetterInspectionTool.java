@@ -9,7 +9,6 @@ import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.unnecessary.UnnecessarySetterRule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.codeInspection.style.JavaStylePropertiesInvocationFixer;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class UnnecessarySetterInspectionTool extends CodeNarcInspectionTool<UnnecessarySetterRule> {
@@ -50,7 +49,7 @@ public class UnnecessarySetterInspectionTool extends CodeNarcInspectionTool<Unne
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(new JavaStylePropertiesInvocationFixer());
+        return Collections.emptyList();
     }
 
 }

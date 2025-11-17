@@ -41,8 +41,8 @@ public class SpaceBeforeClosingBraceInspectionTool extends CodeNarcInspectionToo
         getRule().setCheckClosureMapEntryValue(value);
     }
 
-    public boolean getCheckClosureMapEntryValue() {
-        return getRule().getCheckClosureMapEntryValue();
+    public boolean isCheckClosureMapEntryValue() {
+        return getRule().isCheckClosureMapEntryValue();
     }
 
 
@@ -59,8 +59,8 @@ public class SpaceBeforeClosingBraceInspectionTool extends CodeNarcInspectionToo
         getRule().setIgnoreEmptyBlock(value);
     }
 
-    public boolean getIgnoreEmptyBlock() {
-        return getRule().getIgnoreEmptyBlock();
+    public boolean isIgnoreEmptyBlock() {
+        return getRule().isIgnoreEmptyBlock();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

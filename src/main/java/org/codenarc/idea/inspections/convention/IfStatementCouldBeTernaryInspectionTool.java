@@ -41,8 +41,8 @@ public class IfStatementCouldBeTernaryInspectionTool extends CodeNarcInspectionT
         getRule().setCheckLastStatementImplicitElse(value);
     }
 
-    public boolean getCheckLastStatementImplicitElse() {
-        return getRule().getCheckLastStatementImplicitElse();
+    public boolean isCheckLastStatementImplicitElse() {
+        return getRule().isCheckLastStatementImplicitElse();
     }
 
 

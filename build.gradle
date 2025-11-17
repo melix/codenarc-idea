@@ -1,5 +1,9 @@
+// codenarc-disable
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+
 plugins {
-    id 'org.jetbrains.intellij' version '1.15.0'
+    id 'org.jetbrains.intellij.platform' version '2.10.4'
     id 'java'
     id 'idea'
     id 'groovy'
@@ -8,20 +12,16 @@ plugins {
 
 if (!project.hasProperty('publishPluginChannels')) ext.publishPluginChannels = ''
 if (!project.hasProperty('publishPluginToken')) ext.publishPluginToken = '**UNDEFINED**'
-if (!project.hasProperty('ideVersion')) ext.ideVersion = 'IC-2023.2'
+if (!project.hasProperty('ideVersion')) ext.ideVersion = '2025.2'
+
+project.group = 'org.codenarc.idea'
+project.version = ext.pluginVersion
 
 wrapper {
-    gradleVersion = '8.0.2'
+    gradleVersion = '9.2.0'
     distributionType = Wrapper.DistributionType.ALL
     // Checksums are found here: https://gradle.org/release-checksums/
     distributionSha256Sum = '47a5bfed9ef814f90f8debcbbb315e8e7c654109acd224595ea39fca95c5d4da'
-}
-
-group 'org.codenarc.idea'
-version "${pluginVersion}"
-
-repositories {
-    mavenCentral()
 }
 
 idea {
@@ -39,59 +39,92 @@ sourceSets.create 'generator', {
 }
 
 configurations {
-    implementation  {
+    implementation {
         exclude group: 'org.slf4j', module: 'slf4j-api'
     }
 
     generatorImplementation.extendsFrom compile, implementation, runtimeOnly
 }
 
+configurations.configureEach {
+    resolutionStrategy {
+        // Force a single Groovy version across all modules
+        force "org.apache.groovy:groovy:${groovyVersion}"
+        force "org.apache.groovy:groovy-xml:${groovyVersion}"
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name.contains('prepareTest') && task.name.contains('Sandbox')) {
+        task.doLast {
+            def testPluginLib = file("build/idea-sandbox/IU-2025.2.4/plugins-test/${project.name}/lib")
+            if (testPluginLib.exists()) {
+                def removed = []
+                testPluginLib.listFiles()?.findAll {
+                    it.name.startsWith('spock-')
+                }?.each {
+                    removed << it.name
+                    it.delete()
+                }
+                if (removed) {
+                    logger.lifecycle("Removed from test sandbox: ${removed}")
+                }
+            }
+        }
+    }
+}
+
 dependencies {
-    compileOnly( 'org.apache.groovy:groovy') {
+    intellijPlatform {
+        intellijIdea '2025.2.4'
+        bundledPlugin 'com.intellij.java'
+        bundledPlugin 'org.intellij.groovy'
+        testFramework TestFrameworkType.Platform.INSTANCE
+        testFramework TestFrameworkType.Plugin.Java.INSTANCE
+    }
+    compileOnly 'org.apache.groovy:groovy', {
         version {
-            strictly "$groovyVersion"
+            strictly groovyVersion
         }
         because 'there are version conflicts when building'
     }
-    implementation("org.codenarc:CodeNarc:$codenarcVersion") {
+    implementation "org.codenarc:CodeNarc:$codenarcVersion", {
         exclude group: 'org.codehaus.groovy'
-        exclude group: 'org.appache.groovy'
+        exclude group: 'org.apache.groovy'
     }
 
     implementation 'io.sentry:sentry:5.1.0'
 
-    runtimeOnly('org.gmetrics:GMetrics-Groovy4:2.1.0') {
+    runtimeOnly 'org.gmetrics:GMetrics-Groovy4:2.1.0', {
         exclude group: 'org.codehaus.groovy'
         exclude group: 'org.appache.groovy'
     }
 
-    compile 'org.apache.commons:commons-lang3:3.9'
+    compile 'org.apache.commons:commons-lang3:3.18.0'
 
-    testImplementation "org.spockframework:spock-core:$spockVersion", {
-        exclude group: 'org.codehaus.groovy'
-        exclude group: 'org.appache.groovy'
-    }
-
-    testImplementation 'com.agorapulse.testing:fixt:0.2.1.1'
-    testImplementation( 'org.apache.groovy:groovy') {
+    testImplementation 'junit:junit:4.13.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.10.0'
+    testImplementation "org.spockframework:spock-core:$spockVersion"
+    testImplementation 'com.agorapulse.testing:fixt:0.2.4'
+    testImplementation 'org.apache.groovy:groovy', {
         version {
-            strictly "$groovyVersion"
+            strictly groovyVersion
         }
         because 'there are version conflicts when building'
     }
 
-    generatorImplementation( 'org.apache.groovy:groovy') {
+    generatorImplementation 'org.apache.groovy:groovy', {
         version {
-            strictly "$groovyVersion"
+            strictly groovyVersion
         }
         because 'there are version conflicts when building'
     }
 }
 
-String idePlatformVersion = "${ideVersion}"
+logger.lifecycle("Using IDE version $ideVersion")
 
-logger.lifecycle("Using IDE version $idePlatformVersion")
-
+/*
 intellij {
     pluginName = 'CodeNarc'
 
@@ -100,6 +133,7 @@ intellij {
     version = idePlatformVersion
     instrumentCode = false
 }
+ */
 
 publishPlugin {
     token = publishPluginToken
@@ -112,32 +146,39 @@ runIde {
     jvmArgs "-Xmx2g"
 }
 
-runPluginVerifier {
-    ideVersions = [
-            idePlatformVersion
-    ]
+intellijPlatform.pluginVerification {
+    ides {
+        create(IntelliJPlatformType.IntellijIdea, ideVersion)
+    }
 }
 
 patchPluginXml {
-    version "${pluginVersion}"
-    sinceBuild = '223.7571.182'
-    untilBuild = null
-    changeNotes = file('changelog.html').text
-    pluginDescription = file('description.html').text
+    version = project.version
+    sinceBuild = '252.23892'
+    untilBuild = '252.*'
+    changeNotes = file("$rootDir/changelog.html").text
+    pluginDescription = file("$rootDir/description.html").text
 }
 
+/** Regenerates IDEA inspections from CodeNarc */
 application {
-    mainClassName = 'org.codenarc.idea.gen.RuleInspectionsGenerator'
+    mainClass = 'org.codenarc.idea.gen.RuleInspectionsGenerator'
 }
 
 run {
     // generate classes
-    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath + sourceSets.generator.compileClasspath + sourceSets.generator.runtimeClasspath
+    classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath +
+        sourceSets.generator.compileClasspath + sourceSets.generator.runtimeClasspath
     args project.rootDir.canonicalPath
 }
 
-if (spockVersion.startsWith('2.')) {
-    test {
-        useJUnitPlatform()
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
     }
 }

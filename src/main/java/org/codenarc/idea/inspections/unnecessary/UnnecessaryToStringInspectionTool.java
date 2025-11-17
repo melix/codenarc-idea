@@ -41,8 +41,8 @@ public class UnnecessaryToStringInspectionTool extends CodeNarcInspectionTool<Un
         getRule().setCheckAssignments(value);
     }
 
-    public boolean getCheckAssignments() {
-        return getRule().getCheckAssignments();
+    public boolean isCheckAssignments() {
+        return getRule().isCheckAssignments();
     }
 
 

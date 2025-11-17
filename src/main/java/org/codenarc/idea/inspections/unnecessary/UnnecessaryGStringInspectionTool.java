@@ -52,7 +52,7 @@ public class UnnecessaryGStringInspectionTool extends CodeNarcInspectionTool<Unn
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(IntentionQuickFix.from(new ConvertGStringToStringReusableIntention()));
+      return Collections.singleton(IntentionQuickFix.from(new ConvertGStringToStringReusableIntention()));
     }
 
 }

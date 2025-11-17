@@ -34,8 +34,8 @@ public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWi
         getRule().setIgnoreImports(value);
     }
 
-    public boolean getIgnoreImports() {
-        return getRule().getIgnoreImports();
+    public boolean isIgnoreImports() {
+        return getRule().isIgnoreImports();
     }
 
 
@@ -43,8 +43,8 @@ public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWi
         getRule().setIgnoreStaticImports(value);
     }
 
-    public boolean getIgnoreStaticImports() {
-        return getRule().getIgnoreStaticImports();
+    public boolean isIgnoreStaticImports() {
+        return getRule().isIgnoreStaticImports();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

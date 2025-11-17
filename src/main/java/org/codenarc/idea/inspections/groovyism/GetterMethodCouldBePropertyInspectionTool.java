@@ -50,8 +50,8 @@ public class GetterMethodCouldBePropertyInspectionTool extends CodeNarcInspectio
         getRule().setIgnoreMethodsWithOverrideAnnotation(value);
     }
 
-    public boolean getIgnoreMethodsWithOverrideAnnotation() {
-        return getRule().getIgnoreMethodsWithOverrideAnnotation();
+    public boolean isIgnoreMethodsWithOverrideAnnotation() {
+        return getRule().isIgnoreMethodsWithOverrideAnnotation();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

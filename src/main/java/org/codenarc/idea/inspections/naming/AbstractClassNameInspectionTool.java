@@ -2,18 +2,13 @@ package org.codenarc.idea.inspections.naming;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiModifier;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
-import org.codenarc.idea.CodeNarcBundle;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.naming.AbstractClassNameRule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.codeInspection.bugs.GrModifierFix;
-import org.jetbrains.plugins.groovy.codeInspection.naming.RenameFix;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class AbstractClassNameInspectionTool extends CodeNarcInspectionTool<AbstractClassNameRule> {
@@ -63,10 +58,7 @@ public class AbstractClassNameInspectionTool extends CodeNarcInspectionTool<Abst
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Arrays.asList(
-                new GrModifierFix(CodeNarcBundle.message("add.modifier", "abstract"), PsiModifier.ABSTRACT, true, GrModifierFix.MODIFIER_LIST_CHILD),
-                new RenameFix()
-        );
+        return Collections.emptyList();
     }
 
 }

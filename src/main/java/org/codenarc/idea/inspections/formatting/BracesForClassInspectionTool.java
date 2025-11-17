@@ -32,8 +32,8 @@ public class BracesForClassInspectionTool extends CodeNarcInspectionTool<BracesF
         getRule().setSameLine(value);
     }
 
-    public boolean getSameLine() {
-        return getRule().getSameLine();
+    public boolean isSameLine() {
+        return getRule().isSameLine();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration

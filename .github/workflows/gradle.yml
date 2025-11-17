@@ -5,18 +5,17 @@ jobs:
   check:
     name: Run Tests
     runs-on: ubuntu-latest
+    if: github.event_name != 'push' || github.event.pull_request.head.repo.full_name == null
     env:
-      GRADLE_OPTS: "-Xmx6g -Xms4g"
+      GRADLE_OPTS: "-Xmx6g -Xms4g -Dorg.gradle.daemon=false"
       CI: true
     strategy:
       fail-fast: false # we need to know which version is failing
       matrix:
         version:
-          - "-PideVersion=IC-2022.3"
-          - "-PideVersion=IC-2023.2"
+          - "-PideVersion=2025.2"
     steps:
       - uses: actions/checkout@v1
-
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -24,9 +23,9 @@ jobs:
           distribution: zulu
       - uses: gradle/gradle-build-action@v2
         with:
-          arguments: test runPluginVerifier ${{ matrix.version }} --stacktrace
+          arguments: test verifyPlugin ${{ matrix.version }} --stacktrace
       - name: Show Reports
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: reports

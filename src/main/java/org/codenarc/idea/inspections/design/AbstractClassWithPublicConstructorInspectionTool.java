@@ -2,7 +2,6 @@ package org.codenarc.idea.inspections.design;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiModifier;
 import java.util.Collection;
 import java.util.Collections;
 import javax.annotation.Generated;
@@ -10,7 +9,6 @@ import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.design.AbstractClassWithPublicConstructorRule;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.plugins.groovy.codeInspection.bugs.GrRemoveModifierFix;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class AbstractClassWithPublicConstructorInspectionTool extends CodeNarcInspectionTool<AbstractClassWithPublicConstructorRule> {
@@ -51,7 +49,7 @@ public class AbstractClassWithPublicConstructorInspectionTool extends CodeNarcIn
 
     @Override
     protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
-        return Collections.singleton(new GrRemoveModifierFix(PsiModifier.PUBLIC));
+        return Collections.emptyList();
     }
 
 }

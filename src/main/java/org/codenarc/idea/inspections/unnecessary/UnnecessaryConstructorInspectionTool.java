@@ -50,8 +50,8 @@ public class UnnecessaryConstructorInspectionTool extends CodeNarcInspectionTool
         getRule().setIgnoreAnnotations(value);
     }
 
-    public boolean getIgnoreAnnotations() {
-        return getRule().getIgnoreAnnotations();
+    public boolean isIgnoreAnnotations() {
+        return getRule().isIgnoreAnnotations();
     }
 
     // custom code can be written after this line and it will be preserved during the regeneration
