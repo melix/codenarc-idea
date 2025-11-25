@@ -10,10 +10,6 @@ plugins {
     id 'application'
 }
 
-if (!project.hasProperty('publishPluginChannels')) ext.publishPluginChannels = ''
-if (!project.hasProperty('publishPluginToken')) ext.publishPluginToken = '**UNDEFINED**'
-if (!project.hasProperty('ideVersion')) ext.ideVersion = '2025.2'
-
 project.group = 'org.codenarc.idea'
 project.version = ext.pluginVersion
 
@@ -27,6 +23,9 @@ wrapper {
 idea {
     project {
         jdkName = '17'
+    }
+    module {
+        downloadSources = !System.getenv('CI') || System.getenv('CI').toLowerCase() == 'false'
     }
 }
 
@@ -124,26 +123,21 @@ dependencies {
 
 logger.lifecycle("Using IDE version $ideVersion")
 
-/*
-intellij {
-    pluginName = 'CodeNarc'
-
-    downloadSources = !providers.environmentVariable('CI').forUseAtConfigurationTime().present
-    plugins = ['Groovy', 'gradle', 'java']
-    version = idePlatformVersion
-    instrumentCode = false
-}
- */
-
 publishPlugin {
-    token = publishPluginToken
-    if (publishPluginChannels) {
-        channels = Arrays.asList(publishPluginChannels.split(','))
+    token = System.getenv('JETBRAINS_MARKETPLACE_TOKEN')
+    if (ext.hasProperty('publishPluginChannels')) {
+        channels = Arrays.asList(ext.publishPluginChannels.split(','))
     }
 }
 
 runIde {
     jvmArgs "-Xmx2g"
+}
+
+intellijPlatform {
+    pluginConfiguration {
+        name = 'CodeNarc'
+    }
 }
 
 intellijPlatform.pluginVerification {

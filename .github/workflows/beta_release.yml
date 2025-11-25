@@ -1,25 +1,35 @@
 name: Release to Beta Channel
+# https://plugins.jetbrains.com/plugin/5925-codenarc/versions/beta
 
 on:
   push:
     branches:
       - master
+
 jobs:
   release:
-    name: Release
+    name: Beta Release
     runs-on: ubuntu-latest
     env:
-      GRADLE_OPTS: "-Xmx6g -Xms4g -Dorg.gradle.daemon=false"
+      GRADLE_OPTS: "-Xmx6g -Xms4g"
       CI: true
+      JETBRAINS_MARKETPLACE_TOKEN: ${{ secrets.JB_PLUGINS_TOKEN }}
     steps:
-      - name: Set current date as env variable
-        run: echo "SNAPSHOT_SUFFIX=$(date +'%Y%m%d%H%M')" >> $GITHUB_ENV
-      - uses: actions/checkout@v1
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Checkout source
+        uses: actions/checkout@v6
+      - name: Set up Java
+        uses: actions/setup-java@v5
         with:
+          distribution: 'temurin'
           java-version: 17
-          distribution: zulu
-      - uses: gradle/gradle-build-action@v2
-        with:
-          arguments: publishPlugin -PpublishPluginChannels=beta -PpublishPluginToken=${{ secrets.JB_PLUGINS_TOKEN }} -PideVersion=2025.2 -PpluginVersion=7.0.1-${{ env.SNAPSHOT_SUFFIX }}
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5
+      - name: Set dynamic Beta version
+        id: version_step
+        run: |
+          # Expected result example: BETA_VERSION=7.0.1-20220126120000
+          PLUGIN_VERSION=$(grep 'pluginVersion' gradle.properties | awk -F'=' '{print $2}' | tr -d '[:space:]')
+          BETA_SUFFIX=$(date +%Y%m%d%H%M%S)
+          echo "BETA_VERSION=${PLUGIN_VERSION}-${BETA_SUFFIX}" >> $GITHUB_ENV
+      - name: Build and publish to JetBrains Marketplace Beta channel with Gradle
+        run: ./gradlew publishPlugin --no-daemon -PpublishPluginChannels=beta -PpluginVersion=${{ env.BETA_VERSION }}

@@ -50,9 +50,9 @@ public class Helpers {
 
             JPanel subPanel = null;
             String sentence = camelCaseToSentence(prop.getName());
-            if (Boolean.class.equals(prop.getType()) || Boolean.class.equals(prop.getType())) {
+            if (Boolean.class.equals(prop.getType()) || boolean.class.equals(prop.getType())) {
                 subPanel = new SingleCheckboxOptionsPanel(sentence, instance.getRule(), prop.getName());
-            } else if (Integer.class.equals(prop.getType()) || Integer.class.equals(prop.getType())) {
+            } else if (Integer.class.equals(prop.getType()) || int.class.equals(prop.getType())) {
                 subPanel = new SingleIntegerFieldOptionsPanel(sentence, instance.getRule(), prop.getName());
             } else if (String.class.equals(prop.getType())) {
                 subPanel = new SingleTextFieldOptionsPanel(sentence, instance.getRule(), prop.getName());
