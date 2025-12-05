@@ -1,6 +1,6 @@
 # CodeNarc IntelliJ Plugin
 
-## Version 7.0.4
+## Version 7.x
 
 New features:
 - Compatible with IntelliJ IDEA 2025.2+ (based on IntelliJ Plugins v2):

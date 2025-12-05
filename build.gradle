@@ -125,9 +125,20 @@ logger.lifecycle("Using IDE version $ideVersion")
 
 publishPlugin {
     token = System.getenv('JETBRAINS_MARKETPLACE_TOKEN')
-    if (ext.hasProperty('publishPluginChannels')) {
-        channels = Arrays.asList(ext.publishPluginChannels.split(','))
-    }
+    final publishPluginChannels = project
+        .findProperty('publishPluginChannels')
+        ?.toString()
+        ?.split(',')
+        ?.findResults { channelName ->
+            final trimmedChannelName = channelName.trim()
+            trimmedChannelName
+                ? trimmedChannelName
+                : null
+        }?.toList()
+
+    channels = publishPluginChannels
+        ? publishPluginChannels
+        : []
 }
 
 runIde {

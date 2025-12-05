@@ -14,8 +14,8 @@ public class SingleCheckboxOptionsPanel extends JPanel {
 
     public SingleCheckboxOptionsPanel(@NotNull String label, @NotNull Rule owner, @NonNls String property) {
         super(new GridBagLayout());
-        final boolean selected = (boolean) DefaultGroovyMethods.getMetaClass(owner).getProperty(owner, property);
-        final JCheckBox checkBox = new JCheckBox(label, selected);
+        final Boolean selected = (Boolean) DefaultGroovyMethods.getMetaClass(owner).getProperty(owner, property);
+        final JCheckBox checkBox = new JCheckBox(label, selected != null && selected);
         final ButtonModel model = checkBox.getModel();
         final SingleCheckboxChangeListener listener = new SingleCheckboxChangeListener(owner, property, model);
         model.addChangeListener(listener);
