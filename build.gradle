@@ -22,7 +22,7 @@ wrapper {
 
 idea {
     project {
-        jdkName = '17'
+        jdkName = '21'
     }
     module {
         downloadSources = !System.getenv('CI') || System.getenv('CI').toLowerCase() == 'false'
@@ -56,7 +56,7 @@ configurations.configureEach {
 tasks.configureEach { task ->
     if (task.name.contains('prepareTest') && task.name.contains('Sandbox')) {
         task.doLast {
-            def testPluginLib = file("build/idea-sandbox/IU-2025.2.4/plugins-test/${project.name}/lib")
+            def testPluginLib = file("build/idea-sandbox/IU-2025.3/plugins-test/${project.name}/lib")
             if (testPluginLib.exists()) {
                 def removed = []
                 testPluginLib.listFiles()?.findAll {
@@ -75,7 +75,7 @@ tasks.configureEach { task ->
 
 dependencies {
     intellijPlatform {
-        intellijIdea '2025.2.4'
+        intellijIdea '2025.3'
         bundledPlugin 'com.intellij.java'
         bundledPlugin 'org.intellij.groovy'
         testFramework TestFrameworkType.Platform.INSTANCE
@@ -160,7 +160,7 @@ intellijPlatform.pluginVerification {
 patchPluginXml {
     version = project.version
     sinceBuild = '252.23892'
-    untilBuild = '252.*'
+    untilBuild = null
     changeNotes = file("$rootDir/changelog.html").text
     pluginDescription = file("$rootDir/description.html").text
 }
