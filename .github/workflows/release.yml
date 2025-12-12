@@ -4,6 +4,12 @@ name: Release to Stable Channel
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Plugin version"
+        required: true
+        type: string
 
 jobs:
   release:
@@ -24,4 +30,4 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v5
       - name: Build and publish to JetBrains Marketplace Stable channel with Gradle
-        run: ./gradlew publishPlugin --no-daemon -PpublishPluginChannels=stable -PpluginVersion=${{ github.ref_name }}
+        run: ./gradlew publishPlugin --no-daemon -PpublishPluginChannels=stable -PpluginVersion="${{ github.event.inputs.version || github.ref_name }}"
