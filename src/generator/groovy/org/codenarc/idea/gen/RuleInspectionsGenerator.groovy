@@ -327,8 +327,8 @@ class RuleInspectionsGenerator {
         StringWriter sw = new StringWriter()
         PrintWriter printWriter = new PrintWriter(sw)
 
-        Class<?> ruleClassInstance = Helpers.getRuleClassInstance(ruleClass)
-        AbstractRule ruleInstance = ruleClassInstance.newInstance() as AbstractRule
+        var ruleClassInstance = CodeNarcInspectionTool.classLoader.loadClass(ruleClass)
+        var ruleInstance = ruleClassInstance.getDeclaredConstructor().newInstance() as AbstractRule
 
         if (ruleInstance.compilerPhase > 3) {
             return null
@@ -492,5 +492,4 @@ class RuleInspectionsGenerator {
 
         return descriptor
     }
-
 }

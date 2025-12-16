@@ -1,19 +1,16 @@
 package org.codenarc.idea.ui;
 
 import com.intellij.ui.HyperlinkLabel;
+import com.intellij.util.ui.FormBuilder;
+import com.intellij.util.ui.JBUI;
 import groovy.lang.MetaBeanProperty;
-import groovy.lang.MetaClass;
 import groovy.lang.MetaProperty;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 import javax.swing.JPanel;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @NullMarked
@@ -28,66 +25,30 @@ public class Helpers {
             List.of("applyToFilesMatching", "doNotApplyToFilesMatching", "applyToFileNames", "doNotApplyToFileNames")
     ).flatMap(List::stream).toList();
 
-    public static @Nullable JPanel createOptionsPanel(final CodeNarcInspectionTool<?> instance) {
-        MetaClass ruleMetaClass = DefaultGroovyMethods.getMetaClass(instance.getRule());
-
-        if (ruleMetaClass.getProperties().isEmpty()) {
-            return null;
-        }
-
-        boolean found = false;
-        int row = 0;
-
-        JPanel panel = new JPanel(new GridBagLayout());
-        final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.insets.right = 0;
-        constraints.anchor = GridBagConstraints.BASELINE_LEADING;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-
-        for (MetaProperty it : optionableProps(ruleMetaClass.getTheClass())) {
-            MetaBeanProperty prop = (MetaBeanProperty) it;
-
-            JPanel subPanel = null;
-            String sentence = camelCaseToSentence(prop.getName());
-            if (Boolean.class.equals(prop.getType()) || boolean.class.equals(prop.getType())) {
-                subPanel = new SingleCheckboxOptionsPanel(sentence, instance.getRule(), prop.getName());
-            } else if (Integer.class.equals(prop.getType()) || int.class.equals(prop.getType())) {
-                subPanel = new SingleIntegerFieldOptionsPanel(sentence, instance.getRule(), prop.getName());
-            } else if (String.class.equals(prop.getType())) {
-                subPanel = new SingleTextFieldOptionsPanel(sentence, instance.getRule(), prop.getName());
+    public static JPanel createOptionsPanel(final CodeNarcInspectionTool<?> instance) {
+        var rule = instance.getRule();
+        var builder = FormBuilder.createFormBuilder();
+        for (var it : getOptionableProps(rule.getClass())) {
+            if (!(it instanceof MetaBeanProperty prop)) {
+                continue;
             }
 
+            var label = camelCaseToSentence(prop.getName());
+            var type = prop.getType();
 
-            if (subPanel != null) {
-                found = true;
-                panel.add(subPanel, constraints);
-                constraints.gridy = row++;
+            if (isBoolean(type)) {
+                builder.addComponent(new SingleCheckboxOptionsPanel(label, rule, prop.getName()));
+            } else if (isInteger(type)) {
+                builder.addComponent(new SingleIntegerFieldOptionsPanel(label, rule, prop.getName()));
+            } else if (String.class.equals(type)) {
+                builder.addComponent(new SingleTextFieldOptionsPanel(label, rule, prop.getName()));
             }
         }
 
-        HyperlinkLabel linkLabel = new HyperlinkLabel();
+        builder.addVerticalGap(JBUI.scale(10));
+        builder.addComponent(createDocumentationLink(instance));
 
-        String fragment = instance.getRule().getClass().getSimpleName()
-            .toLowerCase(Locale.ROOT)
-            .replace("rule", "-rule");
-
-        linkLabel.setHyperlinkTarget(
-            "https://codenarc.org/codenarc-rules-" + instance.getRuleset().toLowerCase(Locale.ROOT) + ".html#" +
-                fragment
-        );
-        linkLabel.setHyperlinkText("An explanation of the rule at the CodeNarc website");
-
-        panel.add(linkLabel, constraints);
-
-        if (found) {
-            return panel;
-        }
-
-        return null;
+        return builder.addComponentFillVertically(new JPanel(), 0).getPanel();
     }
 
     public static String camelCaseToSentence(String camelCased) {
@@ -111,8 +72,8 @@ public class Helpers {
         return buf.toString();
     }
 
-    public static List<MetaProperty> proxyableProps(Class<?> clazz) {
-        return DefaultGroovyMethods.getMetaClass(clazz).getProperties().stream()
+    public static List<MetaProperty> proxyableProps(Class<?> aClass) {
+        return DefaultGroovyMethods.getMetaClass(aClass).getProperties().stream()
                 .filter(p ->
                     p instanceof MetaBeanProperty _p &&
                     !EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES.contains(_p.getName()) &&
@@ -123,20 +84,37 @@ public class Helpers {
                 .toList();
     }
 
-    public static List<MetaProperty> optionableProps(Class<?> clazz) {
-        return DefaultGroovyMethods.getMetaClass(clazz).getProperties().stream()
-                .filter(p ->
-                    p instanceof MetaBeanProperty _p &&
-                    !EXCLUDED_STATIC_FIELDS.contains(_p.getName()) &&
-                    _p.getSetter() != null &&
-                    _p.getGetter() != null
-                )
-                .sorted(Comparator.comparing(MetaProperty::getName))
-                .collect(Collectors.toList());
+    private static List<MetaProperty> getOptionableProps(Class<?> aClass) {
+        return DefaultGroovyMethods.getMetaClass(aClass).getProperties().stream()
+            .filter(p ->
+                p instanceof MetaBeanProperty _p &&
+                !EXCLUDED_STATIC_FIELDS.contains(_p.getName()) &&
+                _p.getSetter() != null &&
+                _p.getGetter() != null
+            )
+            .sorted(Comparator.comparing(MetaProperty::getName))
+            .toList();
     }
 
-    public static Class<?> getRuleClassInstance(String ruleClass) throws Throwable {
-        ClassLoader classLoader = CodeNarcInspectionTool.class.getClassLoader();
-        return Class.forName(ruleClass, true, classLoader);
+    private static HyperlinkLabel createDocumentationLink(CodeNarcInspectionTool<?> instance) {
+        var linkLabel = new HyperlinkLabel("An explanation of the rule at the CodeNarc website");
+        var ruleName = instance.getRule().getClass().getSimpleName();
+
+        var url = String.format(
+            "https://codenarc.org/codenarc-rules-%s.html#%s",
+            instance.getRuleset().toLowerCase(Locale.ROOT),
+            ruleName.toLowerCase(Locale.ROOT).replace("rule", "-rule")
+        );
+
+        linkLabel.setHyperlinkTarget(url);
+        return linkLabel;
+    }
+
+    private static boolean isBoolean(Class<?> type) {
+        return Boolean.class.equals(type) || boolean.class.equals(type);
+    }
+
+    private static boolean isInteger(Class<?> type) {
+        return Integer.class.equals(type) || int.class.equals(type);
     }
 }
