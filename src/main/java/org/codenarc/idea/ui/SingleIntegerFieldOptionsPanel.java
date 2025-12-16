@@ -1,103 +1,57 @@
 package org.codenarc.idea.ui;
 
-import com.intellij.ui.DocumentAdapter;
-import com.intellij.util.ui.UIUtil;
+import com.intellij.ui.JBIntSpinner;
+import com.intellij.util.ui.FormBuilder;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codenarc.rule.Rule;
 import org.jetbrains.annotations.NonNls;
-import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.Document;
-import javax.swing.text.NumberFormatter;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.awt.*;
 
+@NullMarked
 public class SingleIntegerFieldOptionsPanel extends JPanel {
     public SingleIntegerFieldOptionsPanel(String labelString, final Rule owner, @NonNls final String property) {
-        this(labelString, owner, property, 6);
+        this(labelString, owner, property, 0, 1000, 120);
     }
 
     public SingleIntegerFieldOptionsPanel(
         String labelString,
         final Rule owner,
         @NonNls final String property,
-        int integerFieldColumns
+        int minValue,
+        int maxValue,
+        int defaultValue
     ) {
-        super(new GridBagLayout());
-        final JLabel label = new JLabel(labelString);
-        final JFormattedTextField valueField = createIntegerFieldTrackingValue(owner, property, integerFieldColumns);
-        final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.insets.right = UIUtil.DEFAULT_HGAP;
-        constraints.weightx = 0.0;
-        constraints.anchor = GridBagConstraints.BASELINE_LEADING;
-        constraints.fill = GridBagConstraints.NONE;
-        add(label, constraints);
-        constraints.gridx = 1;
-        constraints.gridy = 0;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.insets.right = 0;
-        constraints.anchor = GridBagConstraints.BASELINE_LEADING;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        add(valueField, constraints);
+        super(new BorderLayout());
+
+        var spinner = createValueField(owner, property, minValue, maxValue, defaultValue);
+        var contentPanel = FormBuilder.createFormBuilder()
+            .addLabeledComponent(labelString, spinner)
+            .addComponentFillVertically(new JPanel(), 0)
+            .getPanel();
+        add(contentPanel, BorderLayout.NORTH);
     }
 
-    public static JFormattedTextField createIntegerFieldTrackingValue(
-        @NonNull Rule owner,
-        @NonNull String property,
-        int integerFieldColumns
+    public static JBIntSpinner createValueField(
+        Rule owner,
+        String property,
+        int minValue,
+        int maxValue,
+        int defaultValue
     ) {
-        JFormattedTextField valueField = new JFormattedTextField();
-        valueField.setEnabled(true);
-        valueField.setColumns(integerFieldColumns);
-        setupIntegerFieldTrackingValue(valueField, owner, property);
-        return valueField;
+        var groovyMetaClass = DefaultGroovyMethods.getMetaClass(owner);
+        var underlyingValue = groovyMetaClass.getProperty(owner, property);
+        int initialValue = (underlyingValue instanceof Number number)
+            ? number.intValue()
+            : defaultValue;
+
+        var spinner = new JBIntSpinner(initialValue, minValue, maxValue);
+        spinner.addChangeListener(event ->
+            groovyMetaClass.setProperty(owner, property, spinner.getNumber())
+        );
+
+        return spinner;
     }
-
-    /**
-     * Sets an integer number format to JFormattedTextField instance,
-     * sets the value of JFormattedTextField instance to the object's field value,
-     * synchronizes the object's field value with the value of JFormattedTextField instance.
-     *
-     * @param textField JFormattedTextField instance
-     * @param owner     an object whose field is synchronized with {@code textField}
-     * @param property  object's field name for synchronization
-     */
-    public static void setupIntegerFieldTrackingValue(
-        final JFormattedTextField textField,
-        final Rule owner,
-        final String property
-    ) {
-        NumberFormat formatter = NumberFormat.getIntegerInstance();
-        formatter.setParseIntegerOnly(true);
-        textField.setFormatterFactory(new DefaultFormatterFactory(new NumberFormatter(formatter)));
-        textField.setValue(DefaultGroovyMethods.getMetaClass(owner).getProperty(owner, property));
-        final Document document = textField.getDocument();
-        document.addDocumentListener(new DocumentAdapter() {
-            @Override
-            public void textChanged(@NonNull DocumentEvent e) {
-                try {
-                    textField.commitEdit();
-                } catch (ParseException ex) {
-                    throw new IllegalArgumentException(ex);
-                }
-                DefaultGroovyMethods.getMetaClass(owner).setProperty(
-                    owner,
-                    property,
-                    ((Number) textField.getValue()).intValue()
-                );
-            }
-
-        });
-    }
-
 }

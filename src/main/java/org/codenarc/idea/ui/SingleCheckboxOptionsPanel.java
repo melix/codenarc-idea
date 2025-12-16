@@ -1,45 +1,33 @@
 package org.codenarc.idea.ui;
 
+import com.intellij.ui.components.JBCheckBox;
+import com.intellij.util.ui.FormBuilder;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codenarc.rule.Rule;
 import org.jetbrains.annotations.NonNls;
 import org.jspecify.annotations.NullMarked;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 @NullMarked
 public class SingleCheckboxOptionsPanel extends JPanel {
     public SingleCheckboxOptionsPanel(String label, Rule owner, @NonNls String property) {
-        super(new GridBagLayout());
-        final Boolean selected = (Boolean) DefaultGroovyMethods.getMetaClass(owner).getProperty(owner, property);
-        final JCheckBox checkBox = new JCheckBox(label, selected != null && selected);
-        final ButtonModel model = checkBox.getModel();
-        final SingleCheckboxChangeListener listener = new SingleCheckboxChangeListener(owner, property, model);
-        model.addChangeListener(listener);
+        super(new BorderLayout());
 
-        checkBox.setEnabled(true);
+        var groovyMetaClass = DefaultGroovyMethods.getMetaClass(owner);
+        var isSelected = (groovyMetaClass.getProperty(owner, property) instanceof Boolean b) && b;
 
-        final GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1.0;
-        constraints.weighty = 1.0;
-        constraints.anchor = GridBagConstraints.FIRST_LINE_START;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        add(checkBox, constraints);
-    }
+        var checkBox = new JBCheckBox(label, isSelected);
+        checkBox.addActionListener(e ->
+            groovyMetaClass.setProperty(owner, property, checkBox.isSelected())
+        );
 
-    private record SingleCheckboxChangeListener(
-        Rule owner,
-        String property,
-        ButtonModel model
-    ) implements ChangeListener {
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            DefaultGroovyMethods.getMetaClass(owner).setProperty(owner, property, model.isSelected());
-        }
+        var contentPanel = FormBuilder.createFormBuilder()
+            .addComponent(checkBox)
+            .addComponentFillVertically(new JPanel(), 0)
+            .getPanel();
+
+        add(contentPanel, BorderLayout.NORTH);
     }
 }
