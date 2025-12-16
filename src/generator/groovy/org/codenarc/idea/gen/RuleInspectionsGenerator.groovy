@@ -362,7 +362,7 @@ class RuleInspectionsGenerator {
                 'org.codenarc.idea.CodeNarcInspectionTool',
                 'org.codenarc.rule.Violation',
                 ruleClass,
-                'org.jetbrains.annotations.NotNull',
+                'org.jspecify.annotations.NonNull',
                 'java.util.Collection',
                 'java.util.Collections',
         ])
@@ -433,7 +433,7 @@ class RuleInspectionsGenerator {
 
         String emptyListQuickFixImplementation = '''
     @Override
-    protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+    protected @NonNull` Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
         return Collections.emptyList();
     }
         '''
