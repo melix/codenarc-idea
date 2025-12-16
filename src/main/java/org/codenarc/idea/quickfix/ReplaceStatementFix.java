@@ -5,10 +5,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
 import org.codenarc.idea.CodeNarcBundle;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.codeInspection.GroovyFix;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.GrStatement;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ReplaceStatementFix extends GroovyFix {
     private final Class<? extends GrStatement> target;
     private final String original;
@@ -21,16 +22,16 @@ public class ReplaceStatementFix extends GroovyFix {
     }
 
     @Override
-    public @NotNull String getFamilyName() {
+    public String getFamilyName() {
         return CodeNarcBundle.message("replace.text", original, replacement);
     }
 
     @Override
-    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) throws IncorrectOperationException {
+    protected void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
         replaceCode(descriptor.getPsiElement());
     }
 
-    private boolean replaceCode(@NotNull PsiElement element) {
+    private boolean replaceCode(PsiElement element) {
         if (target.isInstance(element)) {
             replaceCode((GrStatement) element, element.getText());
             return true;
@@ -45,7 +46,7 @@ public class ReplaceStatementFix extends GroovyFix {
         return false;
     }
 
-    private void replaceCode(@NotNull GrStatement statement, String text) {
+    private void replaceCode(GrStatement statement, String text) {
         replaceStatement(statement, text.replace(original, replacement));
     }
 }

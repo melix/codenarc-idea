@@ -1,12 +1,13 @@
 package org.codenarc.idea.disablerules;
 
 import org.codenarc.rule.Rule;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@NullMarked
 class DisabledRulesLookupTable {
     protected static final String ALL_RULES = "#ALL#";
     private static final String CODENARC_DISABLE = "codenarc-disable";
@@ -21,16 +22,16 @@ class DisabledRulesLookupTable {
 
     private boolean isDisablingAllRules = false;
 
-    DisabledRulesLookupTable(@NotNull String sourceCode) {
+    DisabledRulesLookupTable(String sourceCode) {
         buildLookupTable(sourceCode);
     }
 
-    boolean isRuleDisabledForLine(@NotNull Rule rule, int lineNumber) {
+    boolean isRuleDisabledForLine(Rule rule, int lineNumber) {
         var disabledRules = disabledRulesByLine.get(lineNumber);
         return disabledRules != null && (disabledRules.contains(ALL_RULES) || disabledRules.contains(rule.getName()));
     }
 
-    private void buildLookupTable(@NotNull String sourceCode) {
+    private void buildLookupTable(String sourceCode) {
         var lineNumber = new AtomicInteger(1);
         sourceCode.lines().forEach(line -> {
             checkForCodeNarcDisable(line);

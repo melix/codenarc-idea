@@ -31,7 +31,7 @@ import org.codenarc.rule.unused.UnusedPrivateFieldRule
 import org.codenarc.rule.unused.UnusedPrivateMethodParameterRule
 import org.codenarc.rule.unused.UnusedPrivateMethodRule
 import org.codenarc.rule.unused.UnusedVariableRule
-import org.jetbrains.annotations.Nullable
+import org.jspecify.annotations.Nullable
 
 import java.util.jar.JarEntry
 import java.util.jar.JarFile

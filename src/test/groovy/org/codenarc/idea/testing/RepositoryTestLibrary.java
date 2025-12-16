@@ -10,13 +10,15 @@ import com.intellij.openapi.roots.ModifiableRootModel;
 import com.intellij.openapi.roots.libraries.Library;
 import com.intellij.openapi.roots.libraries.LibraryTable;
 import com.intellij.openapi.roots.libraries.ui.OrderRoot;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.idea.maven.utils.library.RepositoryLibraryProperties;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
+@NullMarked
 public final class RepositoryTestLibrary implements TestLibrary {
     public RepositoryTestLibrary(String... coordinates) {
         this(DependencyScope.COMPILE, coordinates);
@@ -35,7 +37,7 @@ public final class RepositoryTestLibrary implements TestLibrary {
     }
 
     @Override
-    public void addTo(@NotNull Module module, @NotNull ModifiableRootModel model) {
+    public void addTo(Module module, ModifiableRootModel model) {
         final LibraryTable.ModifiableModel tableModel = model.getModuleLibraryTable().getModifiableModel();
         Library library = tableModel.createLibrary(myCoordinates[0]);
         final Library.ModifiableModel libraryModel = library.getModifiableModel();
@@ -53,7 +55,7 @@ public final class RepositoryTestLibrary implements TestLibrary {
                 tableModel.commit();
         });
 
-        model.findLibraryOrderEntry(library).setScope(myDependencyScope);
+        Objects.requireNonNull(model.findLibraryOrderEntry(library)).setScope(myDependencyScope);
     }
 
     public static Collection<OrderRoot> loadRoots(Project project, String coordinates) {

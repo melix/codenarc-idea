@@ -5,7 +5,7 @@ import com.intellij.util.ui.UIUtil;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codenarc.rule.Rule;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -18,7 +18,12 @@ public class SingleTextFieldOptionsPanel extends JPanel {
         this(labelString, owner, property, 32);
     }
 
-    public SingleTextFieldOptionsPanel(String labelString, final Rule owner, @NonNls final String property, int textFieldColumns) {
+    public SingleTextFieldOptionsPanel(
+        String labelString,
+        final Rule owner,
+        @NonNls final String property,
+        int textFieldColumns
+    ) {
         super(new GridBagLayout());
         final JLabel label = new JLabel(labelString);
         final JFormattedTextField valueField = createIntegerFieldTrackingValue(owner, property, textFieldColumns);
@@ -40,7 +45,11 @@ public class SingleTextFieldOptionsPanel extends JPanel {
         add(valueField, constraints);
     }
 
-    private static JFormattedTextField createIntegerFieldTrackingValue(@NotNull Rule owner, @NotNull String property, int textFieldColumns) {
+    private static JFormattedTextField createIntegerFieldTrackingValue(
+        @NonNull Rule owner,
+        @NonNull String property,
+        int textFieldColumns
+    ) {
         JFormattedTextField valueField = new JFormattedTextField();
         valueField.setEnabled(true);
         valueField.setColumns(textFieldColumns);
@@ -49,20 +58,24 @@ public class SingleTextFieldOptionsPanel extends JPanel {
     }
 
     /**
-     * Sets integer number format to JFormattedTextField instance,
-     * sets value of JFormattedTextField instance to object's field value,
-     * synchronizes object's field value with the value of JFormattedTextField instance.
+     * Sets an integer number format to JFormattedTextField instance,
+     * sets the value of JFormattedTextField instance to the object's field value,
+     * synchronizes the object's field value with the value of JFormattedTextField instance.
      *
      * @param textField JFormattedTextField instance
      * @param owner     an object whose field is synchronized with {@code textField}
      * @param property  object's field name for synchronization
      */
-    private static void setupIntegerFieldTrackingValue(final JFormattedTextField textField, final Rule owner, final String property) {
+    private static void setupIntegerFieldTrackingValue(
+        final JFormattedTextField textField,
+        final Rule owner,
+        final String property
+    ) {
         textField.setValue(DefaultGroovyMethods.getMetaClass(owner).getProperty(owner, property));
         final Document document = textField.getDocument();
         document.addDocumentListener(new DocumentAdapter() {
             @Override
-            public void textChanged(@NotNull DocumentEvent e) {
+            public void textChanged(@NonNull DocumentEvent e) {
                 try {
                     textField.commitEdit();
                 } catch (ParseException ex) {
