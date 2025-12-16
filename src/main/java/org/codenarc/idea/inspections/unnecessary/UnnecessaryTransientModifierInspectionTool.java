@@ -8,7 +8,7 @@ import javax.annotation.Generated;
 import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.unnecessary.UnnecessaryTransientModifierRule;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class UnnecessaryTransientModifierInspectionTool extends CodeNarcInspectionTool<UnnecessaryTransientModifierRule> {
@@ -48,7 +48,7 @@ public class UnnecessaryTransientModifierInspectionTool extends CodeNarcInspecti
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected @NotNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
         return Collections.emptyList();
     }
 
