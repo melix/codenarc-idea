@@ -6,6 +6,8 @@ import groovy.lang.MetaClass;
 import groovy.lang.MetaProperty;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codenarc.idea.CodeNarcInspectionTool;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
 import javax.swing.JPanel;
 import java.awt.GridBagConstraints;
@@ -14,18 +16,19 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@NullMarked
 public class Helpers {
+    private static final List<String> EXCLUDED_STATIC_FIELDS = List.of(
+        "name", "description", "priority", "astVisitor", "astVisitorClass", "violationMessage", "compilerPhase",
+        "class", "enabled"
+    );
 
-    private static final List<String> EXCLUDED_STATIC_FIELDS = Arrays.asList("name", "description", "priority", "astVisitor", "astVisitorClass", "violationMessage", "compilerPhase", "class", "enabled");
     private static final List<String> EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES = Stream.of(
             EXCLUDED_STATIC_FIELDS,
-            Arrays.asList("applyToFilesMatching", "doNotApplyToFilesMatching", "applyToFileNames", "doNotApplyToFileNames")
-    ).flatMap(Collection::stream).collect(Collectors.toList());
+            List.of("applyToFilesMatching", "doNotApplyToFilesMatching", "applyToFileNames", "doNotApplyToFileNames")
+    ).flatMap(List::stream).toList();
 
-
-    public static JPanel createOptionsPanel(final CodeNarcInspectionTool<?> instance) {
-        Objects.requireNonNull(instance);
-
+    public static @Nullable JPanel createOptionsPanel(final CodeNarcInspectionTool<?> instance) {
         MetaClass ruleMetaClass = DefaultGroovyMethods.getMetaClass(instance.getRule());
 
         if (ruleMetaClass.getProperties().isEmpty()) {
@@ -64,15 +67,18 @@ public class Helpers {
                 panel.add(subPanel, constraints);
                 constraints.gridy = row++;
             }
-
         }
-
 
         HyperlinkLabel linkLabel = new HyperlinkLabel();
 
-        String fragment = instance.getRule().getClass().getSimpleName().toLowerCase().replace("rule", "-rule");
+        String fragment = instance.getRule().getClass().getSimpleName()
+            .toLowerCase(Locale.ROOT)
+            .replace("rule", "-rule");
 
-        linkLabel.setHyperlinkTarget("https://codenarc.org/codenarc-rules-" + instance.getRuleset().toLowerCase() + ".html#" + fragment);
+        linkLabel.setHyperlinkTarget(
+            "https://codenarc.org/codenarc-rules-" + instance.getRuleset().toLowerCase(Locale.ROOT) + ".html#" +
+                fragment
+        );
         linkLabel.setHyperlinkText("An explanation of the rule at the CodeNarc website");
 
         panel.add(linkLabel, constraints);
@@ -81,19 +87,22 @@ public class Helpers {
             return panel;
         }
 
-
         return null;
     }
 
     public static String camelCaseToSentence(String camelCased) {
-        StringBuilder buf = new StringBuilder(camelCased);
-        if (buf.length() == 0) {
+        if (camelCased.isBlank()) {
             return camelCased;
         }
 
+        StringBuilder buf = new StringBuilder(camelCased);
         buf.setCharAt(0, Character.toUpperCase(buf.charAt(0)));
         for (int i = 1; i < buf.length() - 1; i++) {
-            if (Character.isLowerCase(buf.charAt(i - 1)) && Character.isUpperCase(buf.charAt(i)) && Character.isLowerCase(buf.charAt(i + 1))) {
+            if (
+                Character.isLowerCase(buf.charAt(i - 1)) &&
+                Character.isUpperCase(buf.charAt(i)) &&
+                Character.isLowerCase(buf.charAt(i + 1))
+            ) {
                 buf.insert(i++, " ");
                 buf.setCharAt(i, Character.toLowerCase(buf.charAt(i)));
             }
@@ -102,29 +111,26 @@ public class Helpers {
         return buf.toString();
     }
 
-    @SuppressWarnings("CodeNarc.Instanceof")
     public static List<MetaProperty> proxyableProps(Class<?> clazz) {
         return DefaultGroovyMethods.getMetaClass(clazz).getProperties().stream()
-                .filter(p -> {
-                    if (!(p instanceof MetaBeanProperty)) {
-                        return false;
-                    }
-                    MetaBeanProperty prop = (MetaBeanProperty) p;
-                    return !EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES.contains(prop.getName()) && prop.getSetter() != null && prop.getGetter() != null;
-                })
+                .filter(p ->
+                    p instanceof MetaBeanProperty _p &&
+                    !EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES.contains(_p.getName()) &&
+                    _p.getSetter() != null &&
+                    _p.getGetter() != null
+                )
                 .sorted(Comparator.comparing(MetaProperty::getName))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static List<MetaProperty> optionableProps(Class<?> clazz) {
         return DefaultGroovyMethods.getMetaClass(clazz).getProperties().stream()
-                .filter(p -> {
-                    if (!(p instanceof MetaBeanProperty)) {
-                        return false;
-                    }
-                    MetaBeanProperty prop = (MetaBeanProperty) p;
-                    return !EXCLUDED_STATIC_FIELDS.contains(prop.getName()) && prop.getSetter() != null && prop.getGetter() != null;
-                })
+                .filter(p ->
+                    p instanceof MetaBeanProperty _p &&
+                    !EXCLUDED_STATIC_FIELDS.contains(_p.getName()) &&
+                    _p.getSetter() != null &&
+                    _p.getGetter() != null
+                )
                 .sorted(Comparator.comparing(MetaProperty::getName))
                 .collect(Collectors.toList());
     }
@@ -133,5 +139,4 @@ public class Helpers {
         ClassLoader classLoader = CodeNarcInspectionTool.class.getClassLoader();
         return Class.forName(ruleClass, true, classLoader);
     }
-
 }

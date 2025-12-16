@@ -11,16 +11,16 @@ import groovy.transform.CompileStatic
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
 import org.jetbrains.annotations.NonNls
-import org.jetbrains.annotations.NotNull
-import org.jetbrains.annotations.Nullable
+import org.jspecify.annotations.NullMarked
+import org.jspecify.annotations.Nullable
 import org.junit.Ignore
 
 /**
  * @author peter
  */
 @Ignore // not a JUnit test
+@NullMarked
 class FixtureHelper extends LightJavaCodeInsightFixtureTestCase implements Closeable {
-
     static FixtureHelper groovy40() {
         return new FixtureHelper(GroovyProjectDescriptors.GROOVY_4_0, null)
     }
@@ -46,16 +46,15 @@ class FixtureHelper extends LightJavaCodeInsightFixtureTestCase implements Close
     }
 
     FixtureHelper start(
-            @DelegatesTo(value = JavaCodeInsightTestFixture, strategy = Closure.DELEGATE_FIRST)
-                    @ClosureParams(value = SimpleType, options = 'com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture')
-            Closure<?> fixtureConfig
+        @DelegatesTo(value = JavaCodeInsightTestFixture, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType, options = 'com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture')
+        Closure<?> fixtureConfig
     ) {
         setUp()
         fixture.with fixtureConfig
         this
     }
 
-    @NotNull
     JavaCodeInsightTestFixture getFixture() {
         myFixture
     }
@@ -73,7 +72,6 @@ class FixtureHelper extends LightJavaCodeInsightFixtureTestCase implements Close
     }
 
     @Override
-    @NotNull
     protected LightProjectDescriptor getProjectDescriptor() {
         return projectDescriptor
     }

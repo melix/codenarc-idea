@@ -3,16 +3,16 @@ package org.codenarc.idea.ui;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 import org.codenarc.rule.Rule;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
+@NullMarked
 public class SingleCheckboxOptionsPanel extends JPanel {
-
-    public SingleCheckboxOptionsPanel(@NotNull String label, @NotNull Rule owner, @NonNls String property) {
+    public SingleCheckboxOptionsPanel(String label, Rule owner, @NonNls String property) {
         super(new GridBagLayout());
         final Boolean selected = (Boolean) DefaultGroovyMethods.getMetaClass(owner).getProperty(owner, property);
         final JCheckBox checkBox = new JCheckBox(label, selected != null && selected);
@@ -32,18 +32,11 @@ public class SingleCheckboxOptionsPanel extends JPanel {
         add(checkBox, constraints);
     }
 
-    private static class SingleCheckboxChangeListener implements ChangeListener {
-
-        private final Rule owner;
-        private final String property;
-        private final ButtonModel model;
-
-        public SingleCheckboxChangeListener(Rule owner, String property, ButtonModel model) {
-            this.owner = owner;
-            this.property = property;
-            this.model = model;
-        }
-
+    private record SingleCheckboxChangeListener(
+        Rule owner,
+        String property,
+        ButtonModel model
+    ) implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
             DefaultGroovyMethods.getMetaClass(owner).setProperty(owner, property, model.isSelected());

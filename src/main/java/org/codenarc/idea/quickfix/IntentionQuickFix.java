@@ -8,13 +8,13 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiEditorUtil;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.codeInspection.GroovyFix;
 import org.jetbrains.plugins.groovy.intentions.GroovyIntentionsBundle;
 import org.jetbrains.plugins.groovy.intentions.base.PsiElementPredicate;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 public class IntentionQuickFix extends GroovyFix {
-
   public static LocalQuickFix from(ReusableIntention action) {
     return new IntentionQuickFix(action);
   }
@@ -26,19 +26,18 @@ public class IntentionQuickFix extends GroovyFix {
   }
 
   @Override
-  @NotNull
+  @NonNull
   public String getFamilyName() {
-    //return GroovyIntentionsBundle.message(getPrefix(intention.getClass().getSuperclass()) + ".family.name");
     return GroovyIntentionsBundle.message(getPrefix(intention.getDelegateClass()) + ".family.name");
   }
 
   @Override
-  protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) throws IncorrectOperationException {
+  protected void doFix(@NonNull Project project, @NonNull ProblemDescriptor descriptor) throws IncorrectOperationException {
     Editor editor = PsiEditorUtil.findEditor(descriptor.getPsiElement());
     callOnProblemDescriptor(descriptor.getPsiElement(), project, editor);
   }
 
-  private static PsiElement findMatchingElement(PsiElement violatingElement, PsiElementPredicate predicate) {
+  private static @Nullable PsiElement findMatchingElement(PsiElement violatingElement, PsiElementPredicate predicate) {
     if (predicate.satisfiedBy(violatingElement)) {
       return violatingElement;
     }
@@ -51,10 +50,10 @@ public class IntentionQuickFix extends GroovyFix {
     return null;
   }
 
-  private void callOnProblemDescriptor(@NotNull PsiElement element, @NotNull Project project, Editor editor) {
-    if (element instanceof PsiFile) {
+  private void callOnProblemDescriptor(@NonNull PsiElement element, @NonNull Project project, Editor editor) {
+    if (element instanceof PsiFile el) {
       // single call
-      intention.invoke(project, editor, (PsiFile) element);
+      intention.invoke(project, editor, el);
       return;
     }
 
@@ -64,7 +63,7 @@ public class IntentionQuickFix extends GroovyFix {
       return;
     }
 
-    // requires reflective call to processIntention otherwise Fix All does not work
+    // requires a reflective call to processIntention otherwise Fix All does not work
     PsiElementPredicate predicate = intention.getElementPredicate();
     PsiElement found = findMatchingElement(element, predicate);
 
@@ -93,5 +92,4 @@ public class IntentionQuickFix extends GroovyFix {
     }
     return buffer.toString();
   }
-
 }

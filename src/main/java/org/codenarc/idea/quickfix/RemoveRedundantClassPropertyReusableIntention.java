@@ -5,13 +5,14 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
 import com.intellij.util.IncorrectOperationException;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.intentions.base.Intention;
 import org.jetbrains.plugins.groovy.intentions.base.PsiElementPredicate;
 import org.jetbrains.plugins.groovy.intentions.style.RemoveRedundantClassPropertyIntention;
-import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrExpression;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrReferenceExpression;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
+@NullMarked
 public class RemoveRedundantClassPropertyReusableIntention extends Intention implements ReusableIntention {
     private final RemoveRedundantClassPropertyIntention delegate = new RemoveRedundantClassPropertyIntention();
 
@@ -21,33 +22,29 @@ public class RemoveRedundantClassPropertyReusableIntention extends Intention imp
     }
 
     @Override
-    public void processIntention(@NotNull PsiElement element, @NotNull Project project, Editor editor) throws IncorrectOperationException {
+    public void processIntention(PsiElement element, Project project, @Nullable Editor editor) throws IncorrectOperationException {
         if (element instanceof GrReferenceExpression ref) {
-            ref.replaceWithExpression((GrExpression)ref.getQualifier(), true);
+            if (ref.getQualifier() != null) {
+                ref.replaceWithExpression(ref.getQualifier(), true);
+            }
         }
     }
 
-    @NotNull
     @Override
     public PsiElementPredicate getElementPredicate() {
-        return (element) -> {
-            boolean var10000;
+        return element -> {
             if (element instanceof GrReferenceExpression ref) {
                 if ("class".equals(ref.getReferenceName())) {
-                    PsiElement patt1231$temp = ref.getQualifier();
-                    if (patt1231$temp instanceof GrReferenceExpression) {
-                        GrReferenceExpression qualifier = (GrReferenceExpression)patt1231$temp;
-                        if (qualifier.resolve() instanceof PsiClass) {
-                            var10000 = true;
-                            return var10000;
+                    PsiElement qualifier = ref.getQualifier();
+                    if (qualifier instanceof GrReferenceExpression _qualifier) {
+                        if (_qualifier.resolve() instanceof PsiClass) {
+                            return true;
                         }
                     }
                 }
             }
 
-            var10000 = false;
-            return var10000;
+            return false;
         };
     }
-
 }

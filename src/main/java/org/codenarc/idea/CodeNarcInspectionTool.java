@@ -43,8 +43,6 @@ import org.codenarc.source.SourceString;
 import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.swing.*;
@@ -57,12 +55,15 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
+
 /**
- * Base class for CodeNarc violation rules, which will get proxied in order to work with the IntelliJ IDEA inspection
+ * Base class for CodeNarc violation rules, which will get proxied to work with the IntelliJ IDEA inspection
  * plugin mechanism.
  */
+@NullMarked
 public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends LocalInspectionTool {
-
     public static final String BASE_MESSAGES_BUNDLE = "codenarc-base-messages";
     public static final String GROUP_DISPLAY_NAME = "CodeNarc";
 
@@ -141,42 +142,36 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
 
     private String getRuleDescriptionOrDefaultMessage(final AbstractRule rule) {
         String resourceKey = rule.getName() + ".description.html";
-        return "[" + rule.getName() + "] " + getResourceBundleString(resourceKey, "No description provided");
+        return "[" + rule.getName() + "] " + getResourceBundleString(resourceKey);
     }
 
-    private String getResourceBundleString(
-        @PropertyKey(resourceBundle = BASE_MESSAGES_BUNDLE) String resourceKey,
-        String defaultString
-    ) {
-        String string;
+    private String getResourceBundleString(@PropertyKey(resourceBundle = BASE_MESSAGES_BUNDLE) String resourceKey) {
         try {
-            string = bundle.getString(resourceKey);
+            return bundle.getString(resourceKey);
         } catch (MissingResourceException ignored) {
-            string = defaultString;
+            return "No description provided";
         }
-
-        return string;
     }
 
     public abstract String getRuleset();
 
     @Override
-    public @NonNls @Nullable String getAlternativeID() {
+    public @NonNls String getAlternativeID() {
         return (rule.getName() != null ? rule.getName() : rule.getClass().getSimpleName());
     }
 
     @Override
-    public JPanel createOptionsPanel() {
+    public @Nullable JPanel createOptionsPanel() {
         return Helpers.createOptionsPanel(this);
     }
 
     @Override
-    public void writeSettings(@NotNull Element node) {
+    public void writeSettings(Element node) {
         XmlSerializer.serializeObjectInto(this.rule, node);
     }
 
     @Override
-    public void readSettings(@NotNull Element node) {
+    public void readSettings(Element node) {
         try {
             if (node.getChild("option") != null) {
                 XmlSerializer.deserializeInto(node, this.rule);
@@ -191,7 +186,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) @NotNull String getGroupDisplayName() {
+    public @Nls(capitalization = Nls.Capitalization.Sentence) String getGroupDisplayName() {
         return getRuleset();
     }
 
@@ -202,7 +197,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     @Override
-    public @Nls(capitalization = Nls.Capitalization.Sentence) String @NotNull [] getGroupPath() {
+    public @Nls(capitalization = Nls.Capitalization.Sentence) String[] getGroupPath() {
         return new String[]{GROUP_DISPLAY_NAME, getRuleset()};
     }
 
@@ -213,9 +208,9 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
 
     @Override
     @SuppressWarnings("unchecked")
-    public ProblemDescriptor[] checkFile(
-        @NotNull final PsiFile file,
-        @NotNull final InspectionManager manager,
+    public ProblemDescriptor @Nullable [] checkFile(
+        final PsiFile file,
+        final InspectionManager manager,
         final boolean isOnTheFly
     ) {
         if (!file.getFileType().getName().equalsIgnoreCase("groovy")) {
@@ -224,7 +219,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
 
         final CachedValuesManager cachedValuesManager = CachedValuesManager.getManager(manager.getProject());
 
-        if (readErrorsCachedValue(file, cachedValuesManager).getValue() == Boolean.TRUE) {
+        if (readErrorsCachedValue(file, cachedValuesManager).getValue()) {
             // avoid inspection if any syntax error is found
             return null;
         }
@@ -268,9 +263,10 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return cachedViolations.getValue(rule);
     }
 
-    // this method is nearly the same as the on in superclass but it uses altarnative ID (without CodeNarc) prefix
+    // this method is nearly the same as in the superclass, but it uses alternative ID (without CodeNarc) prefix
     // to be aligned with CodeNarc behaviour
-    public SuppressQuickFix @NotNull [] getBatchSuppressActions(@Nullable PsiElement element) {
+    @Override
+    public SuppressQuickFix[] getBatchSuppressActions(@Nullable PsiElement element) {
         if (element == null) {
             return SuppressQuickFix.EMPTY_ARRAY;
         }
@@ -280,14 +276,14 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
                 if (object == null) {
                     return 0;
                 }
-                int result = object instanceof InjectionAwareSuppressQuickFix
-                        ? ((InjectionAwareSuppressQuickFix)object).isShouldBeAppliedToInjectionHost().hashCode()
+                int result = object instanceof InjectionAwareSuppressQuickFix obj
+                        ? obj.isShouldBeAppliedToInjectionHost().hashCode()
                         : 0;
                 return 31 * result + object.getName().hashCode();
             }
 
             @Override
-            public boolean equals(SuppressQuickFix o1, SuppressQuickFix o2) {
+            public boolean equals(@Nullable SuppressQuickFix o1, @Nullable SuppressQuickFix o2) {
                 if (o1 == o2) {
                     return true;
                 }
@@ -295,9 +291,8 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
                     return false;
                 }
 
-                if (o1 instanceof InjectionAwareSuppressQuickFix && o2 instanceof InjectionAwareSuppressQuickFix) {
-                    if (((InjectionAwareSuppressQuickFix)o1).isShouldBeAppliedToInjectionHost() !=
-                            ((InjectionAwareSuppressQuickFix)o2).isShouldBeAppliedToInjectionHost()) {
+                if (o1 instanceof InjectionAwareSuppressQuickFix _o1 && o2 instanceof InjectionAwareSuppressQuickFix _o2) {
+                    if (_o1.isShouldBeAppliedToInjectionHost() != _o2.isShouldBeAppliedToInjectionHost()) {
                         return false;
                     }
                 }
@@ -327,16 +322,12 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return fixes.toArray(SuppressQuickFix.EMPTY_ARRAY);
     }
 
-    protected abstract @NotNull Collection<LocalQuickFix> getQuickFixesFor(
-        Violation violation,
-        PsiElement violatingElement
-    );
+    protected abstract Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement);
 
     protected void applyDefaultConfiguration(R rule) {
-        // allows override the defaults in the subclasses
+        // allows overriding the defaults in the subclasses
     }
 
-    @NotNull
     protected TextRange convertViolationRangeToRelative(PsiElement violatingElement, TextRange violatingRange) {
         final int relativeRangeStart = violatingElement.getTextRange().getStartOffset() -
             violatingRange.getStartOffset();
@@ -344,12 +335,10 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return new TextRange(Math.max(0, relativeRangeStart), relativeRangeEnd);
     }
 
-    @Nullable
-    protected PsiElement extractViolatingElement(@NotNull PsiFile file, TextRange violatingRange) {
+    protected @Nullable PsiElement extractViolatingElement(PsiFile file, TextRange violatingRange) {
         return PsiUtil.getElementInclusiveRange(file, violatingRange);
     }
 
-    @NotNull
     protected TextRange extractViolatingRange(Document document, Violation violation) {
         final int lineNumber = extractLineNumber(violation);
         final int startOffset = Math.max(document.getLineStartOffset(lineNumber - 1), 0);
@@ -372,17 +361,15 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return defaultRange;
     }
 
-    protected String extractMessage(Violation violation, R r) {
-        final String message = violation.getMessage();
-        String currentDescription = description == null ? r.getName() : description;
-        return message == null ? currentDescription : message;
+    protected String extractMessage(Violation violation) {
+        return Objects.requireNonNullElse(violation.getMessage(), description);
     }
 
     protected int extractLineNumber(Violation violation) {
         Integer lineNumber = violation.getLineNumber();
 
         // workaround for some rules which do not set the line number correctly
-        // these should roverride this method
+        // these should override this method
         if (lineNumber == null || lineNumber < 1) {
             return 1;
         }
@@ -390,27 +377,27 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return lineNumber;
     }
 
-
-    private static void addAllSuppressActions(@NotNull Collection<? super SuppressQuickFix> fixes,
-                                              @NotNull PsiElement element,
-                                              @NotNull InspectionSuppressor suppressor,
-                                              @NotNull ThreeState appliedToInjectionHost,
-                                              @NotNull String toolId) {
+    private static void addAllSuppressActions(
+        Collection<? super SuppressQuickFix> fixes,
+        PsiElement element,
+        InspectionSuppressor suppressor,
+        ThreeState appliedToInjectionHost,
+        String toolId
+    ) {
         final SuppressQuickFix[] actions = suppressor.getSuppressActions(element, toolId);
         for (SuppressQuickFix action : actions) {
-            if (action instanceof InjectionAwareSuppressQuickFix) {
-                ((InjectionAwareSuppressQuickFix)action).setShouldBeAppliedToInjectionHost(appliedToInjectionHost);
+            if (action instanceof InjectionAwareSuppressQuickFix _action) {
+                _action.setShouldBeAppliedToInjectionHost(appliedToInjectionHost);
             }
             fixes.add(action);
         }
     }
 
-    @Nullable
-    private ProblemDescriptor[] doCheckFile(
-        @NotNull PsiFile file,
-        @NotNull InspectionManager manager,
+    private ProblemDescriptor @Nullable [] doCheckFile(
+        PsiFile file,
+        InspectionManager manager,
         boolean isOnTheFly,
-        SourceCode code,
+        @Nullable SourceCode code,
         R r
     ) throws Throwable {
         if (code == null) {
@@ -440,7 +427,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
             return list
                     .stream()
                     .map(violation ->
-                        convertViolationToProblemDescriptor(file, manager, isOnTheFly, r, document, violation)
+                        convertViolationToProblemDescriptor(file, manager, isOnTheFly, document, violation)
                     )
                     .filter(Objects::nonNull)
                     .toArray(ProblemDescriptor[]::new);
@@ -458,12 +445,10 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
 
     }
 
-    @Nullable
-    private ProblemDescriptor convertViolationToProblemDescriptor(
-        @NotNull PsiFile file,
-        @NotNull InspectionManager manager,
+    private @Nullable ProblemDescriptor convertViolationToProblemDescriptor(
+        PsiFile file,
+        InspectionManager manager,
         boolean isOnTheFly,
-        R r,
         Document document,
         Violation violation
     ) {
@@ -471,9 +456,9 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         final PsiElement violatingElement = extractViolatingElement(file, violatingRange);
 
         if (
-            violatingElement == null || isSuppressedFor(violatingElement) || (
-                DisabledRulesService.getInstance().isRuleDisabled(violation.getRule(), file, violation.getLineNumber())
-            )
+            violatingElement == null ||
+            isSuppressedFor(violatingElement) ||
+            DisabledRulesService.getInstance().isRuleDisabled(violation.getRule(), file, violation.getLineNumber())
         ) {
             return null;
         }
@@ -481,15 +466,14 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         return manager.createProblemDescriptor(
                 violatingElement,
                 convertViolationRangeToRelative(violatingElement, violatingRange),
-                extractMessage(violation, r),
+                extractMessage(violation),
                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
                 isOnTheFly,
                 getQuickFixesFor(violation, violatingElement).toArray(new LocalQuickFix[0])
         );
     }
 
-    @NotNull
-    private CachedValue<Boolean> readErrorsCachedValue(@NotNull PsiFile file, CachedValuesManager cachedValuesManager) {
+    private CachedValue<Boolean> readErrorsCachedValue(PsiFile file, CachedValuesManager cachedValuesManager) {
         CachedValue<Boolean> hasErrorsCachedValue = file.getUserData(HAS_SYNTAX_ERRORS_CACHE_KEY);
         if (hasErrorsCachedValue == null) {
             hasErrorsCachedValue = cachedValuesManager.createCachedValue(() -> {
@@ -501,7 +485,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     private <T> T computeCachedDataIfAbsent(
-        @NotNull PsiFile file,
+        PsiFile file,
         CachedValuesManager cachedValuesManager,
         Key<CachedValue<T>> key,
         Supplier<T> supplier

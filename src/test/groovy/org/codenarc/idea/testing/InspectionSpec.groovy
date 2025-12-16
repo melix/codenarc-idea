@@ -14,7 +14,7 @@ import com.intellij.psi.PsiDocumentManager
 import com.intellij.psi.PsiElement
 import com.intellij.testFramework.fixtures.JavaCodeInsightTestFixture
 import groovy.transform.CompileDynamic
-import org.jetbrains.annotations.NotNull
+import org.jspecify.annotations.NonNull
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -201,7 +201,7 @@ abstract class InspectionSpec extends Specification {
     }
 
     @SuppressWarnings('TrailingWhitespace')
-    @NotNull
+    @NonNull
     protected String readBeforeFile(JavaCodeInsightTestFixture fixture) {
         String before = fixt.readText('before.txt')
 

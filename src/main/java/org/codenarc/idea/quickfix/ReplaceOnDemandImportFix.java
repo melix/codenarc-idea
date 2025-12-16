@@ -22,7 +22,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.ClassUtil;
 import com.intellij.util.IncorrectOperationException;
 import com.siyeh.IntentionPowerPackBundle;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.plugins.groovy.codeInspection.GroovyFix;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyFile;
 import org.jetbrains.plugins.groovy.lang.psi.GroovyPsiElement;
@@ -31,56 +30,59 @@ import org.jetbrains.plugins.groovy.lang.psi.GroovyRecursiveElementVisitor;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.GrTypeDefinition;
 import org.jetbrains.plugins.groovy.lang.psi.api.toplevel.imports.GrImportStatement;
 import org.jetbrains.plugins.groovy.lang.psi.api.types.GrCodeReferenceElement;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Function;
 
+@NullMarked
 public class ReplaceOnDemandImportFix extends GroovyFix {
-
     @Override
-    protected void doFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) throws IncorrectOperationException {
+    protected void doFix(Project project, ProblemDescriptor descriptor) throws IncorrectOperationException {
         if (descriptor.getPsiElement() instanceof GrImportStatement) {
             fixImport(project, (GrImportStatement) descriptor.getPsiElement());
         }
     }
 
     @Override
-    public @NotNull String getFamilyName() {
+    public String getFamilyName() {
         return IntentionPowerPackBundle.message("replace.on.demand.import.intention.family.name");
     }
 
-    protected void fixImport(@NotNull Project project, @NotNull GrImportStatement importStatement) {
+    protected void fixImport(Project project, GrImportStatement importStatement) {
         final GroovyFile groovyFile = (GroovyFile) importStatement.getContainingFile();
         final GroovyPsiElementFactory factory = GroovyPsiElementFactory.getInstance(project);
 
         if (!importStatement.isStatic()) {
             final GrTypeDefinition[] classes = (GrTypeDefinition[]) groovyFile.getClasses();
             final String qualifiedName = importStatement.getImportFqn();
+            if (qualifiedName == null) {
+                return;
+            }
+
             final ClassCollector visitor = new ClassCollector(qualifiedName);
             for (GrTypeDefinition aClass : classes) {
                 aClass.accept(visitor);
             }
             final PsiClass[] importedClasses = visitor.getImportedClasses();
             Arrays.sort(importedClasses, new PsiClassComparator());
-            createImportStatements(
-                importStatement,
-                importedClasses,
-                clazz -> factory.createImportStatement(clazz.getQualifiedName(), false, false, null, null)
-            );
+            createImportStatements(importStatement, importedClasses, factory);
         }
     }
 
-    private static <T> void createImportStatements(
+    private static void createImportStatements(
         GrImportStatement importStatement,
-        T[] importedMembers,
-        Function<? super T, ? extends GrImportStatement> function
+        PsiClass[] importedMembers,
+        GroovyPsiElementFactory factory
     ) {
         final GroovyFile groovyFile = (GroovyFile) importStatement.getParent();
-        for (T importedMember : importedMembers) {
-            groovyFile.addImport(function.apply(importedMember));
+        for (PsiClass importedMember : importedMembers) {
+            var qualifiedName = importedMember.getQualifiedName();
+            if (qualifiedName != null) {
+                groovyFile.addImport(factory.createImportStatement(qualifiedName, false, false, null, null));
+            }
         }
         PsiElement maybeNewLine = importStatement.getPrevSibling();
         if (maybeNewLine != null && maybeNewLine.toString().contains("new line")) {
@@ -99,18 +101,16 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
         }
 
         @Override
-        public void visitElement(@NotNull GroovyPsiElement element) {
+        public void visitElement(GroovyPsiElement element) {
             super.visitElement(element);
-            if (element instanceof GrCodeReferenceElement) {
-                GrCodeReferenceElement ref = (GrCodeReferenceElement) element;
+            if (element instanceof GrCodeReferenceElement ref) {
                 if (ref.isQualified()) {
                     return;
                 }
                 final PsiElement resolvedElement = ref.resolve();
-                if (!(resolvedElement instanceof PsiClass)) {
+                if (!(resolvedElement instanceof PsiClass aClass)) {
                     return;
                 }
-                final PsiClass aClass = (PsiClass) resolvedElement;
                 final String qualifiedName = aClass.getQualifiedName();
                 final String packageName =
                     ClassUtil.extractPackageName(qualifiedName);
@@ -121,7 +121,7 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
             }
         }
 
-        public PsiClass[] getImportedClasses() {
+        private PsiClass[] getImportedClasses() {
             return importedClasses.toArray(PsiClass.EMPTY_ARRAY);
         }
     }
@@ -136,6 +136,11 @@ public class ReplaceOnDemandImportFix extends GroovyFix {
             if (qualifiedName1 == null) {
                 return -1;
             }
+
+            if (qualifiedName2 == null) {
+                return 1;
+            }
+
             return qualifiedName1.compareTo(qualifiedName2);
         }
     }
