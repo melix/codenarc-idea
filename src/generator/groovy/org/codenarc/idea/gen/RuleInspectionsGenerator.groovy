@@ -4,9 +4,9 @@ import com.intellij.codeHighlighting.HighlightDisplayLevel
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import org.apache.commons.lang3.StringUtils
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
 import org.codenarc.CodeNarc
 import org.codenarc.idea.CodeNarcInspectionTool
-import org.codenarc.idea.ui.Helpers
 import org.codenarc.rule.AbstractRule
 import org.codenarc.rule.comments.JavadocEmptyFirstLineRule
 import org.codenarc.rule.convention.ImplicitReturnStatementRule
@@ -45,7 +45,6 @@ import java.util.regex.Pattern
 class RuleInspectionsGenerator {
 
     static class InspectionDescriptor {
-
         String implementationClass
         String shortName
         String displayName
@@ -61,7 +60,6 @@ class RuleInspectionsGenerator {
 
         // not used yet
         String groupBundle
-
     }
 
     static void main(String[] args) {
@@ -76,6 +74,12 @@ class RuleInspectionsGenerator {
         List<InspectionDescriptor> classes = generateClasses(projectRoot)
         report classes
     }
+
+    private static final List<String> EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES = List.of(
+        "name", "description", "priority", "astVisitor", "astVisitorClass", "violationMessage", "compilerPhase",
+        "class", "enabled", "applyToFilesMatching", "doNotApplyToFilesMatching", "applyToFileNames",
+        "doNotApplyToFileNames"
+    )
 
     private static final Set<Class<?>> DISABLED_BY_DEFAULT_RULES = new HashSet<>([
             ClosureStatementOnOpeningLineOfMultipleLineClosureRule, // unreliable
@@ -318,7 +322,7 @@ class RuleInspectionsGenerator {
     }
 
     /**
-     * Generates class Java code and returns the fully qualified name name of the class
+     * Generates class Java code and returns the fully qualified name of the class.
      * @return the fully qualified name of the newly generated class or null if the rule cannot be supported
      */
     @Nullable
@@ -402,7 +406,7 @@ class RuleInspectionsGenerator {
         """.stripIndent()
         // codenarc-enable LineLength
 
-        for (MetaProperty prop : Helpers.proxyableProps(ruleClassInstance)) {
+        for (MetaProperty prop : getProxyableProps(ruleClassInstance)) {
             String getter
             String setter
 
@@ -431,14 +435,14 @@ class RuleInspectionsGenerator {
             """
         }
 
-        String emptyListQuickFixImplementation = '''
-    @Override
-    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(
-        @NonNull Violation violation, 
-        @NonNull PsiElement violatingElement
-    ) {
-        return Collections.emptyList();
-    }
+        String emptyListQuickFixImplementation = '''\
+            @Override
+            protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(
+                @NonNull Violation violation, 
+                @NonNull PsiElement violatingElement
+            ) {
+                return Collections.emptyList();
+            }
         '''
 
         String customCode = """
@@ -494,5 +498,17 @@ class RuleInspectionsGenerator {
         newSourceFile.text = sw.toString().stripIndent().trim() + '\n\n    ' + customCode.stripIndent().trim() + '\n'
 
         return descriptor
+    }
+
+    private static List<MetaProperty> getProxyableProps(Class<?> aClass) {
+        return DefaultGroovyMethods.getMetaClass(aClass).getProperties().stream()
+            .filter(p ->
+                p instanceof MetaBeanProperty &&
+                    !EXCLUDED_FROM_AUTO_PROXYING_FIELD_NAMES.contains(p.getName()) &&
+                    p.getSetter() != null &&
+                    p.getGetter() != null
+            )
+            .sorted(Comparator.comparing(MetaProperty::getName))
+            .toList()
     }
 }

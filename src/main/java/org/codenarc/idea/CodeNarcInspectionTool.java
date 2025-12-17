@@ -8,6 +8,8 @@ import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;
 import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.SuppressQuickFix;
+import com.intellij.codeInspection.options.OptPane;
+import com.intellij.codeInspection.options.OptionController;
 import com.intellij.configurationStore.XmlSerializer;
 import com.intellij.lang.injection.InjectedLanguageManager;
 import com.intellij.openapi.diagnostic.ControlFlowException;
@@ -35,7 +37,6 @@ import com.intellij.util.xmlb.XmlSerializationException;
 import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import org.codenarc.idea.disablerules.DisabledRulesService;
-import org.codenarc.idea.ui.Helpers;
 import org.codenarc.rule.AbstractRule;
 import org.codenarc.rule.Violation;
 import org.codenarc.source.SourceCode;
@@ -44,19 +45,18 @@ import org.jdom.Element;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.PropertyKey;
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.function.Supplier;
-
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for CodeNarc violation rules, which will get proxied to work with the IntelliJ IDEA inspection
@@ -78,11 +78,13 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     private static final Key<ParameterizedCachedValue<ProblemDescriptor[], AbstractRule>> VIOLATIONS_CACHE_KEY =
         Key.create("CODENARC_VIOLATIONS");
     private final R rule;
+    private final InspectionOptions<R> options;
     private final ResourceBundle bundle = ResourceBundle.getBundle(BASE_MESSAGES_BUNDLE);
     private final String description;
 
     protected CodeNarcInspectionTool(R rule) {
         this.rule = rule;
+        this.options = InspectionOptions.from(rule);
         this.description = getRuleDescriptionOrDefaultMessage(rule);
     }
 
@@ -92,8 +94,8 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     public static String getDisplayName(AbstractRule rule) {
-        String ruleName = rule.getName();
-        return ruleName != null ? Helpers.camelCaseToSentence(ruleName) : rule.getClass().getSimpleName();
+        var ruleName = rule.getName();
+        return ruleName != null ? Utils.camelCaseToSentence(ruleName) : rule.getClass().getSimpleName();
     }
 
     public R getRule() {
@@ -140,9 +142,16 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
         rule.setApplyToFileNames(value);
     }
 
-    private String getRuleDescriptionOrDefaultMessage(final AbstractRule rule) {
-        String resourceKey = rule.getName() + ".description.html";
-        return "[" + rule.getName() + "] " + getResourceBundleString(resourceKey);
+    private String getRuleDescriptionOrDefaultMessage(R rule) {
+        var url = String.format(
+            "https://codenarc.org/codenarc-rules-%s.html#%s",
+            getRuleset().toLowerCase(Locale.ROOT),
+            rule.getClass().getSimpleName().toLowerCase(Locale.ROOT).replace("rule", "-rule")
+        );
+
+        return "[" + rule.getName() + "] " +
+            getResourceBundleString(rule.getName() + ".description.html") +
+            "<p><a href=\"" + url + "\">Explanation of the rule at the CodeNarc website</a></p>";
     }
 
     private String getResourceBundleString(@PropertyKey(resourceBundle = BASE_MESSAGES_BUNDLE) String resourceKey) {
@@ -161,8 +170,13 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     @Override
-    public @Nullable JPanel createOptionsPanel() {
-        return Helpers.createOptionsPanel(this);
+    public OptPane getOptionsPane() {
+        return options.getOptionsPane();
+    }
+
+    @Override
+    public OptionController getOptionController() {
+        return options.getOptionController();
     }
 
     @Override
@@ -207,7 +221,6 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public ProblemDescriptor @Nullable [] checkFile(
         final PsiFile file,
         final InspectionManager manager,
@@ -224,9 +237,7 @@ public abstract class CodeNarcInspectionTool<R extends AbstractRule> extends Loc
             return null;
         }
 
-        ParameterizedCachedValue<ProblemDescriptor[], AbstractRule> cachedViolations = file
-            .getUserData(VIOLATIONS_CACHE_KEY);
-
+        var cachedViolations = file.getUserData(VIOLATIONS_CACHE_KEY);
         if (cachedViolations != null) {
             return null;
         }
