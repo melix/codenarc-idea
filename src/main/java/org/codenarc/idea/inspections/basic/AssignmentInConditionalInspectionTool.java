@@ -9,8 +9,8 @@ import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.idea.quickfix.ReplaceStatementFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.basic.AssignmentInConditionalRule;
-import org.jspecify.annotations.NonNull;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrAssignmentExpression;
+import org.jspecify.annotations.NonNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class AssignmentInConditionalInspectionTool extends CodeNarcInspectionTool<AssignmentInConditionalRule> {

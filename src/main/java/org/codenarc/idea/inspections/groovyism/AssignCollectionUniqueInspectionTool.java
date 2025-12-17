@@ -9,8 +9,8 @@ import org.codenarc.idea.CodeNarcInspectionTool;
 import org.codenarc.idea.quickfix.ReplaceStatementFix;
 import org.codenarc.rule.Violation;
 import org.codenarc.rule.groovyism.AssignCollectionUniqueRule;
-import org.jspecify.annotations.NonNull;
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.GrMethodCall;
+import org.jspecify.annotations.NonNull;
 
 @Generated("You can customize this class at the end of the file or remove this annotation to skip regeneration completely")
 public class AssignCollectionUniqueInspectionTool extends CodeNarcInspectionTool<AssignCollectionUniqueRule> {

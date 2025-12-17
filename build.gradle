@@ -196,6 +196,9 @@ run {
     classpath = sourceSets.main.compileClasspath + sourceSets.main.runtimeClasspath +
         sourceSets.generator.compileClasspath + sourceSets.generator.runtimeClasspath
     args project.rootDir.canonicalPath
+    jvmArgs = [
+        '-Djava.awt.headless=true'
+    ]
 }
 
 test {
