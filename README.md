@@ -6,7 +6,7 @@ New features:
 - Compatible with IntelliJ IDEA 2025.2+ (based on IntelliJ Plugins v2):
   - Quick Fixes for CodeNarc violations ported to the new API
   - Automated tests reworked to use the new API
-- [CodeNarc 3.6.0](https://github.com/CodeNarc/CodeNarc/releases/tag/v3.6.0)
+- [CodeNarc 3.7.0](https://github.com/CodeNarc/CodeNarc/releases/tag/v3.7.0)
   - Supports [Disabling rules from comments](https://codenarc.org/codenarc-configuring-rules.html#disabling-rules-from-comments)
 - Groovy 4+
 - Gradle 9.2.0
@@ -34,16 +34,16 @@ To run the plugin locally in IDEA:
 ## Build
 
 To build the plugin run `./gradlew clean buildPlugin`.
-Take the file from `build/distributions/codenarc-idea-7.0.4.zip` and install it in IDEA.
+Take the file from `build/distributions/codenarc-idea-7.*.*.zip` and install it in IDEA.
 
 ## Upgrading CodeNarc
 
-1. Change the CodeNarc version in `build.gradle`
+1. Change the CodeNarc version in `gradle.properties`
 2. Regenerate the IDEA inspection classes from CodeNarc with `./gradlew run`
    - existing inspection classes manual removal from `org.codenarc.idea.inspections` might be required
 3. Test `./gradlew test --info --stacktrace`
 4. Build `./gradlew buildPlugin`
-5. Take the file from `build/distributions/codenarc-idea-7.0.4.zip` and install it in IDEA.
+5. Take the file from `build/distributions/codenarc-idea-7.*.*.zip` and install it in IDEA.
 
 ## History
 
