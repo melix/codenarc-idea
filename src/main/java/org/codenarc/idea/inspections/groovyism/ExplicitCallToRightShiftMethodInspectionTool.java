@@ -57,7 +57,10 @@ public class ExplicitCallToRightShiftMethodInspectionTool extends CodeNarcInspec
     // custom code can be written after this line and it will be preserved during the regeneration
 
     @Override
-    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(
+        @NonNull Violation violation, 
+        @NonNull PsiElement violatingElement
+    ) {
         return Collections.emptyList();
     }
 

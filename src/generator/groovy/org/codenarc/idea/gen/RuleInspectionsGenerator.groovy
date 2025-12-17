@@ -433,7 +433,10 @@ class RuleInspectionsGenerator {
 
         String emptyListQuickFixImplementation = '''
     @Override
-    protected @NonNull` Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(
+        @NonNull Violation violation, 
+        @NonNull PsiElement violatingElement
+    ) {
         return Collections.emptyList();
     }
         '''

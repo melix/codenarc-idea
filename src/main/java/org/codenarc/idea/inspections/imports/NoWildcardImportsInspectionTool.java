@@ -56,7 +56,10 @@ public class NoWildcardImportsInspectionTool extends CodeNarcInspectionTool<NoWi
     }
 
     @Override
-    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(Violation violation, PsiElement violatingElement) {
+    protected @NonNull Collection<LocalQuickFix> getQuickFixesFor(
+        @NonNull Violation violation, 
+        @NonNull PsiElement violatingElement
+    ) {
         if (violatingElement instanceof GrImportStatement importStatement) {
             if (!importStatement.isStatic()) {
                 return Collections.singleton(new ReplaceOnDemandImportFix());
