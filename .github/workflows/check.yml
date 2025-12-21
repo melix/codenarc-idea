@@ -1,11 +1,14 @@
 name: Check
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
 jobs:
   check:
     name: Run Tests
     runs-on: ubuntu-latest
-    if: github.event_name != 'push' || github.event.pull_request.head.repo.full_name == null
     env:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
       CI: true
